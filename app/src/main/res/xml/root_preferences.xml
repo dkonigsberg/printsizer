@@ -1,0 +1,11 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <ListPreference
+        android:icon="@drawable/ic_height"
+        app:defaultValue="millimeters"
+        app:entries="@array/distance_units_entries"
+        app:entryValues="@array/distance_units_values"
+        app:key="enlarger_height_units"
+        app:title="@string/label_enlarger_height_units"
+        app:useSimpleSummaryProvider="true" />
+</PreferenceScreen>

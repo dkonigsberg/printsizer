@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="org.logicprobe.printsizer.ui.home.HomeFragment"
+        android:label="@string/menu_home"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_add_enlarger"
+            app:destination="@+id/nav_enlarger_add"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_enlargers"
+        android:name="org.logicprobe.printsizer.ui.enlargers.EnlargersFragment"
+        android:label="@string/menu_enlargers"
+        tools:layout="@layout/fragment_enlargers">
+        <action
+            android:id="@+id/action_add_enlarger"
+            app:destination="@+id/nav_enlarger_add"/>
+        <action
+            android:id="@+id/action_edit_enlarger"
+            app:destination="@+id/nav_enlarger_edit"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_papers"
+        android:name="org.logicprobe.printsizer.ui.papers.PapersFragment"
+        android:label="@string/menu_papers"
+        tools:layout="@layout/fragment_papers" />
+
+    <fragment
+        android:id="@+id/nav_enlarger_add"
+        android:name="org.logicprobe.printsizer.ui.enlargers.EnlargerEditFragment"
+        android:label="@string/menu_enlarger_add"
+        tools:layout="@layout/fragment_enlarger_edit">
+        <action
+            android:id="@+id/action_edit_enlarger_accept"
+            app:destination="@+id/nav_enlargers"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_enlarger_edit"
+        android:name="org.logicprobe.printsizer.ui.enlargers.EnlargerEditFragment"
+        android:label="@string/menu_enlarger_modify"
+        tools:layout="@layout/fragment_enlarger_edit">
+        <action
+            android:id="@+id/action_edit_enlarger_accept"
+            app:destination="@+id/nav_enlargers"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="org.logicprobe.printsizer.ui.SettingsFragment"
+        android:label="@string/action_settings" />
+
+    <fragment
+        android:id="@+id/nav_about"
+        android:name="org.logicprobe.printsizer.ui.AboutFragment"
+        android:label="@string/action_about"
+        tools:layout="@layout/fragment_about" />
+</navigation>

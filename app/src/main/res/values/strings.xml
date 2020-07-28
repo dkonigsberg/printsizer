@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">PrintSizer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">PrintSizer</string>
+    <string name="nav_header_subtitle">Darkroom Printing Calculator</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_home">PrintSizer</string>
+    <string name="menu_enlargers">Enlarger Profiles</string>
+    <string name="menu_papers">Paper Profiles</string>
+    <string name="menu_enlarger_add">Add Enlarger Profile</string>
+    <string name="menu_enlarger_modify">Modify Enlarger Profile</string>
+    <string name="action_copy">Copy</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="label_name">Name</string>
+    <string name="label_description">Description</string>
+    <string name="label_lens_focal_length">Lens focal length</string>
+    <string name="unit_suffix_mm">mm</string>
+    <string name="unit_suffix_cm">cm</string>
+    <string name="label_enlarger_height_offset">Enlarger height offset</string>
+    <string name="label_smaller_test_exposure">Smaller Test Exposure</string>
+    <string name="label_enlarger_height">Enlarger height</string>
+    <string name="label_exposure_time">Exposure time</string>
+    <string name="unit_suffix_seconds">secs</string>
+    <string name="label_larger_test_exposure">Larger Test Exposure</string>
+    <string name="error_enlarger_missing_name">Enlarger must have a name</string>
+    <string name="error_enlarger_missing_lens_focal_length">Enlarger lens focal length is missing</string>
+    <string name="error_enlarger_lens_focal_length_invalid">Enlarger lens focal length is invalid</string>
+    <string name="error_enlarger_height_offset_invalid">Enlarger height offset is invalid</string>
+    <string name="error_enlarger_height_needed">Enlarger height is needed</string>
+    <string name="error_enlarger_height_invalid">Enlarger height is invalid</string>
+    <string name="error_enlarger_height_too_low_for_focal_length">Enlarger height is too low for the lens focal length</string>
+    <string name="error_exposure_time_needed">Exposure time is needed</string>
+    <string name="error_exposure_time_invalid">Exposure time is invalid</string>
+    <string name="error_enlarger_profile_invalid">Enlarger profile is invalid</string>
+    <string name="enlarger_profile_copy_name_template">Copy of %1$s</string>
+    <string name="action_about">About</string>
+    <string name="label_smaller_print">Smaller Print</string>
+    <string name="label_larger_print">Larger Print</string>
+    <string name="action_choose_enlarger_profile">Choose Enlarger Profile...</string>
+    <string name="dialog_choose_enlarger_profile">Choose enlarger profile</string>
+    <string name="action_add_enlarger_profile">Add Enlarger Profile</string>
+    <plurals name="title_list_selection">
+        <item quantity="one">%s selected</item>
+        <item quantity="other">%s selected</item>
+    </plurals>
+    <plurals name="title_delete_profiles_dialog">
+        <item quantity="one">Delete profile?</item>
+        <item quantity="other">Delete %s profiles?</item>
+    </plurals>
+    <string name="label_version_prefix">Version %1$s</string>
+    <string name="label_enlarger_height_units">Enlarger height units</string>
+</resources>
