@@ -1,2 +1,4 @@
-# printsizer
-Darkroom Printing Calculator for Android
+PrintSizer - Darkroom Printing Calculator
+=========================================
+
+PrintSizer is a darkroom printing calculator app for Android.
