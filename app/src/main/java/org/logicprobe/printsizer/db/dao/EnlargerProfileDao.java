@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface EnlargerProfileDao {
-    @Query("SELECT * FROM enlarger_profiles")
+    @Query("SELECT * FROM enlarger_profiles ORDER BY name, lens_focal_length, description, id")
     LiveData<List<EnlargerProfileEntity>> loadAllEnlargerProfiles();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
