@@ -29,6 +29,8 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputLayout;
+
 import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.databinding.DialogChooseEnlargerBinding;
 import org.logicprobe.printsizer.databinding.FragmentHomeBinding;
@@ -42,12 +44,14 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
+
     private EditText editSmallerHeight;
     private EditText editSmallerTime;
     private EditText editLargerHeight;
     private TextView enlargerName;
-    private TextView textViewSmallerHeightUnits;
-    private TextView textViewLargerHeightUnits;
+    private TextInputLayout editSmallerHeightLayout;
+    private TextInputLayout editLargerHeightLayout;
+
     private boolean height_as_cm;
     private boolean ignoreHeightChange;
 
@@ -72,8 +76,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editSmallerHeight = root.findViewById(R.id.editSmallerHeight);
         editSmallerTime = root.findViewById(R.id.editSmallerTime);
         editLargerHeight = root.findViewById(R.id.editLargerHeight);
-        textViewSmallerHeightUnits = root.findViewById(R.id.textViewSmallerHeightUnits);
-        textViewLargerHeightUnits = root.findViewById(R.id.textViewLargerHeightUnits);
+        editSmallerHeightLayout = root.findViewById(R.id.editSmallerHeightLayout);
+        editLargerHeightLayout = root.findViewById(R.id.editLargerHeightLayout);
 
         return root;
     }
@@ -136,9 +140,9 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             @Override
             public void onChanged(EnlargerHeightErrorEvent enlargerHeightErrorEvent) {
                 if (enlargerHeightErrorEvent != EnlargerHeightErrorEvent.NONE) {
-                    editSmallerHeight.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
+                    editSmallerHeightLayout.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
                 } else {
-                    editSmallerHeight.setError(null);
+                    editSmallerHeightLayout.setError(null);
                 }
             }
         });
@@ -147,9 +151,9 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             @Override
             public void onChanged(EnlargerHeightErrorEvent enlargerHeightErrorEvent) {
                 if (enlargerHeightErrorEvent != EnlargerHeightErrorEvent.NONE) {
-                    editLargerHeight.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
+                    editLargerHeightLayout.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
                 } else {
-                    editLargerHeight.setError(null);
+                    editLargerHeightLayout.setError(null);
                 }
             }
         });
@@ -193,18 +197,18 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             height_as_cm = false;
 
             editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
-            textViewSmallerHeightUnits.setText(R.string.unit_suffix_mm);
+            editSmallerHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
 
             editLargerHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
-            textViewLargerHeightUnits.setText(R.string.unit_suffix_mm);
+            editLargerHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
         } else {
             height_as_cm = true;
 
             editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            textViewSmallerHeightUnits.setText(R.string.unit_suffix_cm);
+            editSmallerHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
 
             editLargerHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            textViewLargerHeightUnits.setText(R.string.unit_suffix_cm);
+            editLargerHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
         }
 
         ignoreHeightChange = true;
