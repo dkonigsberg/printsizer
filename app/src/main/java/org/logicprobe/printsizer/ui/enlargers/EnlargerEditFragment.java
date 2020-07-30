@@ -91,7 +91,7 @@ public class EnlargerEditFragment extends Fragment {
         if (prefValue == null || prefValue.length() == 0 || prefValue.equals("millimeters")) {
             height_as_cm = false;
 
-            editHeightOffset.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editHeightOffset.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED);
             editHeightOffsetLayout.setSuffixText(getString(R.string.unit_suffix_mm));
 
             editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -103,7 +103,7 @@ public class EnlargerEditFragment extends Fragment {
         } else {
             height_as_cm = true;
 
-            editHeightOffset.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            editHeightOffset.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
             editHeightOffsetLayout.setSuffixText(getString(R.string.unit_suffix_cm));
 
             editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
