@@ -175,6 +175,33 @@ public class EnlargerEditFragment extends Fragment {
         editLargerTimeLayout.setHintAnimationEnabled(enabled);
     }
 
+    private void clearInputErrors(Editable editable) {
+        if (editable == null || editable == editName.getText()) {
+            editNameLayout.setError(null);
+        }
+        if (editable == null || editable == editDescription.getText()) {
+            editDescriptionLayout.setError(null);
+        }
+        if (editable == null || editable == editLensFocalLength.getText()) {
+            editLensFocalLengthLayout.setError(null);
+        }
+        if (editable == null || editable == editHeightOffset.getText()) {
+            editHeightOffsetLayout.setError(null);
+        }
+        if (editable == null || editable == editSmallerHeight.getText()) {
+            editSmallerHeightLayout.setError(null);
+        }
+        if (editable == null || editable == editSmallerTime.getText()) {
+            editSmallerTimeLayout.setError(null);
+        }
+        if (editable == null || editable == editLargerHeight.getText()) {
+            editLargerHeightLayout.setError(null);
+        }
+        if (editable == null || editable == editLargerTime.getText()) {
+            editLargerTimeLayout.setError(null);
+        }
+    }
+
     private void handleEditAccept() {
         Util.hideKeyboardFrom(getContext(), getView());
         if (validateInputFields(null)) {
@@ -189,6 +216,8 @@ public class EnlargerEditFragment extends Fragment {
 
     private boolean validateInputFields(Editable editable) {
         boolean result = true;
+
+        clearInputErrors(editable);
 
         // Validate non-numeric fields that need values, which is just the name
         if (editable == null || editable == editName.getText()) {
