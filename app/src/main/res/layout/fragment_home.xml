@@ -51,6 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_enlarger_height"
+                    app:startIconDrawable="@drawable/ic_height"
                     app:errorEnabled="true"
                     app:suffixText="@string/unit_suffix_mm">
 
@@ -58,7 +59,7 @@
                         android:id="@+id/editSmallerHeight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -69,6 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_exposure_time"
+                    app:startIconDrawable="@drawable/ic_shutter_speed"
                     app:errorEnabled="true"
                     app:suffixText="@string/unit_suffix_seconds">
 
@@ -76,7 +78,7 @@
                         android:id="@+id/editSmallerTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -104,6 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_enlarger_height"
+                    app:startIconDrawable="@drawable/ic_height"
                     app:errorEnabled="true"
                     app:suffixText="@string/unit_suffix_mm">
 
@@ -111,7 +114,7 @@
                         android:id="@+id/editLargerHeight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -122,6 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_exposure_time"
+                    app:startIconDrawable="@drawable/ic_shutter_speed"
                     app:errorEnabled="true"
                     app:suffixText="@string/unit_suffix_seconds">
 
@@ -130,7 +134,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:editable="false"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="none"
                         android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -156,6 +160,13 @@
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:visibility="@{homeViewModel.enlargerProfile.id == 0 ? View.VISIBLE : View.INVISIBLE}">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_menu_enlarger"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginEnd="12dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"

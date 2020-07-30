@@ -60,6 +60,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:hint="@string/label_lens_focal_length"
+                app:startIconDrawable="@drawable/ic_lens"
                 app:errorEnabled="true"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:suffixText="@string/unit_suffix_mm">
@@ -68,7 +69,7 @@
                     android:id="@+id/editLensFocalLength"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
+                    android:ems="12"
                     android:inputType="number" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -78,6 +79,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                 android:hint="@string/label_enlarger_height_offset"
+                app:startIconDrawable="@drawable/ic_height_offset"
                 app:errorEnabled="true"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 app:suffixText="@string/unit_suffix_mm">
@@ -86,7 +88,7 @@
                     android:id="@+id/editHeightOffset"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:ems="10"
+                    android:ems="12"
                     android:inputType="numberSigned|numberDecimal" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -118,6 +120,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_enlarger_height"
+                    app:startIconDrawable="@drawable/ic_height"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:suffixText="@string/unit_suffix_mm">
@@ -126,7 +129,7 @@
                         android:id="@+id/editSmallerHeight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -136,6 +139,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_exposure_time"
+                    app:startIconDrawable="@drawable/ic_shutter_speed"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:suffixText="@string/unit_suffix_seconds">
@@ -144,7 +148,7 @@
                         android:id="@+id/editSmallerTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,6 +168,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_enlarger_height"
+                    app:startIconDrawable="@drawable/ic_height"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:suffixText="@string/unit_suffix_mm">
@@ -172,7 +177,7 @@
                         android:id="@+id/editLargerHeight"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -182,6 +187,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
                     android:hint="@string/label_exposure_time"
+                    app:startIconDrawable="@drawable/ic_shutter_speed"
                     app:errorEnabled="true"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     app:suffixText="@string/unit_suffix_seconds">
@@ -190,7 +196,7 @@
                         android:id="@+id/editLargerTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:ems="10"
+                        android:ems="12"
                         android:inputType="numberDecimal" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
