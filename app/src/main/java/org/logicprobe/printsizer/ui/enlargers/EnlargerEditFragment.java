@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.logicprobe.printsizer.App;
 import org.logicprobe.printsizer.R;
@@ -43,9 +44,16 @@ public class EnlargerEditFragment extends Fragment {
     private EditText editSmallerTime;
     private EditText editLargerHeight;
     private EditText editLargerTime;
-    private TextView textViewHeightOffsetUnits;
-    private TextView textViewSmallerHeightUnits;
-    private TextView textViewLargerHeightUnits;
+
+    private TextInputLayout editNameLayout;
+    private TextInputLayout editDescriptionLayout;
+    private TextInputLayout editLensFocalLengthLayout;
+    private TextInputLayout editHeightOffsetLayout;
+    private TextInputLayout editSmallerHeightLayout;
+    private TextInputLayout editSmallerTimeLayout;
+    private TextInputLayout editLargerHeightLayout;
+    private TextInputLayout editLargerTimeLayout;
+
     private boolean height_as_cm;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,9 +68,15 @@ public class EnlargerEditFragment extends Fragment {
         editSmallerTime = root.findViewById(R.id.editSmallerTime);
         editLargerHeight = root.findViewById(R.id.editLargerHeight);
         editLargerTime = root.findViewById(R.id.editLargerTime);
-        textViewHeightOffsetUnits = root.findViewById(R.id.textViewHeightOffsetUnits);
-        textViewSmallerHeightUnits = root.findViewById(R.id.textViewSmallerHeightUnits);
-        textViewLargerHeightUnits = root.findViewById(R.id.textViewLargerHeightUnits);
+
+        editNameLayout = root.findViewById(R.id.editNameLayout);
+        editDescriptionLayout = root.findViewById(R.id.editDescriptionLayout);
+        editLensFocalLengthLayout = root.findViewById(R.id.editLensFocalLengthLayout);
+        editHeightOffsetLayout = root.findViewById(R.id.editHeightOffsetLayout);
+        editSmallerHeightLayout = root.findViewById(R.id.editSmallerHeightLayout);
+        editSmallerTimeLayout = root.findViewById(R.id.editSmallerTimeLayout);
+        editLargerHeightLayout = root.findViewById(R.id.editLargerHeightLayout);
+        editLargerTimeLayout = root.findViewById(R.id.editLargerTimeLayout);
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -78,25 +92,25 @@ public class EnlargerEditFragment extends Fragment {
             height_as_cm = false;
 
             editHeightOffset.setInputType(InputType.TYPE_CLASS_NUMBER);
-            textViewHeightOffsetUnits.setText(R.string.unit_suffix_mm);
+            editHeightOffsetLayout.setSuffixText(getString(R.string.unit_suffix_mm));
 
             editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
-            textViewSmallerHeightUnits.setText(R.string.unit_suffix_mm);
+            editSmallerHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
 
             editLargerHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
-            textViewLargerHeightUnits.setText(R.string.unit_suffix_mm);
+            editLargerHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
 
         } else {
             height_as_cm = true;
 
             editHeightOffset.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            textViewHeightOffsetUnits.setText(R.string.unit_suffix_cm);
+            editHeightOffsetLayout.setSuffixText(getString(R.string.unit_suffix_cm));
 
             editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            textViewSmallerHeightUnits.setText(R.string.unit_suffix_cm);
+            editSmallerHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
 
             editLargerHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            textViewLargerHeightUnits.setText(R.string.unit_suffix_cm);
+            editLargerHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
         }
 
         return root;
@@ -117,7 +131,9 @@ public class EnlargerEditFragment extends Fragment {
                 liveEntity.observe(getViewLifecycleOwner(), new Observer<EnlargerProfileEntity>() {
                     @Override
                     public void onChanged(EnlargerProfileEntity enlargerProfileEntity) {
+                        enableTextHintAnimations(false);
                         populateFromEnlargerProfile(enlargerProfileEntity);
+                        enableTextHintAnimations(true);
                     }
                 });
             }
@@ -148,6 +164,17 @@ public class EnlargerEditFragment extends Fragment {
         editLargerTime.addTextChangedListener(validator);
     }
 
+    private void enableTextHintAnimations(boolean enabled) {
+        editNameLayout.setHintAnimationEnabled(enabled);
+        editDescriptionLayout.setHintAnimationEnabled(enabled);
+        editLensFocalLengthLayout.setHintAnimationEnabled(enabled);
+        editHeightOffsetLayout.setHintAnimationEnabled(enabled);
+        editSmallerHeightLayout.setHintAnimationEnabled(enabled);
+        editSmallerTimeLayout.setHintAnimationEnabled(enabled);
+        editLargerHeightLayout.setHintAnimationEnabled(enabled);
+        editLargerTimeLayout.setHintAnimationEnabled(enabled);
+    }
+
     private void handleEditAccept() {
         Util.hideKeyboardFrom(getContext(), getView());
         if (validateInputFields(null)) {
@@ -166,7 +193,7 @@ public class EnlargerEditFragment extends Fragment {
         // Validate non-numeric fields that need values, which is just the name
         if (editable == null || editable == editName.getText()) {
             if (!hasText(editName)) {
-                editName.setError(getString(R.string.error_enlarger_missing_name));
+                editNameLayout.setError(getString(R.string.error_enlarger_missing_name));
                 result = false;
             }
         }
@@ -183,10 +210,10 @@ public class EnlargerEditFragment extends Fragment {
         // Validate the lens focal length
         if (editable == null || editable == editLensFocalLength.getText()) {
             if (!hasText(editLensFocalLength)) {
-                editLensFocalLength.setError(getString(R.string.error_enlarger_missing_lens_focal_length));
+                editLensFocalLengthLayout.setError(getString(R.string.error_enlarger_missing_lens_focal_length));
                 result = false;
             } else if (Double.isNaN(focalLength) || focalLength <= 0 || focalLength > 10000) {
-                editLensFocalLength.setError(getString(R.string.error_enlarger_lens_focal_length_invalid));
+                editLensFocalLengthLayout.setError(getString(R.string.error_enlarger_lens_focal_length_invalid));
                 result = false;
             }
         }
@@ -194,7 +221,7 @@ public class EnlargerEditFragment extends Fragment {
         // Validate the optional height offset
         if (editable == null || editable == editHeightOffset.getText()) {
             if (hasText(editHeightOffset) && (Double.isNaN(heightOffset) || heightOffset < -10000 || heightOffset > 10000)) {
-                editHeightOffset.setError(getString(R.string.error_enlarger_height_offset_invalid));
+                editHeightOffsetLayout.setError(getString(R.string.error_enlarger_height_offset_invalid));
                 result = false;
             }
         }
@@ -206,10 +233,10 @@ public class EnlargerEditFragment extends Fragment {
         // Validate the smaller test height
         if (editable == null || editable == editSmallerHeight.getText()) {
             if (!hasText(editSmallerHeight)) {
-                editSmallerHeight.setError(getString(R.string.error_enlarger_height_needed));
+                editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_needed));
                 result = false;
             } else if (Double.isNaN(smallerHeight) || (smallerHeight + heightOffset) <= 0 || (smallerHeight + heightOffset) > 10000) {
-                editSmallerHeight.setError(getString(R.string.error_enlarger_height_invalid));
+                editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_invalid));
                 result = false;
             }
         }
@@ -217,10 +244,10 @@ public class EnlargerEditFragment extends Fragment {
         // Validate the smaller test time
         if (editable == null || editable == editSmallerTime.getText()) {
             if (!hasText(editSmallerTime)) {
-                editSmallerTime.setError(getString(R.string.error_exposure_time_needed));
+                editSmallerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
                 result = false;
             } else if (Double.isNaN(smallerTime) || smallerTime <= 0 || smallerTime > 7200) {
-                editSmallerTime.setError(getString(R.string.error_exposure_time_invalid));
+                editSmallerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
                 result = false;
             }
         }
@@ -228,10 +255,10 @@ public class EnlargerEditFragment extends Fragment {
         // Validate the larger test height
         if (editable == null || editable == editLargerHeight.getText()) {
             if (editLargerHeight.getText().toString().length() == 0) {
-                editLargerHeight.setError(getString(R.string.error_enlarger_height_needed));
+                editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_needed));
                 result = false;
             } else if (Double.isNaN(largerHeight) || (largerHeight + heightOffset) <= 0 || (largerHeight + heightOffset) > 10000) {
-                editLargerHeight.setError(getString(R.string.error_enlarger_height_invalid));
+                editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_invalid));
                 result = false;
             }
         }
@@ -239,10 +266,10 @@ public class EnlargerEditFragment extends Fragment {
         // Validate the larger test time
         if (editable == null || editable == editLargerTime.getText()) {
             if (!hasText(editLargerTime)) {
-                editLargerTime.setError(getString(R.string.error_exposure_time_needed));
+                editLargerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
                 result = false;
             } else if (Double.isNaN(largerTime) || largerTime <= 0 || largerTime > 7200) {
-                editLargerTime.setError(getString(R.string.error_exposure_time_invalid));
+                editLargerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
                 result = false;
             }
         }
@@ -252,20 +279,20 @@ public class EnlargerEditFragment extends Fragment {
         // the sake of simplicity.
         if (result && editable == null) {
             if (largerTime <= smallerTime) {
-                editLargerTime.setError(getString(R.string.error_exposure_time_invalid));
+                editLargerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
                 result = false;
             }
 
             if (largerHeight <= smallerHeight) {
-                editLargerHeight.setError(getString(R.string.error_enlarger_height_invalid));
+                editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_invalid));
                 result = false;
             } else {
                 if (smallerHeight + heightOffset < PrintMath.computeMinimumHeight(focalLength)) {
-                    editSmallerHeight.setError(getString(R.string.error_enlarger_height_too_low_for_focal_length));
+                    editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_too_low_for_focal_length));
                     result = false;
                 }
                 if (largerHeight + heightOffset < PrintMath.computeMinimumHeight(focalLength)) {
-                    editLargerHeight.setError(getString(R.string.error_enlarger_height_too_low_for_focal_length));
+                    editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_too_low_for_focal_length));
                     result = false;
                 }
             }
