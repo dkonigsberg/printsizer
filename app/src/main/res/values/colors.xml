@@ -4,5 +4,11 @@
     <color name="primaryLightColor">#ff9e40</color>
     <color name="primaryDarkColor">#c43c00</color>
     <color name="primaryTextColor">#000000</color>
+    <color name="onPrimaryColor">#ffffff</color>
     <color name="secondaryTextColor">#ffffff</color>
+    <color name="surfaceColor">#ffffff</color>
+    <color name="onSurfaceColor">#212121</color>
+    <color name="errorColor">#F44336</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
 </resources>
