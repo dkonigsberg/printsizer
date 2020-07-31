@@ -10,6 +10,7 @@
 .DS_Store
 /build
 /app/release
+/app/schemas
 /captures
 .externalNativeBuild
 .cxx

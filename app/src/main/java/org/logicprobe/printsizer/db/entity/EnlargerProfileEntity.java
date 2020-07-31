@@ -21,6 +21,9 @@ public class EnlargerProfileEntity implements EnlargerProfile {
     @ColumnInfo(name = "description")
     private String description;
 
+    @ColumnInfo(name = "has_test_exposures")
+    private boolean hasTestExposures;
+
     @ColumnInfo(name = "height_measurement_offset")
     private double heightMeasurementOffset;
 
@@ -85,6 +88,15 @@ public class EnlargerProfileEntity implements EnlargerProfile {
     }
 
     @Override
+    public boolean hasTestExposures() {
+        return hasTestExposures;
+    }
+
+    public void setHasTestExposures(boolean hasTestExposures) {
+        this.hasTestExposures = hasTestExposures;
+    }
+
+    @Override
     public double getSmallerTestDistance() {
         return smallerTestDistance;
     }
@@ -128,6 +140,20 @@ public class EnlargerProfileEntity implements EnlargerProfile {
                                  String name,
                                  String description,
                                  double heightMeasurementOffset,
+                                 double lensFocalLength) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.heightMeasurementOffset = heightMeasurementOffset;
+        this.lensFocalLength = lensFocalLength;
+        this.hasTestExposures = false;
+    }
+
+    @Ignore
+    public EnlargerProfileEntity(int id,
+                                 String name,
+                                 String description,
+                                 double heightMeasurementOffset,
                                  double lensFocalLength,
                                  double smallerTestDistance,
                                  double smallerTestTime,
@@ -138,6 +164,7 @@ public class EnlargerProfileEntity implements EnlargerProfile {
         this.description = description;
         this.heightMeasurementOffset = heightMeasurementOffset;
         this.lensFocalLength = lensFocalLength;
+        this.hasTestExposures = true;
         this.smallerTestDistance = smallerTestDistance;
         this.smallerTestTime = smallerTestTime;
         this.largerTestDistance = largerTestDistance;
@@ -150,9 +177,12 @@ public class EnlargerProfileEntity implements EnlargerProfile {
         this.description = enlargerProfile.getDescription();
         this.heightMeasurementOffset = enlargerProfile.getHeightMeasurementOffset();
         this.lensFocalLength = enlargerProfile.getLensFocalLength();
-        this.smallerTestDistance = enlargerProfile.getSmallerTestDistance();
-        this.smallerTestTime = enlargerProfile.getSmallerTestTime();
-        this.largerTestDistance = enlargerProfile.getLargerTestDistance();
-        this.largerTestTime = enlargerProfile.getLargerTestTime();
+        this.hasTestExposures = enlargerProfile.hasTestExposures();
+        if (enlargerProfile.hasTestExposures()) {
+            this.smallerTestDistance = enlargerProfile.getSmallerTestDistance();
+            this.smallerTestTime = enlargerProfile.getSmallerTestTime();
+            this.largerTestDistance = enlargerProfile.getLargerTestDistance();
+            this.largerTestTime = enlargerProfile.getLargerTestTime();
+        }
     }
 }

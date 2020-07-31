@@ -9,13 +9,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.logicprobe.printsizer.AppExecutors;
 import org.logicprobe.printsizer.db.dao.EnlargerProfileDao;
 import org.logicprobe.printsizer.db.entity.EnlargerProfileEntity;
 
-@Database(entities = {EnlargerProfileEntity.class}, version = 1)
+@Database(entities = {EnlargerProfileEntity.class}, version = 2)
 public abstract class AppDatabase  extends RoomDatabase {
     private static AppDatabase instance;
 
@@ -54,6 +55,7 @@ public abstract class AppDatabase  extends RoomDatabase {
                         });
                     }
                 })
+                .addMigrations(MIGRATION_1_2)
                 .build();
     }
 
@@ -70,4 +72,11 @@ public abstract class AppDatabase  extends RoomDatabase {
     public LiveData<Boolean> getDatabaseCreated() {
         return isDatabaseCreated;
     }
+
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("ALTER TABLE enlarger_profiles ADD COLUMN has_test_exposures INTEGER NOT NULL DEFAULT 1");
+        }
+    };
 }
