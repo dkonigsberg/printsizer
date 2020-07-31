@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".ui.enlargers.EnlargerEditFragment">
 
     <ScrollView
@@ -20,7 +21,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="@dimen/activity_vertical_margin"
-            android:paddingBottom="256dp">
+            android:paddingBottom="256dp"
+            android:animateLayoutChanges="true">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/editNameLayout"
@@ -96,110 +98,140 @@
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginBottom="@dimen/form_vertical_margin"
                 android:background="?android:attr/listDivider" />
 
-            <LinearLayout
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonAddTestExposures"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/form_vertical_margin"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:text="Add Test Exposures"
+                app:icon="@drawable/ic_add"
+                android:visibility="visible" />
 
-                <TextView
-                    android:id="@+id/textViewSmallerTest"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutTestExposures"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="@dimen/form_vertical_margin"
-                    android:text="@string/label_smaller_test_exposure"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                    android:textColor="@color/primaryColor" />
+                    android:layout_height="match_parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="@dimen/form_vertical_margin"
+                    android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editSmallerHeightLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_enlarger_height"
-                    app:startIconDrawable="@drawable/ic_height"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:suffixText="@string/unit_suffix_mm">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editSmallerHeight"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textViewSmallerTest"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="12"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                        android:layout_marginBottom="@dimen/form_vertical_margin"
+                        android:text="@string/label_smaller_test_exposure"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                        android:textColor="@color/primaryColor" />
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editSmallerTimeLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_exposure_time"
-                    app:startIconDrawable="@drawable/ic_shutter_speed"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:suffixText="@string/unit_suffix_seconds">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editSmallerTime"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editSmallerHeightLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="12"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                        android:hint="@string/label_enlarger_height"
+                        app:startIconDrawable="@drawable/ic_height"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:suffixText="@string/unit_suffix_mm">
 
-                <TextView
-                    android:id="@+id/textViewLargerTest"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="@dimen/form_vertical_margin"
-                    android:text="@string/label_larger_test_exposure"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                    android:textColor="@color/primaryColor"/>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editSmallerHeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="12"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editLargerHeightLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_enlarger_height"
-                    app:startIconDrawable="@drawable/ic_height"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:suffixText="@string/unit_suffix_mm">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editLargerHeight"
-                        android:layout_width="wrap_content"
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editSmallerTimeLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="12"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                        android:hint="@string/label_exposure_time"
+                        app:startIconDrawable="@drawable/ic_shutter_speed"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:suffixText="@string/unit_suffix_seconds">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editLargerTimeLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_exposure_time"
-                    app:startIconDrawable="@drawable/ic_shutter_speed"
-                    app:errorEnabled="true"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    app:suffixText="@string/unit_suffix_seconds">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editSmallerTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="12"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editLargerTime"
-                        android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/textViewLargerTest"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:ems="12"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-            </LinearLayout>
+                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                        android:layout_marginBottom="@dimen/form_vertical_margin"
+                        android:text="@string/label_larger_test_exposure"
+                        android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
+                        android:textColor="@color/primaryColor"/>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editLargerHeightLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                        android:hint="@string/label_enlarger_height"
+                        app:startIconDrawable="@drawable/ic_height"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:suffixText="@string/unit_suffix_mm">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editLargerHeight"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="12"
+                            android:inputType="number" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editLargerTimeLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                        android:hint="@string/label_exposure_time"
+                        app:startIconDrawable="@drawable/ic_shutter_speed"
+                        app:errorEnabled="true"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:suffixText="@string/unit_suffix_seconds">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editLargerTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:ems="12"
+                            android:inputType="numberDecimal" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/buttonRemoveTestExposures"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:icon="@drawable/ic_close"
+                    style="@style/Widget.App.Button.TextButton.IconOnly"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>
 

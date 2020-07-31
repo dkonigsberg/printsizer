@@ -9,11 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -54,7 +55,12 @@ public class EnlargerEditFragment extends Fragment {
     private TextInputLayout editLargerHeightLayout;
     private TextInputLayout editLargerTimeLayout;
 
+    private Button buttonAddTestExposures;
+    private Button buttonRemoveTestExposures;
+    private ConstraintLayout layoutTestExposures;
+
     private boolean height_as_cm;
+    private boolean hasTestExposures;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +83,10 @@ public class EnlargerEditFragment extends Fragment {
         editSmallerTimeLayout = root.findViewById(R.id.editSmallerTimeLayout);
         editLargerHeightLayout = root.findViewById(R.id.editLargerHeightLayout);
         editLargerTimeLayout = root.findViewById(R.id.editLargerTimeLayout);
+
+        buttonAddTestExposures = root.findViewById(R.id.buttonAddTestExposures);
+        buttonRemoveTestExposures = root.findViewById(R.id.buttonRemoveTestExposures);
+        layoutTestExposures = root.findViewById(R.id.layoutTestExposures);
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +135,7 @@ public class EnlargerEditFragment extends Fragment {
         if (arguments != null) {
             int profileId = arguments.getInt("id");
             if (profileId > 0) {
+                addTestExposureView();
                 App app = (App)requireActivity().getApplication();
                 LiveData<EnlargerProfileEntity> liveEntity = app.getRepository().loadEnlargerProfile(profileId);
 
@@ -162,6 +173,19 @@ public class EnlargerEditFragment extends Fragment {
         editSmallerTime.addTextChangedListener(validator);
         editLargerHeight.addTextChangedListener(validator);
         editLargerTime.addTextChangedListener(validator);
+
+        buttonAddTestExposures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addTestExposureView();
+            }
+        });
+        buttonRemoveTestExposures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeTestExposureView();
+            }
+        });
     }
 
     private void enableTextHintAnimations(boolean enabled) {
@@ -173,6 +197,24 @@ public class EnlargerEditFragment extends Fragment {
         editSmallerTimeLayout.setHintAnimationEnabled(enabled);
         editLargerHeightLayout.setHintAnimationEnabled(enabled);
         editLargerTimeLayout.setHintAnimationEnabled(enabled);
+    }
+
+    private void addTestExposureView() {
+        if (hasTestExposures) {
+            return;
+        }
+        buttonAddTestExposures.setVisibility(View.GONE);
+        layoutTestExposures.setVisibility(View.VISIBLE);
+        hasTestExposures = true;
+    }
+
+    private void removeTestExposureView() {
+        if (!hasTestExposures) {
+            return;
+        }
+        layoutTestExposures.setVisibility(View.GONE);
+        buttonAddTestExposures.setVisibility(View.VISIBLE);
+        hasTestExposures = false;
     }
 
     private void clearInputErrors(Editable editable) {
