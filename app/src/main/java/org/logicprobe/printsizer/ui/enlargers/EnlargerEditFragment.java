@@ -1,5 +1,6 @@
 package org.logicprobe.printsizer.ui.enlargers;
 
+import android.animation.LayoutTransition;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -37,6 +38,9 @@ import java.text.NumberFormat;
 public class EnlargerEditFragment extends Fragment {
     private static final String TAG = EnlargerEditFragment.class.getSimpleName();
     private int profileId = 0;
+
+    private ViewGroup mainContentLayout;
+
     private EditText editName;
     private EditText editDescription;
     private EditText editLensFocalLength;
@@ -65,6 +69,8 @@ public class EnlargerEditFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_enlarger_edit, container, false);
+
+        mainContentLayout = root.findViewById(R.id.mainContentLayout);
 
         editName = root.findViewById(R.id.editName);
         editDescription = root.findViewById(R.id.editDescription);
@@ -135,7 +141,8 @@ public class EnlargerEditFragment extends Fragment {
         if (arguments != null) {
             int profileId = arguments.getInt("id");
             if (profileId > 0) {
-                addTestExposureView();
+                buttonAddTestExposures.setVisibility(View.GONE);
+                layoutTestExposures.setVisibility(View.GONE);
                 App app = (App)requireActivity().getApplication();
                 LiveData<EnlargerProfileEntity> liveEntity = app.getRepository().loadEnlargerProfile(profileId);
 
@@ -143,7 +150,9 @@ public class EnlargerEditFragment extends Fragment {
                     @Override
                     public void onChanged(EnlargerProfileEntity enlargerProfileEntity) {
                         enableTextHintAnimations(false);
+                        mainContentLayout.setLayoutTransition(null);
                         populateFromEnlargerProfile(enlargerProfileEntity);
+                        mainContentLayout.setLayoutTransition(new LayoutTransition());
                         enableTextHintAnimations(true);
                     }
                 });
@@ -301,54 +310,56 @@ public class EnlargerEditFragment extends Fragment {
             heightOffset = 0.0d;
         }
 
-        // Validate the smaller test height
-        if (editable == null || editable == editSmallerHeight.getText()) {
-            if (!hasText(editSmallerHeight)) {
-                editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_needed));
-                result = false;
-            } else if (Double.isNaN(smallerHeight) || (smallerHeight + heightOffset) <= 0 || (smallerHeight + heightOffset) > 10000) {
-                editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_invalid));
-                result = false;
+        if (hasTestExposures) {
+            // Validate the smaller test height
+            if (editable == null || editable == editSmallerHeight.getText()) {
+                if (!hasText(editSmallerHeight)) {
+                    editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_needed));
+                    result = false;
+                } else if (Double.isNaN(smallerHeight) || (smallerHeight + heightOffset) <= 0 || (smallerHeight + heightOffset) > 10000) {
+                    editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_invalid));
+                    result = false;
+                }
             }
-        }
 
-        // Validate the smaller test time
-        if (editable == null || editable == editSmallerTime.getText()) {
-            if (!hasText(editSmallerTime)) {
-                editSmallerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
-                result = false;
-            } else if (Double.isNaN(smallerTime) || smallerTime <= 0 || smallerTime > 7200) {
-                editSmallerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
-                result = false;
+            // Validate the smaller test time
+            if (editable == null || editable == editSmallerTime.getText()) {
+                if (!hasText(editSmallerTime)) {
+                    editSmallerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
+                    result = false;
+                } else if (Double.isNaN(smallerTime) || smallerTime <= 0 || smallerTime > 7200) {
+                    editSmallerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
+                    result = false;
+                }
             }
-        }
 
-        // Validate the larger test height
-        if (editable == null || editable == editLargerHeight.getText()) {
-            if (editLargerHeight.getText().toString().length() == 0) {
-                editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_needed));
-                result = false;
-            } else if (Double.isNaN(largerHeight) || (largerHeight + heightOffset) <= 0 || (largerHeight + heightOffset) > 10000) {
-                editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_invalid));
-                result = false;
+            // Validate the larger test height
+            if (editable == null || editable == editLargerHeight.getText()) {
+                if (editLargerHeight.getText().toString().length() == 0) {
+                    editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_needed));
+                    result = false;
+                } else if (Double.isNaN(largerHeight) || (largerHeight + heightOffset) <= 0 || (largerHeight + heightOffset) > 10000) {
+                    editLargerHeightLayout.setError(getString(R.string.error_enlarger_height_invalid));
+                    result = false;
+                }
             }
-        }
 
-        // Validate the larger test time
-        if (editable == null || editable == editLargerTime.getText()) {
-            if (!hasText(editLargerTime)) {
-                editLargerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
-                result = false;
-            } else if (Double.isNaN(largerTime) || largerTime <= 0 || largerTime > 7200) {
-                editLargerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
-                result = false;
+            // Validate the larger test time
+            if (editable == null || editable == editLargerTime.getText()) {
+                if (!hasText(editLargerTime)) {
+                    editLargerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
+                    result = false;
+                } else if (Double.isNaN(largerTime) || largerTime <= 0 || largerTime > 7200) {
+                    editLargerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
+                    result = false;
+                }
             }
         }
 
         // If all the basic validation checks passed, then do some of the more complex cross-field
         // validation checks. Keeping these specific to the whole-screen validation case for
         // the sake of simplicity.
-        if (result && editable == null) {
+        if (result && editable == null && hasTestExposures) {
             if (largerTime <= smallerTime) {
                 editLargerTimeLayout.setError(getString(R.string.error_exposure_time_invalid));
                 result = false;
@@ -433,12 +444,23 @@ public class EnlargerEditFragment extends Fragment {
         if (isDoubleNonZero(enlargerProfile.getHeightMeasurementOffset())) {
             editHeightOffset.setText(convertHeightDoubleToText(enlargerProfile.getHeightMeasurementOffset()));
         }
-        
-        editSmallerHeight.setText(convertHeightDoubleToText(enlargerProfile.getSmallerTestDistance()));
-        editSmallerTime.setText(convertDoubleToText(enlargerProfile.getSmallerTestTime()));
 
-        editLargerHeight.setText(convertHeightDoubleToText(enlargerProfile.getLargerTestDistance()));
-        editLargerTime.setText(convertDoubleToText(enlargerProfile.getLargerTestTime()));
+        if (enlargerProfile.hasTestExposures()) {
+            hasTestExposures = true;
+
+            editSmallerHeight.setText(convertHeightDoubleToText(enlargerProfile.getSmallerTestDistance()));
+            editSmallerTime.setText(convertDoubleToText(enlargerProfile.getSmallerTestTime()));
+
+            editLargerHeight.setText(convertHeightDoubleToText(enlargerProfile.getLargerTestDistance()));
+            editLargerTime.setText(convertDoubleToText(enlargerProfile.getLargerTestTime()));
+
+            buttonAddTestExposures.setVisibility(View.GONE);
+            layoutTestExposures.setVisibility(View.VISIBLE);
+        } else {
+            hasTestExposures = false;
+            buttonAddTestExposures.setVisibility(View.VISIBLE);
+            layoutTestExposures.setVisibility(View.GONE);
+        }
     }
 
     private EnlargerProfileEntity buildEnlargerProfile() {
@@ -451,11 +473,17 @@ public class EnlargerEditFragment extends Fragment {
         enlargerProfile.setLensFocalLength(safeGetEditTextDouble(editLensFocalLength, 0, 10000));
         enlargerProfile.setHeightMeasurementOffset(safeGetEditTextHeightDouble(editHeightOffset, -10000, 10000));
 
-        enlargerProfile.setSmallerTestDistance(safeGetEditTextHeightDouble(editSmallerHeight, 0, 10000));
-        enlargerProfile.setSmallerTestTime(safeGetEditTextDouble(editSmallerTime, 0, 7200));
+        if (hasTestExposures) {
+            enlargerProfile.setHasTestExposures(true);
 
-        enlargerProfile.setLargerTestDistance(safeGetEditTextHeightDouble(editLargerHeight, 0, 10000));
-        enlargerProfile.setLargerTestTime(safeGetEditTextDouble(editLargerTime, 0, 7200));
+            enlargerProfile.setSmallerTestDistance(safeGetEditTextHeightDouble(editSmallerHeight, 0, 10000));
+            enlargerProfile.setSmallerTestTime(safeGetEditTextDouble(editSmallerTime, 0, 7200));
+
+            enlargerProfile.setLargerTestDistance(safeGetEditTextHeightDouble(editLargerHeight, 0, 10000));
+            enlargerProfile.setLargerTestTime(safeGetEditTextDouble(editLargerTime, 0, 7200));
+        } else {
+            enlargerProfile.setHasTestExposures(false);
+        }
 
         return enlargerProfile;
     }
