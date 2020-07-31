@@ -14,11 +14,16 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="?android:attr/listDivider" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/enlarger_profile_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/activity_vertical_margin"
             android:clipToPadding="false"
             app:layoutManager="LinearLayoutManager"/>
 

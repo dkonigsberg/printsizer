@@ -30,6 +30,7 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.logicprobe.printsizer.R;
@@ -49,6 +50,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private EditText editSmallerHeight;
     private EditText editSmallerTime;
     private EditText editLargerHeight;
+    private Chip enlargerProfileTypeChip;
     private ImageView enlargerProfileErrorView;
 
     private TextInputLayout editSmallerHeightLayout;
@@ -67,6 +69,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         binding.setHomeViewModel(homeViewModel);
 
         View enlargerView = root.findViewById(R.id.layoutEnlarger);
+        enlargerProfileTypeChip = enlargerView.findViewById(R.id.enlargerProfileTypeChip);
         enlargerProfileErrorView = enlargerView.findViewById(R.id.enlargerProfileErrorView);
         enlargerView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,13 +163,24 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             }
         });
 
+        homeViewModel.getEnlargerProfile().observe(getViewLifecycleOwner(), new Observer<EnlargerProfile>() {
+            @Override
+            public void onChanged(EnlargerProfile enlargerProfile) {
+                enlargerProfileTypeChip.setText(enlargerProfile.hasTestExposures()
+                        ? R.string.label_enlarger_profile_calibrated
+                        : R.string.label_enlarger_profile_uncalibrated);
+            }
+        });
+
         homeViewModel.getEnlargerProfileValid().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
             @Override
             public void onChanged(Boolean valid) {
                 if (valid) {
                     enlargerProfileErrorView.setVisibility(View.GONE);
+                    enlargerProfileTypeChip.setVisibility(View.VISIBLE);
                 } else {
                     enlargerProfileErrorView.setVisibility(View.VISIBLE);
+                    enlargerProfileTypeChip.setVisibility(View.GONE);
                 }
             }
         });

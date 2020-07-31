@@ -53,4 +53,6 @@
     <string name="label_version_prefix">Version %1$s</string>
     <string name="label_enlarger_height_units">Enlarger height units</string>
     <string name="action_add_test_exposures">Add Test Exposures</string>
+    <string name="label_enlarger_profile_calibrated">Calibrated</string>
+    <string name="label_enlarger_profile_uncalibrated">Uncalibrated</string>
 </resources>
