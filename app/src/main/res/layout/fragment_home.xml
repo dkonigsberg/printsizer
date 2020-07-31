@@ -199,6 +199,16 @@
                             android:text="@{homeViewModel.enlargerProfile.description}"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
                     </RelativeLayout>
+
+                    <ImageView
+                        android:id="@+id/enlargerProfileErrorView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:src="@android:drawable/stat_notify_error"
+                        android:tint="@color/errorColor"
+                        android:visibility="gone"/>
+
                 </FrameLayout>
 
                 <View

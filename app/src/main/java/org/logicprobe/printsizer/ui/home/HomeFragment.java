@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,7 +49,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private EditText editSmallerHeight;
     private EditText editSmallerTime;
     private EditText editLargerHeight;
-    private TextView enlargerName;
+    private ImageView enlargerProfileErrorView;
+
     private TextInputLayout editSmallerHeightLayout;
     private TextInputLayout editLargerHeightLayout;
 
@@ -65,7 +67,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         binding.setHomeViewModel(homeViewModel);
 
         View enlargerView = root.findViewById(R.id.layoutEnlarger);
-        enlargerName = enlargerView.findViewById(R.id.name);
+        enlargerProfileErrorView = enlargerView.findViewById(R.id.enlargerProfileErrorView);
         enlargerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -162,9 +164,9 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             @Override
             public void onChanged(Boolean valid) {
                 if (valid) {
-                    enlargerName.setError(null);
+                    enlargerProfileErrorView.setVisibility(View.GONE);
                 } else {
-                    enlargerName.setError(getString(R.string.error_enlarger_profile_invalid));
+                    enlargerProfileErrorView.setVisibility(View.VISIBLE);
                 }
             }
         });
