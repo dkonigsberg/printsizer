@@ -10,5 +10,6 @@
         <item name="colorError">@color/errorColor</item>
         <item name="colorSurface">@color/surfaceColor</item>
         <item name="colorOnSurface">@color/onSurfaceColor</item>
+        <item name="android:colorBackground">@color/backgroundColor</item>
     </style>
 </resources>
