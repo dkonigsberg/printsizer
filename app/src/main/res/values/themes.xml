@@ -11,5 +11,7 @@
         <item name="colorSurface">@color/surfaceColor</item>
         <item name="colorOnSurface">@color/onSurfaceColor</item>
         <item name="android:colorBackground">@color/backgroundColor</item>
+        <item name="windowActionModeOverlay">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
     </style>
 </resources>
