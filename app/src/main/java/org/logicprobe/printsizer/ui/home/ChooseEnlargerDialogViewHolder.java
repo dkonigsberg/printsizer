@@ -4,13 +4,13 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.logicprobe.printsizer.databinding.DialogChooseEnlargerProfileItemBinding;
+import org.logicprobe.printsizer.databinding.EnlargerProfileItemBinding;
 import org.logicprobe.printsizer.model.EnlargerProfile;
 
 public class ChooseEnlargerDialogViewHolder extends RecyclerView.ViewHolder {
-    private final DialogChooseEnlargerProfileItemBinding binding;
+    private final EnlargerProfileItemBinding binding;
 
-    public ChooseEnlargerDialogViewHolder(DialogChooseEnlargerProfileItemBinding binding) {
+    public ChooseEnlargerDialogViewHolder(EnlargerProfileItemBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
     }

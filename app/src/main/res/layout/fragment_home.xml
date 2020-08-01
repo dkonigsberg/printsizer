@@ -9,6 +9,9 @@
         <variable
             name="homeViewModel"
             type="org.logicprobe.printsizer.ui.home.HomeViewModel" />
+        <variable
+            name="enlargerProfileClickCallback"
+            type="org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -142,20 +145,19 @@
                     android:id="@+id/layoutEnlarger"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:clickable="true"
                     android:clipToPadding="false"
                     android:clipChildren="false"
-                    android:foreground="?android:attr/selectableItemBackground"
-
-                    android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                    android:paddingVertical="@dimen/activity_vertical_margin">
+                    android:measureAllChildren="true">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
-                        android:visibility="@{homeViewModel.enlargerProfile.id == 0 ? View.VISIBLE : View.INVISIBLE}">
+                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:onClick="@{() ->  enlargerProfileClickCallback.onClick(homeViewModel.enlargerProfile)}"
+                        android:visibility="@{homeViewModel.enlargerProfile.id == 0 ? View.VISIBLE : View.GONE}">
 
                         <ImageView
                             android:layout_width="wrap_content"
@@ -172,71 +174,12 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
                     </LinearLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clipChildren="false"
-                        android:clipToPadding="false"
-                        android:visibility="@{homeViewModel.enlargerProfile.id > 0 ? View.VISIBLE : View.INVISIBLE}">
+                    <include layout="@layout/enlarger_profile_item"
+                        app:enlargerProfile="@{homeViewModel.enlargerProfile}"
+                        app:profileError="@{!homeViewModel.enlargerProfileValid}"
+                        app:callback="@{enlargerProfileClickCallback}"
+                        android:visibility="@{homeViewModel.enlargerProfile.id > 0 ? View.VISIBLE : View.GONE}" />
 
-                        <TextView
-                            android:id="@+id/name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@{homeViewModel.enlargerProfile.name}"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-                        <TextView
-                            android:id="@+id/focal_length"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_marginEnd="5dp"
-                            android:text='@{Converter.focalLengthToString(homeViewModel.enlargerProfile.lensFocalLength) + @string/unit_suffix_mm}'
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                        <TextView
-                            android:id="@+id/description"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/name"
-                            android:layout_alignParentStart="true"
-                            android:layout_toStartOf="@id/indicatorLayout"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@{homeViewModel.enlargerProfile.description}"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-
-                        <LinearLayout
-                            android:id="@+id/indicatorLayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentBottom="true"
-                            android:clipToPadding="false"
-                            android:clipChildren="false"
-                            android:orientation="horizontal">
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/enlargerProfileTypeChip"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                app:ensureMinTouchTargetSize="false"
-                                android:clickable="false"
-                                android:checkable="false"
-                                android:longClickable="false"
-                                android:translationY="2dp"
-                                app:chipMinHeight="24dp"/>
-
-                            <ImageView
-                                android:id="@+id/enlargerProfileErrorView"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:src="@android:drawable/stat_notify_error"
-                                android:tint="@color/errorColor"
-                                android:visibility="gone"/>
-                        </LinearLayout>
-                    </RelativeLayout>
                 </FrameLayout>
 
                 <View

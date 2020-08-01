@@ -12,7 +12,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.logicprobe.printsizer.R;
-import org.logicprobe.printsizer.databinding.DialogChooseEnlargerProfileItemBinding;
+import org.logicprobe.printsizer.databinding.EnlargerProfileItemBinding;
+import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback;
 
 import java.util.List;
 
@@ -71,11 +73,16 @@ public class ChooseEnlargerDialogAdapter extends RecyclerView.Adapter<ChooseEnla
     @Override
     public ChooseEnlargerDialogViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == ITEM_PROFILE) {
-            DialogChooseEnlargerProfileItemBinding binding = DataBindingUtil.inflate(
+            EnlargerProfileItemBinding binding = DataBindingUtil.inflate(
                     LayoutInflater.from(parent.getContext()),
-                    R.layout.dialog_choose_enlarger_profile_item,
+                    R.layout.enlarger_profile_item,
                     parent, false);
-            binding.setCallback(clickCallback);
+            binding.setCallback(new EnlargerProfileClickCallback() {
+                @Override
+                public void onClick(EnlargerProfile enlargerProfile) {
+                    clickCallback.onClickProfile(enlargerProfile);
+                }
+            });
             return new ChooseEnlargerDialogViewHolder(binding);
         } else if (viewType == ITEM_ACTION_ADD) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());

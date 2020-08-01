@@ -37,6 +37,7 @@ import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.databinding.DialogChooseEnlargerBinding;
 import org.logicprobe.printsizer.databinding.FragmentHomeBinding;
 import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -50,8 +51,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private EditText editSmallerHeight;
     private EditText editSmallerTime;
     private EditText editLargerHeight;
-    private Chip enlargerProfileTypeChip;
-    private ImageView enlargerProfileErrorView;
 
     private TextInputLayout editSmallerHeightLayout;
     private TextInputLayout editLargerHeightLayout;
@@ -68,12 +67,9 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setHomeViewModel(homeViewModel);
 
-        View enlargerView = root.findViewById(R.id.layoutEnlarger);
-        enlargerProfileTypeChip = enlargerView.findViewById(R.id.enlargerProfileTypeChip);
-        enlargerProfileErrorView = enlargerView.findViewById(R.id.enlargerProfileErrorView);
-        enlargerView.setOnClickListener(new View.OnClickListener() {
+        binding.setEnlargerProfileClickCallback(new EnlargerProfileClickCallback() {
             @Override
-            public void onClick(View view) {
+            public void onClick(EnlargerProfile enlargerProfile) {
                 enlargerViewClicked();
             }
         });
@@ -159,28 +155,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                     editLargerHeightLayout.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
                 } else {
                     editLargerHeightLayout.setError(null);
-                }
-            }
-        });
-
-        homeViewModel.getEnlargerProfile().observe(getViewLifecycleOwner(), new Observer<EnlargerProfile>() {
-            @Override
-            public void onChanged(EnlargerProfile enlargerProfile) {
-                enlargerProfileTypeChip.setText(enlargerProfile.hasTestExposures()
-                        ? R.string.label_enlarger_profile_calibrated
-                        : R.string.label_enlarger_profile_uncalibrated);
-            }
-        });
-
-        homeViewModel.getEnlargerProfileValid().observe(getViewLifecycleOwner(), new Observer<Boolean>() {
-            @Override
-            public void onChanged(Boolean valid) {
-                if (valid) {
-                    enlargerProfileErrorView.setVisibility(View.GONE);
-                    enlargerProfileTypeChip.setVisibility(View.VISIBLE);
-                } else {
-                    enlargerProfileErrorView.setVisibility(View.VISIBLE);
-                    enlargerProfileTypeChip.setVisibility(View.GONE);
                 }
             }
         });

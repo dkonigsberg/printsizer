@@ -5,35 +5,39 @@
 
     <data>
         <import type="org.logicprobe.printsizer.ui.Converter" />
+        <import type="android.view.View" />
         <variable
             name="enlargerProfile"
             type="org.logicprobe.printsizer.model.EnlargerProfile" />
+        <variable
+            name="profileError"
+            type="Boolean" />
         <variable
             name="callback"
             type="org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback" />
     </data>
 
     <LinearLayout
-        android:id="@+id/profile_card"
+        android:id="@+id/enlargerProfileItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingHorizontal="8dp"
         android:paddingVertical="8dp"
-        android:onClick="@{() ->  callback.onClick(enlargerProfile)}"
         android:foreground="?android:attr/selectableItemBackground"
         android:background="@drawable/background_selectable_item"
-        app:cardUseCompatPadding="true"
+        android:clipChildren="false"
         android:clipToPadding="false"
-        android:clipChildren="false">
+        android:clickable="true"
+        android:onClick="@{() ->  callback.onClick(enlargerProfile)}">
 
         <RelativeLayout
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false"
-            android:clipChildren="false">
+            android:clipChildren="false"
+            android:clipToPadding="false">
 
             <TextView
                 android:id="@+id/name"
@@ -61,25 +65,44 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/name"
-                android:layout_toStartOf="@+id/typeChip"
+                android:layout_toStartOf="@id/indicatorLayout"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{enlargerProfile.description}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/typeChip"
+            <LinearLayout
+                android:id="@+id/indicatorLayout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                app:ensureMinTouchTargetSize="false"
-                android:clickable="false"
-                android:checkable="false"
-                android:longClickable="false"
-                android:translationY="2dp"
-                app:chipMinHeight="24dp"
-                android:text="@{enlargerProfile.hasTestExposures ? @string/label_enlarger_profile_calibrated : @string/label_enlarger_profile_uncalibrated}"/>
+                android:clipToPadding="false"
+                android:clipChildren="false"
+                android:orientation="horizontal">
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/typeChip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentBottom="true"
+                    app:ensureMinTouchTargetSize="false"
+                    android:clickable="false"
+                    android:checkable="false"
+                    android:longClickable="false"
+                    android:translationY="2dp"
+                    app:chipMinHeight="24dp"
+                    android:text="@{enlargerProfile.hasTestExposures ? @string/label_enlarger_profile_calibrated : @string/label_enlarger_profile_uncalibrated}"
+                    android:visibility="@{profileError ? View.GONE : View.VISIBLE}" />
+
+                <ImageView
+                    android:id="@+id/errorView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/stat_notify_error"
+                    android:tint="@color/errorColor"
+                    android:visibility="@{profileError ? View.VISIBLE : View.GONE}" />
+            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 </layout>
