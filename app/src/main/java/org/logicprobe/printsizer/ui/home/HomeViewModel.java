@@ -162,17 +162,25 @@ public class HomeViewModel extends AndroidViewModel {
             return false;
         }
         final EnlargerProfile profile = enlargerProfile.getValue();
-        final double offset = validEnlargerHeightOffset();
-        return profile.getId() > 0
-                && profile.getLensFocalLength() > 0
-                && (profile.getSmallerTestDistance() + offset) > 0
-                && profile.getSmallerTestTime() > 0
-                && (profile.getLargerTestDistance() + offset) > 0
-                && profile.getLargerTestTime() > 0
-                && profile.getSmallerTestDistance() < profile.getLargerTestDistance()
-                && profile.getSmallerTestTime() < profile.getLargerTestTime()
-                && (profile.getSmallerTestDistance() + offset) >= PrintMath.computeMinimumHeight(profile.getLensFocalLength())
-                && (profile.getLargerTestDistance() + offset) >= PrintMath.computeMinimumHeight(profile.getLensFocalLength());
+
+        if (profile.getId() <= 0 || profile.getLensFocalLength() <= 0) {
+            return false;
+        }
+
+        if (profile.hasTestExposures()) {
+            final double offset = validEnlargerHeightOffset();
+
+            return (profile.getSmallerTestDistance() + offset) > 0
+                    && profile.getSmallerTestTime() > 0
+                    && (profile.getLargerTestDistance() + offset) > 0
+                    && profile.getLargerTestTime() > 0
+                    && profile.getSmallerTestDistance() < profile.getLargerTestDistance()
+                    && profile.getSmallerTestTime() < profile.getLargerTestTime()
+                    && (profile.getSmallerTestDistance() + offset) >= PrintMath.computeMinimumHeight(profile.getLensFocalLength())
+                    && (profile.getLargerTestDistance() + offset) >= PrintMath.computeMinimumHeight(profile.getLensFocalLength());
+        } else {
+            return true;
+        }
     }
 
     private void validateSmallerPrintHeight() {
@@ -249,7 +257,7 @@ public class HomeViewModel extends AndroidViewModel {
         final double largerHeightValue = getLargerPrintHeight().getValue() + offset;
 
 
-        Enlarger enlarger = new Enlarger(enlargerProfile.getValue());
+        Enlarger enlarger = Enlarger.createFromProfile(enlargerProfile.getValue());
         PrintScaler printScaler = new PrintScaler(enlarger);
         double largerExposureValue = printScaler.scalePrintTime(smallerHeightValue, smallerExposureValue, largerHeightValue);
 
