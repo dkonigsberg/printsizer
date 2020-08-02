@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "79e1da7411928515ebf64013f054268e",
+    "entities": [
+      {
+        "tableName": "enlarger_profiles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `height_measurement_offset` REAL NOT NULL, `lens_focal_length` REAL NOT NULL, `smaller_test_distance` REAL NOT NULL, `smaller_test_time` REAL NOT NULL, `larger_test_distance` REAL NOT NULL, `larger_test_time` REAL NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "heightMeasurementOffset",
+            "columnName": "height_measurement_offset",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lensFocalLength",
+            "columnName": "lens_focal_length",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "smallerTestDistance",
+            "columnName": "smaller_test_distance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "smallerTestTime",
+            "columnName": "smaller_test_time",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "largerTestDistance",
+            "columnName": "larger_test_distance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "largerTestTime",
+            "columnName": "larger_test_time",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '79e1da7411928515ebf64013f054268e')"
+    ]
+  }
+}
