@@ -57,6 +57,7 @@ public class EnlargersFragment extends Fragment {
 
         enlargerProfileAdapter = new EnlargerProfileAdapter(clickCallback);
         binding.enlargerProfileList.setAdapter(enlargerProfileAdapter);
+        binding.setIsLoaded(false);
 
         FloatingActionButton fab = root.findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -92,10 +93,10 @@ public class EnlargersFragment extends Fragment {
                     @Override
                     public void onChanged(List<EnlargerProfileEntity> enlargerProfileEntities) {
                         if (enlargerProfileEntities != null) {
-                            // isLoading = false
+                            binding.setIsLoaded(true);
                             enlargerProfileAdapter.setEnlargerProfileList(enlargerProfileEntities);
                         } else {
-                            // isLoading = true
+                            binding.setIsLoaded(false);
                         }
                         binding.executePendingBindings();
                     }

@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+        <import type="android.view.View" />
+        <variable name="isLoaded" type="Boolean" />
         <variable
             name="enlargersViewModel"
             type="org.logicprobe.printsizer.ui.enlargers.EnlargersViewModel" />
@@ -15,6 +17,37 @@
         tools:context=".ui.enlargers.EnlargersFragment">
 
         <LinearLayout
+            android:id="@+id/placeholderLayout"
+            android:visibility="@{enlargersViewModel.enlargerProfiles.size() == 0 &amp;&amp; isLoaded ? View.VISIBLE : View.GONE}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:paddingBottom="64dp"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_gravity="center"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_menu_enlarger"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:text="No Enlarger Profiles"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contentLayout"
+            android:visibility="@{enlargersViewModel.enlargerProfiles.size() > 0 &amp;&amp; isLoaded ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/cardview_light_background"
