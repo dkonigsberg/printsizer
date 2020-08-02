@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -14,14 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -30,7 +27,6 @@ import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.chip.Chip;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.logicprobe.printsizer.R;
@@ -45,6 +41,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = HomeFragment.class.getSimpleName();
+    private static final String ADD_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_ENLARGER";
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
 
@@ -57,6 +54,19 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
     private boolean height_as_cm;
     private boolean ignoreHeightChange;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getParentFragmentManager().setFragmentResultListener(ADD_ENLARGER_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int enlargerProfileId = result.getInt("id", 0);
+                Log.d(TAG, "Enlarger profile inserted: " + enlargerProfileId);
+                handleEnlargerProfileInserted(enlargerProfileId);
+            }
+        });
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -216,10 +226,19 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
             @Override
             public void onClickAction(int actionId) {
-                Navigation.findNavController(getView()).navigate(R.id.action_add_enlarger);
+                Bundle bundle = new Bundle();
+                bundle.putString("requestKey", ADD_ENLARGER_REQUEST_KEY);
+                Navigation.findNavController(getView()).navigate(R.id.action_add_enlarger, bundle);
             }
         });
         dialog.show(getParentFragmentManager(), "choose_enlarger_alert");
+    }
+
+    private void handleEnlargerProfileInserted(int enlargerProfileId) {
+        // An enlarger profile was just added via user action originating from the picker
+        // dialog. The user likely expects it to now become the selected profile.
+        Log.d(TAG, "Setting added enlarger profile " + enlargerProfileId + " as selected");
+        homeViewModel.setEnlargerProfile(enlargerProfileId);
     }
 
     private String modelHeightValueToString(LiveData<Double> liveValue) {

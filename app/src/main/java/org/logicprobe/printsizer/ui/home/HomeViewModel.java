@@ -122,6 +122,10 @@ public class HomeViewModel extends AndroidViewModel {
         return state.getLiveData(LARGER_PRINT_EXPOSURE_TIME_KEY, Double.NaN);
     }
 
+    public void setEnlargerProfile(int enlargerProfileId) {
+        state.set(ENLARGER_PROFILE_ID_KEY, enlargerProfileId);
+    }
+
     public void setEnlargerProfile(EnlargerProfile enlargerProfile) {
         state.set(ENLARGER_PROFILE_ID_KEY, enlargerProfile.getId());
     }

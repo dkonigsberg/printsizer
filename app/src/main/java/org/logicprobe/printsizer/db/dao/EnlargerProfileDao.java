@@ -16,10 +16,10 @@ public interface EnlargerProfileDao {
     LiveData<List<EnlargerProfileEntity>> loadAllEnlargerProfiles();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(EnlargerProfileEntity enlargerProfile);
+    long insert(EnlargerProfileEntity enlargerProfile);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertAll(List<EnlargerProfileEntity> enlargerProfiles);
+    long[] insertAll(List<EnlargerProfileEntity> enlargerProfiles);
 
     @Query("DELETE FROM " + EnlargerProfileEntity.TABLE_NAME + " WHERE id = :enlargerProfileId")
     int deleteById(int enlargerProfileId);

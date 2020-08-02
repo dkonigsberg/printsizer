@@ -1,7 +1,10 @@
 package org.logicprobe.printsizer;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
 import org.logicprobe.printsizer.db.AppDatabase;
@@ -11,6 +14,7 @@ import org.logicprobe.printsizer.db.entity.EnlargerProfileEntity;
 import java.util.List;
 
 public class DataRepository {
+    private static final String TAG = DataRepository.class.getSimpleName();
     private static DataRepository instance;
 
     private final AppDatabase database;
@@ -56,13 +60,17 @@ public class DataRepository {
         return database.enlargerProfileDao().loadEnlargerProfile(enlargerProfileId);
     }
 
-    public void insert(final EnlargerProfileEntity enlargerProfile) {
+    public LiveData<Integer> insert(final EnlargerProfileEntity enlargerProfile) {
+        final MutableLiveData<Integer> liveId = new MutableLiveData<>();
         appExecutors.database().execute(new Runnable() {
             @Override
             public void run() {
-                enlargerProfileDao.insert(enlargerProfile);
+                long profileId = enlargerProfileDao.insert(enlargerProfile);
+                Log.d(TAG, "Inserted profile: " + enlargerProfile.getName() + " -> " + profileId);
+                liveId.postValue((int)profileId);
             }
         });
+        return liveId;
     }
 
     public void deleteEnlargerProfileById(final int enlargerProfileId) {
@@ -70,6 +78,7 @@ public class DataRepository {
             @Override
             public void run() {
                 enlargerProfileDao.deleteById(enlargerProfileId);
+                Log.d(TAG, "Deleted profile: " + enlargerProfileId);
             }
         });
     }

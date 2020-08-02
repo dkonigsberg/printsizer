@@ -20,6 +20,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
+import androidx.navigation.NavBackStackEntry;
+import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
@@ -38,6 +40,7 @@ import java.text.NumberFormat;
 
 public class EnlargerEditFragment extends Fragment {
     private static final String TAG = EnlargerEditFragment.class.getSimpleName();
+    private String requestKey;
     private int profileId = 0;
 
     private ViewGroup mainContentLayout;
@@ -161,6 +164,7 @@ public class EnlargerEditFragment extends Fragment {
                     }
                 });
             }
+            requestKey = arguments.getString("requestKey");
         }
 
         final TextWatcher validator = new TextWatcher() {
@@ -265,9 +269,20 @@ public class EnlargerEditFragment extends Fragment {
             EnlargerProfileEntity enlargerProfile = buildEnlargerProfile();
 
             App app = (App)requireActivity().getApplication();
-            app.getRepository().insert(enlargerProfile);
+            LiveData<Integer> liveProfileId = app.getRepository().insert(enlargerProfile);
 
-            Navigation.findNavController(getView()).popBackStack();
+            liveProfileId.observe(getViewLifecycleOwner(), new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer profileId) {
+                    Log.d(TAG, "Saved added enlarger: " + profileId);
+                    if (requestKey != null && requestKey.length() > 0) {
+                        Bundle result = new Bundle();
+                        result.putInt("id", profileId);
+                        getParentFragmentManager().setFragmentResult(requestKey, result);
+                    }
+                    Navigation.findNavController(getView()).popBackStack();
+                }
+            });
         }
     }
 
