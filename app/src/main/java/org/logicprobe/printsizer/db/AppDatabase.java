@@ -17,7 +17,7 @@ import org.logicprobe.printsizer.db.dao.EnlargerProfileDao;
 import org.logicprobe.printsizer.db.entity.EnlargerProfileEntity;
 
 @Database(entities = {EnlargerProfileEntity.class}, version = 2)
-public abstract class AppDatabase  extends RoomDatabase {
+public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 
     @VisibleForTesting
@@ -73,7 +73,8 @@ public abstract class AppDatabase  extends RoomDatabase {
         return isDatabaseCreated;
     }
 
-    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+    @VisibleForTesting
+    static final Migration MIGRATION_1_2 = new Migration(1, 2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE enlarger_profiles ADD COLUMN has_test_exposures INTEGER NOT NULL DEFAULT 1");
