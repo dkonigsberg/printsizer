@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,6 +61,7 @@ public class EnlargerEditFragment extends Fragment {
     private TextInputLayout editLargerTimeLayout;
 
     private Button buttonAddTestExposures;
+    private TextView memoAddTestExposures;
     private Button buttonRemoveTestExposures;
     private ConstraintLayout layoutTestExposures;
 
@@ -91,6 +93,7 @@ public class EnlargerEditFragment extends Fragment {
         editLargerTimeLayout = root.findViewById(R.id.editLargerTimeLayout);
 
         buttonAddTestExposures = root.findViewById(R.id.buttonAddTestExposures);
+        memoAddTestExposures = root.findViewById(R.id.memoAddTestExposures);
         buttonRemoveTestExposures = root.findViewById(R.id.buttonRemoveTestExposures);
         layoutTestExposures = root.findViewById(R.id.layoutTestExposures);
 
@@ -142,6 +145,7 @@ public class EnlargerEditFragment extends Fragment {
             int profileId = arguments.getInt("id");
             if (profileId > 0) {
                 buttonAddTestExposures.setVisibility(View.GONE);
+                memoAddTestExposures.setVisibility(View.GONE);
                 layoutTestExposures.setVisibility(View.GONE);
                 App app = (App)requireActivity().getApplication();
                 LiveData<EnlargerProfileEntity> liveEntity = app.getRepository().loadEnlargerProfile(profileId);
@@ -213,6 +217,7 @@ public class EnlargerEditFragment extends Fragment {
             return;
         }
         buttonAddTestExposures.setVisibility(View.GONE);
+        memoAddTestExposures.setVisibility(View.GONE);
         layoutTestExposures.setVisibility(View.VISIBLE);
         hasTestExposures = true;
     }
@@ -223,6 +228,7 @@ public class EnlargerEditFragment extends Fragment {
         }
         layoutTestExposures.setVisibility(View.GONE);
         buttonAddTestExposures.setVisibility(View.VISIBLE);
+        memoAddTestExposures.setVisibility(View.VISIBLE);
         hasTestExposures = false;
     }
 
@@ -455,10 +461,12 @@ public class EnlargerEditFragment extends Fragment {
             editLargerTime.setText(convertDoubleToText(enlargerProfile.getLargerTestTime()));
 
             buttonAddTestExposures.setVisibility(View.GONE);
+            memoAddTestExposures.setVisibility(View.GONE);
             layoutTestExposures.setVisibility(View.VISIBLE);
         } else {
             hasTestExposures = false;
             buttonAddTestExposures.setVisibility(View.VISIBLE);
+            memoAddTestExposures.setVisibility(View.VISIBLE);
             layoutTestExposures.setVisibility(View.GONE);
         }
     }
