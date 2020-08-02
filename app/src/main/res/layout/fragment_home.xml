@@ -133,7 +133,8 @@
                         android:editable="false"
                         android:ems="12"
                         android:inputType="none"
-                        android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}" />
+                        android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}"
+                        tools:ignore="Deprecated" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <View
@@ -149,30 +150,26 @@
                     android:clipChildren="false"
                     android:measureAllChildren="true">
 
-                    <LinearLayout
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal"
                         android:paddingHorizontal="@dimen/activity_horizontal_margin"
                         android:foreground="?android:attr/selectableItemBackground"
                         android:clickable="true"
+                        android:focusable="true"
                         android:onClick="@{() ->  enlargerProfileClickCallback.onClick(homeViewModel.enlargerProfile)}"
                         android:visibility="@{homeViewModel.enlargerProfile.id == 0 ? View.VISIBLE : View.GONE}">
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:src="@drawable/ic_menu_enlarger"
-                            android:layout_gravity="center_vertical"
-                            android:layout_marginEnd="12dp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:text="@string/action_choose_enlarger_profile"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
-                    </LinearLayout>
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:drawableStart="@drawable/ic_menu_enlarger"
+                            android:drawablePadding="12dp" />
+                    </FrameLayout>
 
                     <include layout="@layout/enlarger_profile_item"
                         app:enlargerProfile="@{homeViewModel.enlargerProfile}"

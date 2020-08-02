@@ -32,7 +32,8 @@
                 android:layout_height="128dp"
                 android:layout_gravity="center"
                 android:scaleType="fitXY"
-                android:src="@drawable/ic_menu_enlarger"/>
+                android:src="@drawable/ic_menu_enlarger"
+                tools:ignore="ContentDescription" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
                 android:layout_marginEnd="8dp"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                android:text="No Enlarger Profiles"/>
+                android:text="@string/placeholder_no_enlarger_profiles"/>
         </LinearLayout>
 
         <LinearLayout
@@ -50,21 +51,14 @@
             android:visibility="@{enlargersViewModel.enlargerProfiles.size() > 0 &amp;&amp; isLoaded ? View.VISIBLE : View.GONE}"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/cardview_light_background"
             android:orientation="vertical">
-            <FrameLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/enlarger_profile_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/enlarger_profile_list_wrapper">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/enlarger_profile_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingBottom="128dp"
-                    app:layoutManager="LinearLayoutManager"/>
-            </FrameLayout>
+                android:clipToPadding="false"
+                android:paddingBottom="128dp"
+                app:layoutManager="LinearLayoutManager"/>
         </LinearLayout>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -76,6 +70,7 @@
             android:layout_marginBottom="337dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:contentDescription="@string/action_add_enlarger_profile"
             app:srcCompat="@drawable/ic_add" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

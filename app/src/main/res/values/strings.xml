@@ -56,4 +56,7 @@
     <string name="label_enlarger_profile_calibrated">Calibrated</string>
     <string name="label_enlarger_profile_uncalibrated">Uncalibrated</string>
     <string name="note_add_test_exposures">Test exposures are used to calibrate this profile to the unique characteristics of your enlarger, which will make results more accurate.</string>
+    <string name="placeholder_no_enlarger_profiles">No Enlarger Profiles</string>
+    <string name="description_fork_me_on_github">Fork me on Github</string>
+    <string name="description_save_enlarger_profile">Save enlarger profile</string>
 </resources>

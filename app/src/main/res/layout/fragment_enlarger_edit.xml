@@ -106,7 +106,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/form_vertical_margin"
                 android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                android:text="Add Test Exposures"
+                android:text="@string/action_add_test_exposures"
                 app:icon="@drawable/ic_add"
                 android:visibility="visible" />
 
@@ -253,5 +253,6 @@
         android:layout_marginBottom="337dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/description_save_enlarger_profile"
         app:srcCompat="@drawable/ic_check" />
 </androidx.constraintlayout.widget.ConstraintLayout>

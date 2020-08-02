@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -26,7 +25,8 @@
             android:id="@+id/imageViewAppIcon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/ic_launcher"
+            tools:ignore="ContentDescription" />
 
         <TextView
             android:id="@+id/textViewAppSubtitle"
@@ -52,7 +52,8 @@
             android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:text="Copyright \u00A9 2020 Derek Konigsberg"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
     <ImageView
@@ -61,5 +62,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top|right"
         android:src="@drawable/ic_forkme_github"
-        android:clickable="true" />
+        android:clickable="true"
+        android:focusable="true"
+        tools:ignore="RtlHardcoded"
+        android:contentDescription="@string/description_fork_me_on_github" />
 </FrameLayout>
