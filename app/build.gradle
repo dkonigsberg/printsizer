@@ -1,5 +1,23 @@
 apply plugin: 'com.android.application'
 
+def getVersionName = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--match', 'v[0-9]*.*', '--abbrev=0'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim().substring(1)
+}
+
+def getVersionDescribe = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'describe', '--long', '--match', 'v[0-9]*.*', '--dirty'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.1"
@@ -9,7 +27,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
-        versionName "0.1"
+        versionName "${getVersionName()}"
+        buildConfigField "String", "VERSION_DESCRIBE", "\"${getVersionDescribe()}\""
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

@@ -19,7 +19,7 @@
             android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:text="@string/app_name"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4" />
 
         <ImageView
             android:id="@+id/imageViewAppIcon"
@@ -44,6 +44,15 @@
             android:layout_marginVertical="@dimen/activity_vertical_margin"
             android:gravity="center_horizontal"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <TextView
+            android:id="@+id/textViewAppDescribe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/textViewAppCopyright"
