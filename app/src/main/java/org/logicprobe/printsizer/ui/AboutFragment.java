@@ -30,7 +30,7 @@ public class AboutFragment extends Fragment {
         ImageView imageViewGithub = root.findViewById(R.id.imageViewGithub);
 
         try {
-            Context context = getContext();
+            Context context = requireContext();
             PackageManager packageManager = context.getPackageManager();
             String packageName = context.getPackageName();
             PackageInfo info = packageManager.getPackageInfo(packageName, 0);

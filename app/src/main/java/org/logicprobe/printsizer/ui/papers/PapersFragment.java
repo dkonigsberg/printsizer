@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import org.logicprobe.printsizer.R;
 
@@ -20,8 +20,7 @@ public class PapersFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        papersViewModel =
-                ViewModelProviders.of(this).get(PapersViewModel.class);
+        papersViewModel = new ViewModelProvider(this).get(PapersViewModel.class);
         View root = inflater.inflate(R.layout.fragment_papers, container, false);
         final TextView textView = root.findViewById(R.id.text_slideshow);
         papersViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {

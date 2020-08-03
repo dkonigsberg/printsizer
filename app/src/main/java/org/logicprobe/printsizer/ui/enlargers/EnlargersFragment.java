@@ -53,7 +53,7 @@ public class EnlargersFragment extends Fragment {
         final View root = binding.getRoot();
 
         RecyclerView recyclerView = root.findViewById(R.id.enlarger_profile_list);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+        recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
         enlargerProfileAdapter = new EnlargerProfileAdapter(clickCallback);
         binding.enlargerProfileList.setAdapter(enlargerProfileAdapter);
@@ -75,7 +75,7 @@ public class EnlargersFragment extends Fragment {
         public void onClick(EnlargerProfile enlargerProfile) {
             Bundle bundle = new Bundle();
             bundle.putInt("id", enlargerProfile.getId());
-            Navigation.findNavController(getView()).navigate(R.id.action_edit_enlarger, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.action_edit_enlarger, bundle);
         }
     };
 
@@ -112,13 +112,13 @@ public class EnlargersFragment extends Fragment {
                 .build();
         enlargerProfileAdapter.setSelectionTracker(selectionTracker);
 
-        selectionTracker.addObserver(new SelectionTracker.SelectionObserver() {
+        selectionTracker.addObserver(new SelectionTracker.SelectionObserver<Long>() {
             private ActionMode actionMode = null;
             @Override
             public void onSelectionChanged() {
                 if (selectionTracker.hasSelection()) {
                     if (actionMode == null) {
-                        actionMode = getActivity().startActionMode(actionModeCallback);
+                        actionMode = requireActivity().startActionMode(actionModeCallback);
                     }
                     int count = selectionTracker.getSelection().size();
                     Resources res = getResources();
@@ -171,14 +171,14 @@ public class EnlargersFragment extends Fragment {
         Log.d(TAG, "Copy enlarger profile: " + selectionTracker.getSelection());
         Bundle bundle = new Bundle();
         bundle.putInt("id", getFirstSelectedId());
-        Navigation.findNavController(getView()).navigate(R.id.action_add_enlarger, bundle);
+        Navigation.findNavController(requireView()).navigate(R.id.action_add_enlarger, bundle);
         actionMode.finish();
     }
 
     private void deleteSelectedEnlargerProfiles(ActionMode actionMode) {
         Log.d(TAG, "Delete enlarger profile: " + selectionTracker.getSelection());
         List<Integer> idList = getSelectedIdList();
-        if (idList == null || idList.size() == 0) {
+        if (idList.size() == 0) {
             return;
         }
         ConfirmDeleteDialogFragment dialog = new ConfirmDeleteDialogFragment(actionMode, idList);

@@ -20,8 +20,6 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.navigation.NavBackStackEntry;
-import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
@@ -108,7 +106,7 @@ public class EnlargerEditFragment extends Fragment {
             }
         });
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String prefValue = sharedPreferences.getString("enlarger_height_units", null);
         if (prefValue == null || prefValue.length() == 0 || prefValue.equals("millimeters")) {
             height_as_cm = false;
@@ -264,7 +262,7 @@ public class EnlargerEditFragment extends Fragment {
     }
 
     private void handleEditAccept() {
-        Util.hideKeyboardFrom(getContext(), getView());
+        Util.hideKeyboardFrom(requireContext(), requireView());
         if (validateInputFields(null)) {
             EnlargerProfileEntity enlargerProfile = buildEnlargerProfile();
 
@@ -280,7 +278,7 @@ public class EnlargerEditFragment extends Fragment {
                         result.putInt("id", profileId);
                         getParentFragmentManager().setFragmentResult(requestKey, result);
                     }
-                    Navigation.findNavController(getView()).popBackStack();
+                    Navigation.findNavController(requireView()).popBackStack();
                 }
             });
         }
@@ -443,7 +441,12 @@ public class EnlargerEditFragment extends Fragment {
     }
 
     private void populateFromEnlargerProfile(EnlargerProfileEntity enlargerProfile) {
-        NavDestination dest = Navigation.findNavController(getView()).getCurrentDestination();
+        NavDestination dest = Navigation.findNavController(requireView()).getCurrentDestination();
+        if (dest == null) {
+            Log.e(TAG, "Null navigation destination");
+            return;
+        }
+
         if (dest.getId() == R.id.nav_enlarger_add) {
             Log.d(TAG, "Enlarger " + enlargerProfile.getId() + " copied for adding");
             profileId = 0;

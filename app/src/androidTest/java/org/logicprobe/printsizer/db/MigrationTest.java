@@ -18,8 +18,10 @@ import org.logicprobe.printsizer.db.dao.EnlargerProfileDao;
 import org.logicprobe.printsizer.model.EnlargerProfile;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.logicprobe.printsizer.db.AppDatabase.MIGRATION_1_2;
 
 @RunWith(AndroidJUnit4.class)
@@ -31,12 +33,12 @@ public class MigrationTest {
 
     public MigrationTest() {
         helper = new MigrationTestHelper(InstrumentationRegistry.getInstrumentation(),
-                AppDatabase.class.getCanonicalName(),
+                Objects.requireNonNull(AppDatabase.class.getCanonicalName()),
                 new FrameworkSQLiteOpenHelperFactory());
     }
 
     @Test
-    public void migrate1To2() throws IOException, InterruptedException {
+    public void migrate1To2() throws IOException {
         SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 1);
 
         ContentValues values = new ContentValues();
@@ -59,7 +61,7 @@ public class MigrationTest {
         assertEquals(profile.getName(), "Name");
         assertEquals(profile.getDescription(), "Description");
         assertEquals(profile.getHeightMeasurementOffset(), 0.0d, 0.001d);
-        assertEquals(profile.hasTestExposures(), true);
+        assertTrue(profile.hasTestExposures());
         assertEquals(profile.getSmallerTestDistance(), 300.0d, 0.001d);
         assertEquals(profile.getSmallerTestTime(), 10.0d, 0.001d);
         assertEquals(profile.getLargerTestDistance(), 600.0d, 0.001d);

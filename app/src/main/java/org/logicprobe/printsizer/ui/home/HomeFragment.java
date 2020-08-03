@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editSmallerTime.setText(modelTimeValueToString(homeViewModel.getSmallerPrintExposureTime()));
         editLargerHeight.setText(modelHeightValueToString(homeViewModel.getLargerPrintHeight()));
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         updateHeightUnits(sharedPreferences);
 
         editSmallerHeight.addTextChangedListener(new TextWatcher() {
@@ -173,20 +173,20 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key != null || key.equals("enlarger_height_units")) {
+        if (key != null && key.equals("enlarger_height_units")) {
             updateHeightUnits(sharedPreferences);
         }
     }
@@ -228,7 +228,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             public void onClickAction(int actionId) {
                 Bundle bundle = new Bundle();
                 bundle.putString("requestKey", ADD_ENLARGER_REQUEST_KEY);
-                Navigation.findNavController(getView()).navigate(R.id.action_add_enlarger, bundle);
+                Navigation.findNavController(requireView()).navigate(R.id.action_add_enlarger, bundle);
             }
         });
         dialog.show(getParentFragmentManager(), "choose_enlarger_alert");
@@ -246,7 +246,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             return "";
         }
 
-        double value = liveValue.getValue().doubleValue();
+        double value = liveValue.getValue();
         if (Double.isNaN(value) || Double.isInfinite(value) || value == 0.0d) {
             return "";
         }
@@ -268,7 +268,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             return "";
         }
 
-        double value = liveValue.getValue().doubleValue();
+        double value = liveValue.getValue();
         if (Double.isNaN(value) || Double.isInfinite(value) || value == 0.0d) {
             return "";
         }
@@ -284,7 +284,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
     private double charSequenceToModelHeightDouble(CharSequence charSequence) {
         double result;
-        if (charSequence == null || charSequence.toString() == null) {
+        if (charSequence == null) {
             result = Double.NaN;
         } else {
             try {
@@ -301,7 +301,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
     private double charSequenceToModelTimeDouble(CharSequence charSequence) {
         double result;
-        if (charSequence == null || charSequence.toString() == null) {
+        if (charSequence == null) {
             result = Double.NaN;
         } else {
             try {
@@ -356,7 +356,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             binding.setLifecycleOwner(getActivity());
             binding.setDialogViewModel(viewModel);
 
-            viewModel.getSelectionList().observe(getActivity(),
+            viewModel.getSelectionList().observe(requireActivity(),
                     new Observer<List<ChooseEnlargerElement>>() {
                         @Override
                         public void onChanged(List<ChooseEnlargerElement> chooseEnlargerElements) {
@@ -370,7 +370,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             View view = binding.getRoot();
 
             RecyclerView recyclerView = view.findViewById(R.id.enlarger_profile_list);
-            recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
+            recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
             builder.setView(view).setTitle(R.string.dialog_choose_enlarger_profile);
             return builder.create();
