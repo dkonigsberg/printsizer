@@ -57,4 +57,5 @@
     <string name="placeholder_no_enlarger_profiles">No Enlarger Profiles</string>
     <string name="description_fork_me_on_github">Fork me on Github</string>
     <string name="description_save_enlarger_profile">Save enlarger profile</string>
+    <string name="label_exposure_increments">Exposure increments</string>
 </resources>

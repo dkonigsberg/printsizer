@@ -29,6 +29,7 @@ public class HomeViewModel extends AndroidViewModel {
     private static final String SMALLER_PRINT_EXPOSURE_TIME_KEY = "smaller_print_exposure_time";
     private static final String LARGER_PRINT_HEIGHT_KEY = "larger_print_height";
     private static final String LARGER_PRINT_EXPOSURE_TIME_KEY = "larger_print_exposure_time";
+    private static final String LARGER_PRINT_EXPOSURE_OFFSET_KEY = "larger_print_exposure_offset";
     private static final String ENLARGER_PROFILE_ID_KEY = "enlarger_profile_id";
 
     private final SavedStateHandle state;
@@ -124,6 +125,15 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<Double> getLargerPrintExposureTime() {
         return state.getLiveData(LARGER_PRINT_EXPOSURE_TIME_KEY, Double.NaN);
+    }
+
+    public void setLargerPrintExposureOffset(double exposureOffset) {
+        state.set(LARGER_PRINT_EXPOSURE_OFFSET_KEY, exposureOffset);
+        recalculateLargerPrintExposureTime();
+    }
+
+    public LiveData<Double> getLargerPrintExposureOffset() {
+        return state.getLiveData(LARGER_PRINT_EXPOSURE_OFFSET_KEY, 0.0d);
     }
 
     public void setEnlargerProfile(int enlargerProfileId) {
@@ -271,13 +281,20 @@ public class HomeViewModel extends AndroidViewModel {
         final double smallerHeightValue = LiveDataUtil.getValue(getSmallerPrintHeight()) + offset;
         final double smallerExposureValue = LiveDataUtil.getValue(getSmallerPrintExposureTime());
         final double largerHeightValue = LiveDataUtil.getValue(getLargerPrintHeight()) + offset;
+        final double largerExposureOffset = LiveDataUtil.getValue(getLargerPrintExposureOffset());
 
         Enlarger enlarger = Enlarger.createFromProfile(enlargerProfileValue);
         PrintScaler printScaler = new PrintScaler(enlarger);
         double largerExposureValue = printScaler.scalePrintTime(smallerHeightValue, smallerExposureValue, largerHeightValue);
 
         Log.d(TAG, "Smaller Print: " + smallerHeightValue + "mm" + ", " + smallerExposureValue + "s");
-        Log.d(TAG, "Larger Print: " + largerHeightValue + "mm" + ", " + largerExposureValue + "s");
+        Log.d(TAG, "Larger Print: " + largerHeightValue + "mm" + ", " + largerExposureValue + "s, "
+                + largerExposureOffset + " EV");
+
+        if (Math.abs(largerExposureOffset) > 0.0001d) {
+            largerExposureValue *= Math.pow(2, largerExposureOffset);
+            Log.d(TAG, "Adjusted larger exposure: " + largerExposureValue + "s");
+        }
 
         state.set(LARGER_PRINT_EXPOSURE_TIME_KEY, largerExposureValue);
     }

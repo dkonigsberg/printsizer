@@ -115,27 +115,45 @@
                         android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editLargerTimeLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_exposure_time"
-                    app:startIconDrawable="@drawable/ic_shutter_speed"
-                    app:errorEnabled="true"
-                    app:suffixText="@string/unit_suffix_seconds">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editLargerTime"
+                    android:orientation="horizontal">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/editLargerTimeLayout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:editable="false"
-                        android:ems="12"
-                        android:inputType="none"
-                        android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}"
-                        tools:ignore="Deprecated" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                        android:hint="@string/label_exposure_time"
+                        app:startIconDrawable="@drawable/ic_shutter_speed"
+                        app:errorEnabled="true"
+                        app:suffixText="@string/unit_suffix_seconds">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/editLargerTime"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:editable="false"
+                            android:ems="12"
+                            android:inputType="none"
+                            android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}"
+                            tools:ignore="Deprecated" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        app:endIconDrawable="@drawable/ic_exposure">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/editLargerExposureAdjustment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                 <View
                     android:layout_width="match_parent"

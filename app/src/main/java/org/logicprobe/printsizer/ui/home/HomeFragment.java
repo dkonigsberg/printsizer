@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -37,11 +39,25 @@ import org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private static final String ADD_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_ENLARGER";
+
+    private static final double[] FULL_STOPS = { -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0 };
+    private static final double[] HALF_STOPS = {
+            -3.0, -2.5, -2.0, -1.5, -1.0, -0.5,
+            0.0,
+            0.5, 1.0, 1.5, 2.0, 2.5, 3.0 };
+    private static final double[] THIRD_STOPS = {
+            -3.0, -2.667, -2.333, -2.0, -1.667, -1.333, -1.0, -0.667, 0.333,
+            0.0,
+            0.333, 0.667, 1.0, 1.333, 1.667, 2.0, 2.333, 2.667, 3.0 };
+    private HashMap<String, Double> exposureOffsetLabelToValue;
+    private HashMap<Double, String> exposureOffsetValueToLabel;
+
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
 
@@ -52,8 +68,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private TextInputLayout editSmallerHeightLayout;
     private TextInputLayout editLargerHeightLayout;
 
+    private AutoCompleteTextView editLargerExposureAdjustment;
+
     private boolean height_as_cm;
     private boolean ignoreHeightChange;
+    private boolean ignoreExposureOffsetChange;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +85,24 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                 handleEnlargerProfileInserted(enlargerProfileId);
             }
         });
+
+        exposureOffsetLabelToValue = new HashMap<>();
+        exposureOffsetValueToLabel = new HashMap<>();
+        populateExposureOffsetMaps(R.array.exposure_offset_full_stops, FULL_STOPS);
+        populateExposureOffsetMaps(R.array.exposure_offset_half_stops, HALF_STOPS);
+        populateExposureOffsetMaps(R.array.exposure_offset_third_stops, THIRD_STOPS);
+
+    }
+
+    private void populateExposureOffsetMaps(int labelResourceId, double[] valueArray) {
+        String[] stringArray = getResources().getStringArray(labelResourceId);
+        if (stringArray.length != valueArray.length) {
+            throw new IllegalArgumentException("Bad exposure offset resource");
+        }
+        for (int i = 0; i < stringArray.length; i++) {
+            exposureOffsetLabelToValue.put(stringArray[i], valueArray[i]);
+            exposureOffsetValueToLabel.put(valueArray[i], stringArray[i]);
+        }
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -89,6 +126,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editLargerHeight = root.findViewById(R.id.editLargerHeight);
         editSmallerHeightLayout = root.findViewById(R.id.editSmallerHeightLayout);
         editLargerHeightLayout = root.findViewById(R.id.editLargerHeightLayout);
+        editLargerExposureAdjustment = root.findViewById(R.id.editLargerExposureAdjustment);
 
         return root;
     }
@@ -100,9 +138,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editSmallerHeight.setText(modelHeightValueToString(homeViewModel.getSmallerPrintHeight()));
         editSmallerTime.setText(modelTimeValueToString(homeViewModel.getSmallerPrintExposureTime()));
         editLargerHeight.setText(modelHeightValueToString(homeViewModel.getLargerPrintHeight()));
+        editLargerExposureAdjustment.setText(modelExposureOffsetValueToString(homeViewModel.getLargerPrintExposureOffset()));
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         updateHeightUnits(sharedPreferences);
+        updateExposureIncrements(sharedPreferences);
 
         editSmallerHeight.addTextChangedListener(new TextWatcher() {
             @Override
@@ -140,6 +180,21 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!ignoreHeightChange) {
                     homeViewModel.setLargerPrintHeight(charSequenceToModelHeightDouble(charSequence));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) { }
+        });
+
+        editLargerExposureAdjustment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!ignoreExposureOffsetChange) {
+                    homeViewModel.setLargerPrintExposureOffset(charSequenceToModelExposureOffset(charSequence));
                 }
             }
 
@@ -186,8 +241,10 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key != null && key.equals("enlarger_height_units")) {
+        if ("enlarger_height_units".equals(key)) {
             updateHeightUnits(sharedPreferences);
+        } else if ("exposure_increments".equals(key)) {
+            updateExposureIncrements(sharedPreferences);
         }
     }
 
@@ -215,6 +272,36 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editSmallerHeight.setText(modelHeightValueToString(homeViewModel.getSmallerPrintHeight()));
         editLargerHeight.setText(modelHeightValueToString(homeViewModel.getLargerPrintHeight()));
         ignoreHeightChange = false;
+    }
+
+    private void updateExposureIncrements(SharedPreferences sharedPreferences) {
+        String prefValue = sharedPreferences.getString("exposure_increments", null);
+
+        String[] stringArray;
+        double[] valueArray;
+
+        if ("half_stops".equals(prefValue)) {
+            stringArray = getResources().getStringArray(R.array.exposure_offset_half_stops);
+            valueArray = HALF_STOPS;
+        } else if ("third_stops".equals(prefValue)) {
+            stringArray = getResources().getStringArray(R.array.exposure_offset_third_stops);
+            valueArray = THIRD_STOPS;
+        } else { // "full_stops"
+            stringArray = getResources().getStringArray(R.array.exposure_offset_full_stops);
+            valueArray = FULL_STOPS;
+        }
+
+        if (stringArray.length != valueArray.length) {
+            throw new IllegalArgumentException("Stop increment labels and values do not match");
+        }
+
+        ignoreExposureOffsetChange = true;
+        ArrayAdapter<CharSequence> exposureAdapter = new ArrayAdapter<CharSequence>(
+                requireContext(),
+                R.layout.exposure_offset_popup_item,
+                stringArray);
+        editLargerExposureAdjustment.setAdapter(exposureAdapter);
+        ignoreExposureOffsetChange = false;
     }
 
     private void enlargerViewClicked() {
@@ -282,6 +369,22 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         return f.format(value);
     }
 
+    private String modelExposureOffsetValueToString(LiveData<Double> liveValue) {
+        double exposureOffset;
+        if (liveValue == null || liveValue.getValue() == null) {
+            exposureOffset = 0.0d;
+        } else {
+            exposureOffset = liveValue.getValue();
+        }
+
+        String label = exposureOffsetValueToLabel.get(exposureOffset);
+        if (label == null || label.length() == 0) {
+            label = "0";
+        }
+
+        return label;
+    }
+
     private double charSequenceToModelHeightDouble(CharSequence charSequence) {
         double result;
         if (charSequence == null) {
@@ -311,6 +414,22 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             }
         }
         return result;
+    }
+
+
+    private double charSequenceToModelExposureOffset(CharSequence charSequence) {
+        if (charSequence == null || charSequence.toString().length() == 0) {
+            return 0.0d;
+        }
+
+        String label = charSequence.toString();
+        Double value = exposureOffsetLabelToValue.get(label);
+
+        if (value == null || Double.isNaN(value) || Double.isInfinite(value)) {
+            return 0.0d;
+        } else {
+            return value;
+        }
     }
 
     public static class ChooseEnlargerDialogFragment extends DialogFragment {

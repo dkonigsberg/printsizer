@@ -4,8 +4,68 @@
         <item>Centimeters</item>
     </string-array>
 
-    <string-array name="distance_units_values">
+    <string-array name="distance_units_values" translatable="false">
         <item>millimeters</item>
         <item>centimeters</item>
+    </string-array>
+
+    <string-array name="exposure_increments_entires">
+        <item>Full stops</item>
+        <item>Half stops</item>
+        <item>Third stops</item>
+    </string-array>
+
+    <string-array name="exposure_increments_values" translatable="false">
+        <item>full_stops</item>
+        <item>half_stops</item>
+        <item>third_stops</item>
+    </string-array>
+
+    <string-array name="exposure_offset_full_stops" translatable="false">
+        <item>-3</item>
+        <item>-2</item>
+        <item>-1</item>
+        <item>0</item>
+        <item>+1</item>
+        <item>+2</item>
+        <item>+3</item>
+    </string-array>
+
+    <string-array name="exposure_offset_half_stops" translatable="false">
+        <item>-3</item>
+        <item>-2½</item>
+        <item>-2</item>
+        <item>-1½</item>
+        <item>-1</item>
+        <item>-½</item>
+        <item>0</item>
+        <item>+½</item>
+        <item>+1</item>
+        <item>+1½</item>
+        <item>+2</item>
+        <item>+2½</item>
+        <item>+3</item>
+    </string-array>
+
+    <string-array name="exposure_offset_third_stops" translatable="false">
+        <item>-3</item>
+        <item>-2⅔</item>
+        <item>-2⅓</item>
+        <item>-2</item>
+        <item>-1⅔</item>
+        <item>-1⅓</item>
+        <item>-1</item>
+        <item>-⅔</item>
+        <item>-⅓</item>
+        <item>0</item>
+        <item>+⅓</item>
+        <item>+⅔</item>
+        <item>+1</item>
+        <item>+1⅓</item>
+        <item>+1⅔</item>
+        <item>+2</item>
+        <item>+2⅓</item>
+        <item>+2⅔</item>
+        <item>+3</item>
     </string-array>
 </resources>
