@@ -151,6 +151,8 @@
                             android:id="@+id/editLargerExposureAdjustment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:contentDescription="@string/description_exposure_compensation"
+                            tools:ignore="LabelFor"
                             android:inputType="none" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
@@ -185,7 +187,7 @@
                             android:layout_gravity="center_vertical"
                             android:text="@string/action_choose_enlarger_profile"
                             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:drawableStart="@drawable/ic_menu_enlarger"
+                            app:drawableStartCompat="@drawable/ic_menu_enlarger"
                             android:drawablePadding="12dp" />
                     </FrameLayout>
 

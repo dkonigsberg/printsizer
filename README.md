@@ -57,7 +57,7 @@ lamp may be too dim to produce an accurate result via that method.
 
 #### Computing the reference curve
 
-The app uses the exposure height/time combos inputed above to interpolate a
+The app uses the exposure height/time combos inputted above to interpolate a
 reference curve that is used to calculate exposure changes. Here is how that
 process works:
 

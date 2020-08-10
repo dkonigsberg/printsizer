@@ -11,7 +11,7 @@
     <ListPreference
         android:icon="@drawable/ic_exposure"
         app:defaultValue="half_stops"
-        app:entries="@array/exposure_increments_entires"
+        app:entries="@array/exposure_increments_entries"
         app:entryValues="@array/exposure_increments_values"
         app:key="exposure_increments"
         app:title="@string/label_exposure_increments"

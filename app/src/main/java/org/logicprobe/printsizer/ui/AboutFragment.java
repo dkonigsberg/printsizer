@@ -76,11 +76,7 @@ public class AboutFragment extends Fragment {
 
     private boolean isTaggedVersion() {
         String describe = BuildConfig.VERSION_DESCRIBE;
-        String parts[] = describe.split("-");
-        if (parts != null && parts.length > 2 && "0".equals(parts[1])) {
-            return true;
-        } else {
-            return false;
-        }
+        String[] parts = describe.split("-");
+        return parts.length > 2 && "0".equals(parts[1]);
     }
 }

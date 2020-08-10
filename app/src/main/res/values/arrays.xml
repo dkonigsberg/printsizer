@@ -9,7 +9,7 @@
         <item>centimeters</item>
     </string-array>
 
-    <string-array name="exposure_increments_entires">
+    <string-array name="exposure_increments_entries">
         <item>Full stops</item>
         <item>Half stops</item>
         <item>Third stops</item>
