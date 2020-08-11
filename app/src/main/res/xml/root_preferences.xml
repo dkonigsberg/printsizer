@@ -10,7 +10,7 @@
         app:useSimpleSummaryProvider="true" />
     <ListPreference
         android:icon="@drawable/ic_exposure"
-        app:defaultValue="half_stops"
+        app:defaultValue="full_stops"
         app:entries="@array/exposure_increments_entries"
         app:entryValues="@array/exposure_increments_values"
         app:key="exposure_increments"
