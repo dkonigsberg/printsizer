@@ -14,9 +14,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import org.logicprobe.printsizer.AppExecutors;
 import org.logicprobe.printsizer.db.dao.EnlargerProfileDao;
+import org.logicprobe.printsizer.db.dao.PaperProfileDao;
 import org.logicprobe.printsizer.db.entity.EnlargerProfileEntity;
+import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 
-@Database(entities = {EnlargerProfileEntity.class}, version = 2)
+@Database(entities = {
+        EnlargerProfileEntity.class, PaperProfileEntity.class},
+        version = 3)
 public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
 
@@ -24,6 +28,7 @@ public abstract class AppDatabase extends RoomDatabase {
     public static final String DATABASE_NAME = "printsizer-db";
 
     public abstract EnlargerProfileDao enlargerProfileDao();
+    public abstract PaperProfileDao paperProfileDao();
 
     private final MutableLiveData<Boolean> isDatabaseCreated = new MutableLiveData<>();
 
@@ -56,6 +61,7 @@ public abstract class AppDatabase extends RoomDatabase {
                     }
                 })
                 .addMigrations(MIGRATION_1_2)
+                .addMigrations(MIGRATION_2_3)
                 .build();
     }
 
@@ -78,6 +84,21 @@ public abstract class AppDatabase extends RoomDatabase {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             database.execSQL("ALTER TABLE enlarger_profiles ADD COLUMN has_test_exposures INTEGER NOT NULL DEFAULT 1");
+        }
+    };
+
+    @VisibleForTesting
+    static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            database.execSQL("CREATE TABLE IF NOT EXISTS paper_profiles (" +
+                    "'id' INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                    "'name' TEXT, 'description' TEXT, " +
+                    "'00_iso_p' INTEGER, '00_iso_r' INTEGER, '0_iso_p' INTEGER, '0_iso_r' INTEGER, " +
+                    "'1_iso_p' INTEGER, '1_iso_r' INTEGER, '2_iso_p' INTEGER, '2_iso_r' INTEGER, " +
+                    "'3_iso_p' INTEGER, '3_iso_r' INTEGER, '4_iso_p' INTEGER, '4_iso_r' INTEGER, " +
+                    "'5_iso_p' INTEGER, '5_iso_r' INTEGER, " +
+                    "'none_iso_p' INTEGER, 'none_iso_r' INTEGER)");
         }
     };
 }

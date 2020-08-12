@@ -291,7 +291,7 @@ public class EnlargerEditFragment extends Fragment {
 
         // Validate non-numeric fields that need values, which is just the name
         if (editable == null || editable == editName.getText()) {
-            if (!hasText(editName)) {
+            if (!Util.hasText(editName)) {
                 editNameLayout.setError(getString(R.string.error_enlarger_missing_name));
                 result = false;
             }
@@ -308,7 +308,7 @@ public class EnlargerEditFragment extends Fragment {
 
         // Validate the lens focal length
         if (editable == null || editable == editLensFocalLength.getText()) {
-            if (!hasText(editLensFocalLength)) {
+            if (!Util.hasText(editLensFocalLength)) {
                 editLensFocalLengthLayout.setError(getString(R.string.error_enlarger_missing_lens_focal_length));
                 result = false;
             } else if (Double.isNaN(focalLength) || focalLength <= 0 || focalLength > 10000) {
@@ -319,7 +319,7 @@ public class EnlargerEditFragment extends Fragment {
 
         // Validate the optional height offset
         if (editable == null || editable == editHeightOffset.getText()) {
-            if (hasText(editHeightOffset) && (Double.isNaN(heightOffset) || heightOffset < -10000 || heightOffset > 10000)) {
+            if (Util.hasText(editHeightOffset) && (Double.isNaN(heightOffset) || heightOffset < -10000 || heightOffset > 10000)) {
                 editHeightOffsetLayout.setError(getString(R.string.error_enlarger_height_offset_invalid));
                 result = false;
             }
@@ -332,7 +332,7 @@ public class EnlargerEditFragment extends Fragment {
         if (hasTestExposures) {
             // Validate the smaller test height
             if (editable == null || editable == editSmallerHeight.getText()) {
-                if (!hasText(editSmallerHeight)) {
+                if (!Util.hasText(editSmallerHeight)) {
                     editSmallerHeightLayout.setError(getString(R.string.error_enlarger_height_needed));
                     result = false;
                 } else if (Double.isNaN(smallerHeight) || (smallerHeight + heightOffset) <= 0 || (smallerHeight + heightOffset) > 10000) {
@@ -343,7 +343,7 @@ public class EnlargerEditFragment extends Fragment {
 
             // Validate the smaller test time
             if (editable == null || editable == editSmallerTime.getText()) {
-                if (!hasText(editSmallerTime)) {
+                if (!Util.hasText(editSmallerTime)) {
                     editSmallerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
                     result = false;
                 } else if (Double.isNaN(smallerTime) || smallerTime <= 0 || smallerTime > 7200) {
@@ -365,7 +365,7 @@ public class EnlargerEditFragment extends Fragment {
 
             // Validate the larger test time
             if (editable == null || editable == editLargerTime.getText()) {
-                if (!hasText(editLargerTime)) {
+                if (!Util.hasText(editLargerTime)) {
                     editLargerTimeLayout.setError(getString(R.string.error_exposure_time_needed));
                     result = false;
                 } else if (Double.isNaN(largerTime) || largerTime <= 0 || largerTime > 7200) {
@@ -400,13 +400,6 @@ public class EnlargerEditFragment extends Fragment {
         }
 
         return result;
-    }
-
-    private static boolean hasText(EditText editText) {
-        return editText != null
-                && editText.getText() != null
-                && editText.getText().length() > 0
-                && editText.getText().toString().trim().length() > 0;
     }
 
     private double parseHeightDoubleFromText(EditText editText) {
@@ -493,8 +486,8 @@ public class EnlargerEditFragment extends Fragment {
         EnlargerProfileEntity enlargerProfile = new EnlargerProfileEntity();
 
         enlargerProfile.setId(profileId);
-        enlargerProfile.setName(safeGetEditTextString(editName));
-        enlargerProfile.setDescription(safeGetEditTextString(editDescription));
+        enlargerProfile.setName(Util.safeGetEditTextString(editName));
+        enlargerProfile.setDescription(Util.safeGetEditTextString(editDescription));
 
         enlargerProfile.setLensFocalLength(safeGetEditTextDouble(editLensFocalLength, 0, 10000));
         enlargerProfile.setHeightMeasurementOffset(safeGetEditTextHeightDouble(editHeightOffset, -10000, 10000));
@@ -512,14 +505,6 @@ public class EnlargerEditFragment extends Fragment {
         }
 
         return enlargerProfile;
-    }
-
-    private static String safeGetEditTextString(EditText editText) {
-        if (editText.getText() != null) {
-            return editText.getText().toString();
-        } else {
-            return "";
-        }
     }
 
     private double safeGetEditTextHeightDouble(EditText editText, double min, double max) {

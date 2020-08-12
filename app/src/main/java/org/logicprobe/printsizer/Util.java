@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 public final class Util {
     private Util() { }
@@ -30,5 +31,20 @@ public final class Util {
     public static void hideKeyboardFrom(Context context, View view) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Activity.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static boolean hasText(EditText editText) {
+        return editText != null
+                && editText.getText() != null
+                && editText.getText().length() > 0
+                && editText.getText().toString().trim().length() > 0;
+    }
+
+    public static String safeGetEditTextString(EditText editText) {
+        if (editText.getText() != null) {
+            return editText.getText().toString();
+        } else {
+            return "";
+        }
     }
 }

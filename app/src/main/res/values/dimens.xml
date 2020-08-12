@@ -6,4 +6,5 @@
     <dimen name="nav_header_height">176dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="form_vertical_margin">8dp</dimen>
+    <dimen name="sd_label_max_width">240dp</dimen>
 </resources>

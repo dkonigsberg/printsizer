@@ -9,6 +9,8 @@
     <string name="menu_papers">Paper Profiles</string>
     <string name="menu_enlarger_add">Add Enlarger Profile</string>
     <string name="menu_enlarger_modify">Modify Enlarger Profile</string>
+    <string name="menu_paper_add">Add Paper Profile</string>
+    <string name="menu_paper_modify">Modify Paper Profile</string>
     <string name="action_copy">Copy</string>
     <string name="action_delete">Delete</string>
     <string name="action_cancel">Cancel</string>
@@ -34,12 +36,15 @@
     <string name="error_exposure_time_invalid">Exposure time is invalid</string>
     <string name="error_enlarger_profile_invalid">Enlarger profile is invalid</string>
     <string name="enlarger_profile_copy_name_template">Copy of %1$s</string>
+    <string name="paper_profile_copy_name_template">Copy of %1$s</string>
     <string name="action_about">About</string>
     <string name="label_smaller_print">Smaller Print</string>
     <string name="label_larger_print">Larger Print</string>
     <string name="action_choose_enlarger_profile">Choose Enlarger Profile…</string>
     <string name="dialog_choose_enlarger_profile">Choose enlarger profile</string>
     <string name="action_add_enlarger_profile">Add Enlarger Profile</string>
+    <string name="action_add_paper_profile">Add paper profile</string>
+    <string name="action_add_stock_profile">Add stock profile</string>
     <plurals name="title_list_selection">
         <item quantity="one">%s selected</item>
         <item quantity="other">%s selected</item>
@@ -55,8 +60,22 @@
     <string name="label_enlarger_profile_uncalibrated">Uncalibrated</string>
     <string name="note_add_test_exposures">Test exposures are used to calibrate this profile to the unique characteristics of your enlarger, which will make results more accurate.</string>
     <string name="placeholder_no_enlarger_profiles">No Enlarger Profiles</string>
+    <string name="placeholder_no_paper_profiles">No Paper Profiles</string>
     <string name="description_fork_me_on_github">Fork me on Github</string>
     <string name="description_save_enlarger_profile">Save enlarger profile</string>
+    <string name="description_save_paper_profile">Save paper profile</string>
     <string name="label_exposure_increments">Exposure increments</string>
     <string name="description_exposure_compensation">Exposure compensation</string>
+    <string name="label_grade_00">Grade 00</string>
+    <string name="label_grade_0">Grade 0</string>
+    <string name="label_grade_1">Grade 1</string>
+    <string name="label_grade_2">Grade 2</string>
+    <string name="label_grade_3">Grade 3</string>
+    <string name="label_grade_4">Grade 4</string>
+    <string name="label_grade_5">Grade 5</string>
+    <string name="label_grade_none">None</string>
+    <string name="heading_filter_grade">Filter Grade</string>
+    <string name="heading_iso_p">ISO (P)</string>
+    <string name="heading_iso_r">ISO (R)</string>
+    <string name="error_paper_missing_name">Paper must have a name</string>
 </resources>

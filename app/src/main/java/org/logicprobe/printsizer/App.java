@@ -18,6 +18,6 @@ public class App extends Application {
     }
 
     public DataRepository getRepository() {
-        return DataRepository.getInstance(getDatabase(), appExecutors);
+        return DataRepository.getInstance(this, getDatabase(), appExecutors);
     }
 }

@@ -11,21 +11,21 @@ import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 
 import java.util.List;
 
-public class PapersViewModel extends AndroidViewModel {
+public class StockPapersViewModel extends AndroidViewModel {
 
     private final DataRepository repository;
 
     private LiveData<List<PaperProfileEntity>> paperProfiles;
 
-    public PapersViewModel(Application application) {
+    public StockPapersViewModel(Application application) {
         super(application);
 
         repository = ((App)application).getRepository();
 
-        paperProfiles = repository.getPaperProfiles();
+        paperProfiles = repository.getStockPaperProfiles();
     }
 
-    public LiveData<List<PaperProfileEntity>> getPaperProfiles() {
+    public LiveData<List<PaperProfileEntity>> getStockPaperProfiles() {
         return paperProfiles;
     }
 }

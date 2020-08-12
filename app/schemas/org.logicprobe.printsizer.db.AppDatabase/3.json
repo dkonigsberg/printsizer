@@ -1,0 +1,216 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 3,
+    "identityHash": "0e63bdffa2fdd599457ef32151a98923",
+    "entities": [
+      {
+        "tableName": "enlarger_profiles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `has_test_exposures` INTEGER NOT NULL, `height_measurement_offset` REAL NOT NULL, `lens_focal_length` REAL NOT NULL, `smaller_test_distance` REAL NOT NULL, `smaller_test_time` REAL NOT NULL, `larger_test_distance` REAL NOT NULL, `larger_test_time` REAL NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "hasTestExposures",
+            "columnName": "has_test_exposures",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "heightMeasurementOffset",
+            "columnName": "height_measurement_offset",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lensFocalLength",
+            "columnName": "lens_focal_length",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "smallerTestDistance",
+            "columnName": "smaller_test_distance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "smallerTestTime",
+            "columnName": "smaller_test_time",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "largerTestDistance",
+            "columnName": "larger_test_distance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "largerTestTime",
+            "columnName": "larger_test_time",
+            "affinity": "REAL",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "paper_profiles",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT, `description` TEXT, `00_iso_p` INTEGER, `00_iso_r` INTEGER, `0_iso_p` INTEGER, `0_iso_r` INTEGER, `1_iso_p` INTEGER, `1_iso_r` INTEGER, `2_iso_p` INTEGER, `2_iso_r` INTEGER, `3_iso_p` INTEGER, `3_iso_r` INTEGER, `4_iso_p` INTEGER, `4_iso_r` INTEGER, `5_iso_p` INTEGER, `5_iso_r` INTEGER, `none_iso_p` INTEGER, `none_iso_r` INTEGER)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade00.isoP",
+            "columnName": "00_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade00.isoR",
+            "columnName": "00_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade0.isoP",
+            "columnName": "0_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade0.isoR",
+            "columnName": "0_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade1.isoP",
+            "columnName": "1_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade1.isoR",
+            "columnName": "1_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade2.isoP",
+            "columnName": "2_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade2.isoR",
+            "columnName": "2_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade3.isoP",
+            "columnName": "3_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade3.isoR",
+            "columnName": "3_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade4.isoP",
+            "columnName": "4_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade4.isoR",
+            "columnName": "4_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade5.isoP",
+            "columnName": "5_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "grade5.isoR",
+            "columnName": "5_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gradeNone.isoP",
+            "columnName": "none_iso_p",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gradeNone.isoR",
+            "columnName": "none_iso_r",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0e63bdffa2fdd599457ef32151a98923')"
+    ]
+  }
+}

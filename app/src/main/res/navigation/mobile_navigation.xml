@@ -29,12 +29,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/nav_papers"
-        android:name="org.logicprobe.printsizer.ui.papers.PapersFragment"
-        android:label="@string/menu_papers"
-        tools:layout="@layout/fragment_papers" />
-
-    <fragment
         android:id="@+id/nav_enlarger_add"
         android:name="org.logicprobe.printsizer.ui.enlargers.EnlargerEditFragment"
         android:label="@string/menu_enlarger_add"
@@ -52,6 +46,52 @@
         <action
             android:id="@+id/action_edit_enlarger_accept"
             app:destination="@+id/nav_enlargers"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_papers"
+        android:name="org.logicprobe.printsizer.ui.papers.PapersFragment"
+        android:label="@string/menu_papers"
+        tools:layout="@layout/fragment_papers">
+        <action
+            android:id="@+id/action_add_paper"
+            app:destination="@id/nav_paper_add"/>
+        <action
+            android:id="@+id/action_edit_paper"
+            app:destination="@id/nav_paper_edit"/>
+        <action
+            android:id="@+id/action_add_stock_paper"
+            app:destination="@id/nav_paper_add_stock"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_paper_add"
+        android:name="org.logicprobe.printsizer.ui.papers.PaperEditFragment"
+        android:label="@string/menu_paper_add"
+        tools:layout="@layout/fragment_paper_edit">
+        <action
+            android:id="@+id/action_edit_paper_accept"
+            app:destination="@id/nav_papers"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_paper_edit"
+        android:name="org.logicprobe.printsizer.ui.papers.PaperEditFragment"
+        android:label="@string/menu_paper_modify"
+        tools:layout="@layout/fragment_paper_edit">
+        <action
+            android:id="@+id/action_edit_paper_accept"
+            app:destination="@id/nav_papers"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_paper_add_stock"
+        android:name="org.logicprobe.printsizer.ui.papers.StockPapersFragment"
+        android:label="Add Stock Paper"
+        tools:layout="@layout/fragment_stock_papers">
+        <action
+            android:id="@+id/action_add_stock_paper_accept"
+            app:destination="@id/nav_papers"/>
     </fragment>
 
     <fragment

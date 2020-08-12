@@ -3,7 +3,9 @@ package org.logicprobe.printsizer.db;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule;
 import androidx.room.Room;
+import androidx.room.migration.Migration;
 import androidx.room.testing.MigrationTestHelper;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 import androidx.sqlite.db.framework.FrameworkSQLiteOpenHelperFactory;
@@ -14,15 +16,20 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.logicprobe.printsizer.LiveDataTestUtil;
 import org.logicprobe.printsizer.db.dao.EnlargerProfileDao;
+import org.logicprobe.printsizer.db.dao.PaperProfileDao;
+import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.EnlargerProfile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.logicprobe.printsizer.db.AppDatabase.MIGRATION_1_2;
+import static org.logicprobe.printsizer.db.AppDatabase.MIGRATION_2_3;
 
 @RunWith(AndroidJUnit4.class)
 public class MigrationTest {
@@ -30,6 +37,9 @@ public class MigrationTest {
 
     @Rule
     public MigrationTestHelper helper;
+
+    @Rule
+    public InstantTaskExecutorRule instantTaskExecutorRule = new InstantTaskExecutorRule();
 
     public MigrationTest() {
         helper = new MigrationTestHelper(InstrumentationRegistry.getInstrumentation(),
@@ -68,12 +78,40 @@ public class MigrationTest {
         assertEquals(profile.getLargerTestTime(), 20.0d, 0.001d);
     }
 
+    @Test
+    public void migrate2To3() throws IOException, InterruptedException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 2);
+        db.close();
+        helper.runMigrationsAndValidate(TEST_DB, 2, true, MIGRATION_2_3);
+
+        PaperProfileDao paperDao = getMigratedRoomDatabase().paperProfileDao();
+        List<PaperProfileEntity> profiles = LiveDataTestUtil.getValue(paperDao.loadAllPaperProfiles());
+        assertTrue(profiles.isEmpty());
+    }
+
+    @Test
+    public void migrateAll() throws IOException {
+        SupportSQLiteDatabase db = helper.createDatabase(TEST_DB, 1);
+        db.close();
+
+        AppDatabase database = Room.databaseBuilder(
+                InstrumentationRegistry.getInstrumentation().getTargetContext(),
+                AppDatabase.class,
+                TEST_DB)
+                .addMigrations(ALL_MIGRATIONS).build();
+        database.getOpenHelper().getWritableDatabase();
+        database.close();
+    }
+
     private AppDatabase getMigratedRoomDatabase() {
         AppDatabase database = Room.databaseBuilder(ApplicationProvider.getApplicationContext(),
                 AppDatabase.class, TEST_DB)
-                .addMigrations(MIGRATION_1_2)
+                .addMigrations(ALL_MIGRATIONS)
                 .build();
         helper.closeWhenFinished(database);
         return database;
     }
+
+    private static final Migration[] ALL_MIGRATIONS = new Migration[]{
+            MIGRATION_1_2, MIGRATION_2_3};
 }
