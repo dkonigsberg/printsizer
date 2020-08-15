@@ -1,0 +1,163 @@
+[
+  {
+    "name": "Ilford MULTIGRADE RC DELUXE",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 240, "isoR": 160 },
+      "0":    { "isoP": 240, "isoR": 130 },
+      "1":    { "isoP": 240, "isoR": 110 },
+      "2":    { "isoP": 240, "isoR": 90  },
+      "3":    { "isoP": 240, "isoR": 70  },
+      "4":    { "isoP": 220, "isoR": 60  },
+      "5":    { "isoP": 220, "isoR": 50  },
+      "none": { "isoP": 500, "isoR": 90  }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE IV RC DELUXE",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 200, "isoR": 180 },
+      "0":    { "isoP": 200, "isoR": 160 },
+      "1":    { "isoP": 200, "isoR": 130 },
+      "2":    { "isoP": 200, "isoR": 110 },
+      "3":    { "isoP": 200, "isoR": 90  },
+      "4":    { "isoP": 100, "isoR": 60  },
+      "5":    { "isoP": 100, "isoR": 40  },
+      "none": { "isoP": 500, "isoR": 110 }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE RC WARMTONE",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 100, "isoR": 190 },
+      "0":    { "isoP": 100, "isoR": 160 },
+      "1":    { "isoP": 100, "isoR": 130 },
+      "2":    { "isoP": 100, "isoR": 110 },
+      "3":    { "isoP": 100, "isoR": 90  },
+      "4":    { "isoP": 50,  "isoR": 70  },
+      "5":    { "isoP": 50,  "isoR": 50  },
+      "none": { "isoP": 200, "isoR": 110 }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE RC COOLTONE",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 200, "isoR": 180 },
+      "0":    { "isoP": 200, "isoR": 160 },
+      "1":    { "isoP": 200, "isoR": 120 },
+      "2":    { "isoP": 200, "isoR": 100 },
+      "3":    { "isoP": 200, "isoR": 80  },
+      "4":    { "isoP": 100, "isoR": 60  },
+      "5":    { "isoP": 100, "isoR": 50  },
+      "none": { "isoP": 500, "isoR": 100 }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE IV RC PORTFOLIO",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 200, "isoR": 180 },
+      "0":    { "isoP": 200, "isoR": 160 },
+      "1":    { "isoP": 200, "isoR": 130 },
+      "2":    { "isoP": 200, "isoR": 110 },
+      "3":    { "isoP": 200, "isoR": 90  },
+      "4":    { "isoP": 100, "isoR": 60  },
+      "5":    { "isoP": 100, "isoR": 40  },
+      "none": { "isoP": 500, "isoR": 110 }
+    }
+  },
+  {
+    "name": "Kentmere VC SELECT",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 320, "isoR": 150 },
+      "0":    { "isoP": 320, "isoR": 130 },
+      "1":    { "isoP": 320, "isoR": 110 },
+      "2":    { "isoP": 320, "isoR": 95  },
+      "3":    { "isoP": 320, "isoR": 80  },
+      "4":    { "isoP": 160, "isoR": 70  },
+      "5":    { "isoP": 160, "isoR": 60  },
+      "none": { "isoP": 640, "isoR": 95  }
+    }
+  },
+  {
+    "name": "Ilford ILFOSPEED RC DELUXE",
+    "description": "Default paper",
+    "grades": {
+      "0":    { "isoP": 500, "isoR": 140 },
+      "1":    { "isoP": 500, "isoR": 120 },
+      "2":    { "isoP": 500, "isoR": 100 },
+      "3":    { "isoP": 500, "isoR": 80  },
+      "4":    { "isoP": 500, "isoR": 60  },
+      "5":    { "isoP": 250, "isoR": 40  }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE FB CLASSIC",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 230, "isoR": 170 },
+      "0":    { "isoP": 230, "isoR": 140 },
+      "1":    { "isoP": 230, "isoR": 110 },
+      "2":    { "isoP": 230, "isoR": 95  },
+      "3":    { "isoP": 230, "isoR": 80  },
+      "4":    { "isoP": 210, "isoR": 60  },
+      "5":    { "isoP": 210, "isoR": 50  },
+      "none": { "isoP": 500, "isoR": 95  }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE FB WARMTONE",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 100, "isoR": 170 },
+      "0":    { "isoP": 100, "isoR": 160 },
+      "1":    { "isoP": 100, "isoR": 130 },
+      "2":    { "isoP": 100, "isoR": 110 },
+      "3":    { "isoP": 100, "isoR": 90  },
+      "4":    { "isoP": 50,  "isoR": 70  },
+      "5":    { "isoP": 50,  "isoR": 50  },
+      "none": { "isoP": 200, "isoR": 110 }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE FB COOLTONE",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 250, "isoR": 130 },
+      "0":    { "isoP": 250, "isoR": 115 },
+      "1":    { "isoP": 250, "isoR": 100 },
+      "2":    { "isoP": 250, "isoR": 85  },
+      "3":    { "isoP": 250, "isoR": 70  },
+      "4":    { "isoP": 225, "isoR": 55  },
+      "5":    { "isoP": 225, "isoR": 50  },
+      "none": { "isoP": 590, "isoR": 85  }
+    }
+  },
+  {
+    "name": "Ilford ILFOBROM GALERIE FB",
+    "description": "Default paper",
+    "grades": {
+      "1":    { "isoP": 400, "isoR": 130 },
+      "2":    { "isoP": 400, "isoR": 110 },
+      "3":    { "isoP": 400, "isoR": 90  },
+      "4":    { "isoP": 400, "isoR": 70  }
+    }
+  },
+  {
+    "name": "Ilford MULTIGRADE ART 300",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 100, "isoR": 170 },
+      "0":    { "isoP": 100, "isoR": 160 },
+      "1":    { "isoP": 100, "isoR": 130 },
+      "2":    { "isoP": 100, "isoR": 110 },
+      "3":    { "isoP": 100, "isoR": 90  },
+      "4":    { "isoP": 50,  "isoR": 70  },
+      "5":    { "isoP": 50,  "isoR": 50  },
+      "none": { "isoP": 200, "isoR": 110 }
+    }
+  }]
