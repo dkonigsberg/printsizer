@@ -160,4 +160,112 @@
       "5":    { "isoP": 50,  "isoR": 50  },
       "none": { "isoP": 200, "isoR": 110 }
     }
-  }]
+  },
+  {
+    "name": "Adox MCP 310/312 RC",
+    "description": "Default paper",
+    "grades": {
+      "0":    { "isoP": 160 },
+      "1":    { "isoP": 160 },
+      "2":    { "isoP": 160 },
+      "3":    { "isoP": 160 },
+      "4":    { "isoP": 80  },
+      "5":    { "isoP": 80  },
+      "none": { "isoP": 400 }
+    }
+  },
+  {
+    "name": "Adox MCC 110/112 FB",
+    "description": "Default paper",
+    "grades": {
+      "0":    { "isoP": 160, "isoR": 140 },
+      "1":    { "isoP": 160, "isoR": 120 },
+      "2":    { "isoP": 160, "isoR": 100 },
+      "3":    { "isoP": 160, "isoR": 85  },
+      "4":    { "isoP": 80,  "isoR": 70  },
+      "5":    { "isoP": 80,  "isoR": 55  },
+      "none": { "isoP": 400, "isoR": 100 }
+    }
+  },
+  {
+    "name": "Foma FOMABROM FB",
+    "description": "Default paper",
+    "grades": {
+      "1":    { "isoP": 400, "isoR": 120 },
+      "2":    { "isoP": 400, "isoR": 100 },
+      "3":    { "isoP": 400, "isoR": 80  },
+      "4":    { "isoP": 400, "isoR": 60  }
+    }
+  },
+  {
+    "name": "Foma FOMABROM Variant III FB",
+    "description": "Ilford Multigrade filters",
+    "grades": {
+      "00":   { "isoP": 200, "isoR": 160 },
+      "0":    { "isoP": 200, "isoR": 130 },
+      "1":    { "isoP": 200, "isoR": 110 },
+      "2":    { "isoP": 200, "isoR": 90  },
+      "3":    { "isoP": 200, "isoR": 70  },
+      "4":    { "isoP": 100, "isoR": 60  },
+      "5":    { "isoP": 100, "isoR": 50  },
+      "none": { "isoP": 500, "isoR": 100 }
+    }
+  },
+  {
+    "name": "Foma FOMABROM Variant III FB",
+    "description": "Foma Variant filters",
+    "grades": {
+      "0":    { "isoP": 310, "isoR": 135 },
+      "1":    { "isoP": 360, "isoR": 120 },
+      "2":    { "isoP": 360, "isoR": 90 },
+      "3":    { "isoP": 240, "isoR": 80  },
+      "4":    { "isoP": 190, "isoR": 65  },
+      "5":    { "isoP": 110, "isoR": 55  },
+      "none": { "isoP": 500, "isoR": 100 }
+    }
+  },
+  {
+    "name": "Foma FOMASPEED RC",
+    "description": "Default paper",
+    "grades": {
+      "1":    { "isoP": 400, "isoR": 120 },
+      "2":    { "isoP": 400, "isoR": 100 },
+      "3":    { "isoP": 400, "isoR": 80  },
+      "4":    { "isoP": 400, "isoR": 60  }
+    }
+  },
+  {
+    "name": "Foma FOMASPEED Variant III RC",
+    "description": "Ilford Multigrade filters",
+    "grades": {
+      "00":   { "isoP": 200, "isoR": 160 },
+      "0":    { "isoP": 200, "isoR": 130 },
+      "1":    { "isoP": 200, "isoR": 110 },
+      "2":    { "isoP": 200, "isoR": 90  },
+      "3":    { "isoP": 200, "isoR": 70  },
+      "4":    { "isoP": 100, "isoR": 60  },
+      "5":    { "isoP": 100, "isoR": 50  },
+      "none": { "isoP": 500, "isoR": 100 }
+    }
+  },
+  {
+    "name": "Foma FOMASPEED Variant III RC",
+    "description": "Foma Variant filters",
+    "grades": {
+      "0":    { "isoP": 310, "isoR": 135 },
+      "1":    { "isoP": 360, "isoR": 120 },
+      "2":    { "isoP": 360, "isoR": 90 },
+      "3":    { "isoP": 240, "isoR": 80 },
+      "4":    { "isoP": 190, "isoR": 65 },
+      "5":    { "isoP": 110, "isoR": 55 },
+      "none": { "isoP": 500, "isoR": 100 }
+    }
+  },
+  {
+    "name": "Foma RETROBROM Sp",
+    "description": "Default paper",
+    "grades": {
+      "none": { "isoP": 200, "isoR": 110 }
+    }
+  }
+]
