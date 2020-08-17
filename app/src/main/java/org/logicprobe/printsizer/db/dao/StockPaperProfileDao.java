@@ -12,6 +12,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class StockPaperProfileDao {
@@ -35,6 +37,17 @@ public class StockPaperProfileDao {
             Log.e(TAG, "Unable to read stock data file: " + e.getMessage());
             e.printStackTrace();
         }
+
+        Collections.sort(list, new Comparator<PaperProfileEntity>() {
+            @Override
+            public int compare(PaperProfileEntity e1, PaperProfileEntity e2) {
+                int cmp = e1.getName().compareTo(e2.getName());
+                if (cmp == 0) {
+                    cmp = e1.getId() - e2.getId();
+                }
+                return cmp;
+            }
+        });
 
         return list;
     }
