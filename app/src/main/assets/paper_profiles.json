@@ -267,5 +267,101 @@
     "grades": {
       "none": { "isoP": 200, "isoR": 110 }
     }
+  },
+  {
+    "name": "Arista EDU ULTRA FB VC",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 200 },
+      "0":    { "isoP": 200 },
+      "1":    { "isoP": 200 },
+      "2":    { "isoP": 200 },
+      "3":    { "isoP": 200 },
+      "4":    { "isoP": 100 },
+      "5":    { "isoP": 100 }
+    }
+  },
+  {
+    "name": "Arista EDU ULTRA VC RC",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 200 },
+      "0":    { "isoP": 200 },
+      "1":    { "isoP": 200 },
+      "2":    { "isoP": 200 },
+      "3":    { "isoP": 200 },
+      "4":    { "isoP": 100 },
+      "5":    { "isoP": 100 }
+    }
+  },
+  {
+    "name": "Arista EDU ULTRA GRADED RC",
+    "description": "Default paper",
+    "grades": {
+      "2":    { "isoP": 400 },
+      "3":    { "isoP": 400 }
+    }
+  },
+  {
+    "name": "Bergger PRESTIGE RC 1",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 250 },
+      "0":    { "isoP": 250 },
+      "1":    { "isoP": 250 },
+      "2":    { "isoP": 250 },
+      "3":    { "isoP": 250 },
+      "4":    { "isoP": 125 },
+      "5":    { "isoP": 125 },
+      "none": { "isoP": 640 }
+    }
+  },
+  {
+    "name": "Bergger PRESTIGE VARIABLE NB",
+    "description": "Default paper",
+    "grades": {
+      "00":   { "isoP": 250 },
+      "0":    { "isoP": 250 },
+      "1":    { "isoP": 250 },
+      "2":    { "isoP": 250 },
+      "3":    { "isoP": 250 },
+      "4":    { "isoP": 125 },
+      "5":    { "isoP": 125 },
+      "none": { "isoP": 640 }
+    }
+  },
+  {
+    "name": "Bergger PRESTIGE VARIABLE CB",
+    "description": "Default paper",
+    "grades": {
+      "none": { "isoP": 200 }
+    }
+  },
+  {
+    "name": "Oriental Seagull G",
+    "description": "Default paper",
+    "grades": {
+      "2":    { "isoP": 640, "isoR": 100 },
+      "3":    { "isoP": 400, "isoR": 80  },
+      "4":    { "isoP": 200, "isoR": 60  }
+    }
+  },
+  {
+    "name": "Oriental Seagull RP-M PREMIUM",
+    "description": "Default paper",
+    "grades": {
+      "2":    { "isoP": 640, "isoR": 110 },
+      "3":    { "isoP": 400, "isoR": 90  },
+      "4":    { "isoP": 320, "isoR": 70  }
+    }
+  },
+  {
+    "name": "Oriental Seagull RP",
+    "description": "Default paper",
+    "grades": {
+      "2":    { "isoP": 640, "isoR": 110 },
+      "3":    { "isoP": 400, "isoR": 90  },
+      "4":    { "isoP": 320, "isoR": 70  }
+    }
   }
 ]
