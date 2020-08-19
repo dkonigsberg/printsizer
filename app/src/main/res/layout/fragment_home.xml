@@ -6,9 +6,16 @@
     <data>
         <import type="org.logicprobe.printsizer.ui.Converter" />
         <import type="android.view.View" />
+
         <variable
             name="homeViewModel"
             type="org.logicprobe.printsizer.ui.home.HomeViewModel" />
+        <variable
+            name="smallerPaperProfileClickCallback"
+            type="org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback" />
+        <variable
+            name="largerPaperProfileClickCallback"
+            type="org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback" />
         <variable
             name="enlargerProfileClickCallback"
             type="org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback" />
@@ -17,6 +24,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
         tools:context=".ui.home.HomeFragment">
 
         <ScrollView
@@ -30,180 +38,379 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/form_vertical_margin">
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/textViewSmallerPrint"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_marginBottom="@dimen/form_vertical_margin"
-                    android:text="@string/label_smaller_print"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:textColor="@color/primaryColor" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editSmallerHeightLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_enlarger_height"
-                    app:startIconDrawable="@drawable/ic_height"
-                    app:errorEnabled="true"
-                    app:suffixText="@string/unit_suffix_mm">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editSmallerHeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="12"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editSmallerTimeLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_exposure_time"
-                    app:startIconDrawable="@drawable/ic_shutter_speed"
-                    app:errorEnabled="true"
-                    app:suffixText="@string/unit_suffix_seconds">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editSmallerTime"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="12"
-                        android:inputType="numberDecimal" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
-
-                <TextView
-                    android:id="@+id/textViewLargerPrint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:layout_marginVertical="@dimen/form_vertical_margin"
-                    android:text="@string/label_larger_print"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-                    android:textColor="@color/primaryColor" />
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editLargerHeightLayout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                    android:hint="@string/label_enlarger_height"
-                    app:startIconDrawable="@drawable/ic_height"
-                    app:errorEnabled="true"
-                    app:suffixText="@string/unit_suffix_mm">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/editLargerHeight"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:ems="12"
-                        android:inputType="number" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/editLargerTimeLayout"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
-                        android:hint="@string/label_exposure_time"
-                        app:startIconDrawable="@drawable/ic_shutter_speed"
-                        app:errorEnabled="true"
-                        app:suffixText="@string/unit_suffix_seconds">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editLargerTime"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:editable="false"
-                            android:ems="12"
-                            android:inputType="none"
-                            android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}"
-                            tools:ignore="Deprecated" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                        app:endIconDrawable="@drawable/ic_exposure">
-
-                        <AutoCompleteTextView
-                            android:id="@+id/editLargerExposureAdjustment"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="@string/description_exposure_compensation"
-                            tools:ignore="LabelFor"
-                            android:inputType="none" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
-
-                <FrameLayout
-                    android:id="@+id/layoutEnlarger"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:clipChildren="false"
-                    android:measureAllChildren="true">
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="8dp">
 
                     <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="@dimen/activity_horizontal_margin"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:onClick="@{() ->  enlargerProfileClickCallback.onClick(homeViewModel.enlargerProfile)}"
-                        android:visibility="@{homeViewModel.enlargerProfile.id == 0 ? View.VISIBLE : View.GONE}">
+                        android:layout_height="match_parent">
 
-                        <TextView
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:animateLayoutChanges="true"
+                            android:orientation="vertical"
+                            android:paddingVertical="16dp"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false">
+
+                            <TextView
+                                android:id="@+id/textViewSmallerPrint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="0dp"
+                                android:layout_weight="1"
+                                android:text="@string/label_smaller_print"
+                                android:textAppearance="?attr/textAppearanceHeadline6"
+                                android:includeFontPadding="false"
+                                android:layout_marginTop="-2dp"
+                                android:textColor="@color/primaryColor" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/editSmallerHeightLayout"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/form_vertical_margin"
+                                android:hint="@string/label_enlarger_height"
+                                app:errorEnabled="true"
+                                app:startIconDrawable="@drawable/ic_height"
+                                app:suffixText="@string/unit_suffix_mm">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/editSmallerHeight"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ems="12"
+                                    android:inputType="number" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/editSmallerTimeLayout"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/form_vertical_margin"
+                                android:hint="@string/label_exposure_time"
+                                app:errorEnabled="true"
+                                app:startIconDrawable="@drawable/ic_shutter_speed"
+                                app:suffixText="@string/unit_suffix_seconds">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/editSmallerTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ems="12"
+                                    android:inputType="numberDecimal" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.card.MaterialCardView
+                                android:id="@+id/smallerPaperProfileView"
+                                android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/form_vertical_margin"
+                                app:cardElevation="0dp"
+                                app:strokeColor="@color/outlined_stroke_color"
+                                app:strokeWidth="1dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:foreground="?android:attr/selectableItemBackground"
+                                    android:orientation="horizontal"
+                                    android:paddingStart="8dp"
+                                    android:paddingEnd="8dp"
+                                    android:onClick="@{() ->  smallerPaperProfileClickCallback.onClick(homeViewModel.smallerPaperProfile)}"
+                                    android:baselineAligned="false"
+                                    tools:ignore="UnusedAttribute">
+
+                                    <RelativeLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:background="@drawable/background_selectable_item"
+                                        android:clipChildren="false"
+                                        android:clipToPadding="false"
+                                        android:orientation="vertical"
+                                        android:paddingVertical="8dp"
+                                        tools:ignore="UselessParent">
+
+                                        <TextView
+                                            android:id="@+id/smallerPaperName"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentStart="true"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            tools:text="Ilford MULTIGRADE IV RC DELUXE"
+                                            android:text="@{homeViewModel.smallerPaperProfile.name}"
+                                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                                        <TextView
+                                            android:id="@+id/smallerPaperDescription"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_below="@id/smallerPaperName"
+                                            android:layout_alignParentStart="true"
+                                            android:ellipsize="end"
+                                            android:maxLines="1"
+                                            tools:text="Stock paper profile"
+                                            android:text="@{homeViewModel.smallerPaperProfile.description}"
+                                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                                        <com.google.android.material.chip.Chip
+                                            android:id="@+id/smallerPaperGradeChip"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentEnd="true"
+                                            android:layout_alignParentBottom="true"
+                                            android:checkable="false"
+                                            android:clickable="false"
+                                            android:longClickable="false"
+                                            tools:text="Grade 00"
+                                            android:text="@{homeViewModel.smallerPaperGradeResourceId}"
+                                            android:translationY="2dp"
+                                            app:chipMinHeight="24dp"
+                                            app:ensureMinTouchTargetSize="false" />
+                                    </RelativeLayout>
+                                </LinearLayout>
+                            </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonAddPaperProfile"
+                            android:visibility="@{homeViewModel.hasPaperProfiles() ? View.INVISIBLE : View.VISIBLE}"
+                            style="@style/Widget.App.Button.TextButton.IconOnly"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:text="@string/action_choose_enlarger_profile"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            app:drawableStartCompat="@drawable/ic_menu_enlarger"
-                            android:drawablePadding="12dp" />
+                            android:layout_gravity="top|end"
+                            app:icon="@drawable/ic_add_paper_profile" />
                     </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <include layout="@layout/enlarger_profile_item"
-                        app:enlargerProfile="@{homeViewModel.enlargerProfile}"
-                        app:profileError="@{!homeViewModel.enlargerProfileValid}"
-                        app:callback="@{enlargerProfileClickCallback}"
-                        android:visibility="@{homeViewModel.enlargerProfile.id > 0 ? View.VISIBLE : View.GONE}" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="8dp">
 
-                </FrameLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical"
+                        android:padding="16dp"
+                        android:clipChildren="false"
+                        android:clipToPadding="false">
+
+                        <TextView
+                            android:id="@+id/textViewLargerPrint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_larger_print"
+                            android:textAppearance="?attr/textAppearanceHeadline6"
+                            android:includeFontPadding="false"
+                            android:layout_marginTop="-2dp"
+                            android:textColor="@color/primaryColor" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/editLargerHeightLayout"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/form_vertical_margin"
+                            android:hint="@string/label_enlarger_height"
+                            app:errorEnabled="true"
+                            app:startIconDrawable="@drawable/ic_height"
+                            app:suffixText="@string/unit_suffix_mm">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/editLargerHeight"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:ems="12"
+                                android:inputType="number" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/form_vertical_margin"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/editLargerTimeLayout"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/label_exposure_time"
+                                app:errorEnabled="true"
+                                app:startIconDrawable="@drawable/ic_shutter_speed"
+                                app:suffixText="@string/unit_suffix_seconds">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/editLargerTime"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:editable="false"
+                                    android:ems="12"
+                                    android:inputType="none"
+                                    android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}"
+                                    tools:ignore="Deprecated" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:endIconDrawable="@drawable/ic_exposure">
+
+                                <AutoCompleteTextView
+                                    android:id="@+id/editLargerExposureAdjustment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:contentDescription="@string/description_exposure_compensation"
+                                    android:inputType="none"
+                                    tools:ignore="LabelFor" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/largerPaperProfileView"
+                            android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/form_vertical_margin"
+                            app:cardElevation="0dp"
+                            app:strokeColor="@color/outlined_stroke_color"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:foreground="?android:attr/selectableItemBackground"
+                                android:orientation="horizontal"
+                                android:paddingStart="8dp"
+                                android:paddingEnd="8dp"
+                                android:onClick="@{() ->  largerPaperProfileClickCallback.onClick(homeViewModel.largerPaperProfile)}"
+                                android:baselineAligned="false"
+                                tools:ignore="UnusedAttribute">
+
+                                <RelativeLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/background_selectable_item"
+                                    android:clipChildren="false"
+                                    android:clipToPadding="false"
+                                    android:orientation="vertical"
+                                    android:paddingVertical="8dp"
+                                    tools:ignore="UselessParent">
+
+                                    <TextView
+                                        android:id="@+id/largerPaperName"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentStart="true"
+                                        android:ellipsize="end"
+                                        android:maxLines="1"
+                                        tools:text="Ilford MULTIGRADE RC DELUXE"
+                                        android:text="@{homeViewModel.largerPaperProfile.name}"
+                                        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                                    <TextView
+                                        android:id="@+id/largerPaperDescription"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@id/largerPaperName"
+                                        android:layout_alignParentStart="true"
+                                        android:ellipsize="end"
+                                        android:maxLines="1"
+                                        tools:text="Stock paper profile"
+                                        android:text="@{homeViewModel.largerPaperProfile.description}"
+                                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                                    <com.google.android.material.chip.Chip
+                                        android:id="@+id/largerPaperGradeChip"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentEnd="true"
+                                        android:layout_alignParentBottom="true"
+                                        android:checkable="false"
+                                        android:clickable="false"
+                                        android:longClickable="false"
+                                        tools:text="Grade 2"
+                                        android:text="@{homeViewModel.largerPaperGradeResourceId}"
+                                        android:translationY="2dp"
+                                        app:chipMinHeight="24dp"
+                                        app:ensureMinTouchTargetSize="false" />
+                                </RelativeLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginTop="8dp">
+
+                    <FrameLayout
+                        android:id="@+id/layoutEnlarger"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipChildren="false"
+                        android:clipToPadding="false"
+                        android:measureAllChildren="true">
+
+                        <FrameLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:onClick="@{() ->  enlargerProfileClickCallback.onClick(homeViewModel.enlargerProfile)}"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/activity_horizontal_margin"
+                            android:paddingVertical="4dp"
+                            android:visibility="@{homeViewModel.enlargerProfile.id == 0 ? View.VISIBLE : View.GONE}">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:drawablePadding="12dp"
+                                android:text="@string/action_choose_enlarger_profile"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                app:drawableStartCompat="@drawable/ic_menu_enlarger" />
+                        </FrameLayout>
+
+                        <include
+                            layout="@layout/enlarger_profile_item"
+                            android:visibility="@{homeViewModel.enlargerProfile.id > 0 ? View.VISIBLE : View.GONE}"
+                            app:callback="@{enlargerProfileClickCallback}"
+                            app:enlargerProfile="@{homeViewModel.enlargerProfile}"
+                            app:profileError="@{!homeViewModel.enlargerProfileValid}" />
+
+                    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="?android:attr/listDivider" />
-
+                    android:layout_height="@dimen/activity_vertical_margin" />
             </LinearLayout>
         </ScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

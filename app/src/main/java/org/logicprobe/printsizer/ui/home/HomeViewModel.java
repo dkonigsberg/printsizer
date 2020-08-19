@@ -15,26 +15,43 @@ import androidx.preference.PreferenceManager;
 import org.logicprobe.printsizer.App;
 import org.logicprobe.printsizer.DataRepository;
 import org.logicprobe.printsizer.LiveDataUtil;
+import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.db.entity.EnlargerProfileEntity;
+import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.Enlarger;
 import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.model.PaperProfile;
 import org.logicprobe.printsizer.model.PrintMath;
 import org.logicprobe.printsizer.model.PrintScaler;
+import org.logicprobe.printsizer.ui.Converter;
 
 public class HomeViewModel extends AndroidViewModel {
     private static final String TAG = HomeViewModel.class.getSimpleName();
     private static final EnlargerProfile DEFAULT_PROFILE = new EnlargerProfileEntity();
+    private static final PaperProfile DEFAULT_PAPER_PROFILE = new PaperProfileEntity();
+    private static final int DEFAULT_PAPER_GRADE_ID = PaperProfile.GRADE_2;
     private static final String DEFAULT_PROFILE_ID_KEY = "default_enlarger_profile_id";
     private static final String SMALLER_PRINT_HEIGHT_KEY = "smaller_print_height";
     private static final String SMALLER_PRINT_EXPOSURE_TIME_KEY = "smaller_print_exposure_time";
     private static final String LARGER_PRINT_HEIGHT_KEY = "larger_print_height";
     private static final String LARGER_PRINT_EXPOSURE_TIME_KEY = "larger_print_exposure_time";
     private static final String LARGER_PRINT_EXPOSURE_OFFSET_KEY = "larger_print_exposure_offset";
+    private static final String SMALLER_PAPER_PROFILE_ID_KEY = "smaller_paper_profile_id";
+    private static final String SMALLER_PAPER_GRADE_ID_KEY = "smaller_paper_grade_id";
+    private static final String LARGER_PAPER_PROFILE_ID_KEY = "larger_paper_profile_id";
+    private static final String LARGER_PAPER_GRADE_ID_KEY = "larger_paper_grade_id";
+    private static final String HAS_PAPER_PROFILES_KEY = "has_paper_profiles";
     private static final String ENLARGER_PROFILE_ID_KEY = "enlarger_profile_id";
 
     private final SavedStateHandle state;
     private final DataRepository repository;
 
+    private MediatorLiveData<PaperProfile> smallerPaperProfile;
+    private LiveData<PaperProfileEntity> loadedSmallerPaperProfile;
+    private MediatorLiveData<Integer> smallerPaperGradeResourceId;
+    private MediatorLiveData<PaperProfile> largerPaperProfile;
+    private LiveData<PaperProfileEntity> loadedLargerPaperProfile;
+    private MediatorLiveData<Integer> largerPaperGradeResourceId;
     private MediatorLiveData<EnlargerProfile> enlargerProfile;
     private LiveData<EnlargerProfileEntity> loadedEnlargerProfile;
     private MutableLiveData<EnlargerHeightErrorEvent> smallerPrintHeightError;
@@ -45,10 +62,101 @@ public class HomeViewModel extends AndroidViewModel {
         super(application);
         this.state = savedStateHandle;
         this.repository = ((App)application).getRepository();
+        this.smallerPaperProfile = new MediatorLiveData<>();
+        this.smallerPaperGradeResourceId = new MediatorLiveData<>();
+        this.largerPaperProfile = new MediatorLiveData<>();
+        this.largerPaperGradeResourceId = new MediatorLiveData<>();
         this.enlargerProfile = new MediatorLiveData<>();
         this.smallerPrintHeightError = new MutableLiveData<>(EnlargerHeightErrorEvent.NONE);
         this.largerPrintHeightError = new MutableLiveData<>(EnlargerHeightErrorEvent.NONE);
         this.enlargerProfileValid = new MutableLiveData<>(true);
+
+        // Set placeholder values indicating unset paper grades, so that our change listeners
+        // will work correctly when they are set.
+        state.set(SMALLER_PAPER_GRADE_ID_KEY, Integer.MIN_VALUE);
+        state.set(LARGER_PAPER_GRADE_ID_KEY, Integer.MIN_VALUE);
+
+        smallerPaperProfile.setValue(DEFAULT_PAPER_PROFILE);
+        smallerPaperProfile.addSource(state.getLiveData(SMALLER_PAPER_PROFILE_ID_KEY, 0), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer profileId) {
+                if (loadedSmallerPaperProfile != null) {
+                    smallerPaperProfile.removeSource(loadedSmallerPaperProfile);
+                    loadedSmallerPaperProfile = null;
+                }
+                if (profileId == 0) {
+                    smallerPaperProfile.setValue(DEFAULT_PAPER_PROFILE);
+                    state.set(SMALLER_PAPER_GRADE_ID_KEY, Integer.MIN_VALUE);
+                    recalculateLargerPrintExposureTime();
+                    return;
+                }
+                loadedSmallerPaperProfile = repository.loadPaperProfile(profileId);
+                smallerPaperProfile.addSource(loadedSmallerPaperProfile, new Observer<PaperProfileEntity>() {
+                    @Override
+                    public void onChanged(PaperProfileEntity paperProfileEntity) {
+                        if (paperProfileEntity == null) {
+                            smallerPaperProfile.setValue(DEFAULT_PAPER_PROFILE);
+                        } else {
+                            smallerPaperProfile.setValue(paperProfileEntity);
+                        }
+                        Integer gradeIdValue = state.get(SMALLER_PAPER_GRADE_ID_KEY);
+                        if (gradeIdValue != null && gradeIdValue == Integer.MIN_VALUE) {
+                            state.set(SMALLER_PAPER_GRADE_ID_KEY, findDefaultPaperGradeId(paperProfileEntity));
+                        }
+                        recalculateLargerPrintExposureTime();
+                    }
+                });
+            }
+        });
+
+        smallerPaperGradeResourceId.setValue(R.string.empty);
+        smallerPaperGradeResourceId.addSource(state.getLiveData(SMALLER_PAPER_GRADE_ID_KEY, PaperProfile.GRADE_NONE), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer gradeId) {
+                smallerPaperGradeResourceId.setValue(Converter.paperGradeToResourceId(gradeId));
+            }
+        });
+        
+        largerPaperProfile.setValue(DEFAULT_PAPER_PROFILE);
+        largerPaperProfile.addSource(state.getLiveData(LARGER_PAPER_PROFILE_ID_KEY, 0), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer profileId) {
+                if (loadedLargerPaperProfile != null) {
+                    largerPaperProfile.removeSource(loadedLargerPaperProfile);
+                    loadedLargerPaperProfile = null;
+                }
+                if (profileId == 0) {
+                    largerPaperProfile.setValue(DEFAULT_PAPER_PROFILE);
+                    state.set(LARGER_PAPER_GRADE_ID_KEY, Integer.MIN_VALUE);
+                    recalculateLargerPrintExposureTime();
+                    return;
+                }
+                loadedLargerPaperProfile = repository.loadPaperProfile(profileId);
+                largerPaperProfile.addSource(loadedLargerPaperProfile, new Observer<PaperProfileEntity>() {
+                    @Override
+                    public void onChanged(PaperProfileEntity paperProfileEntity) {
+                        if (paperProfileEntity == null) {
+                            largerPaperProfile.setValue(DEFAULT_PAPER_PROFILE);
+                        } else {
+                            largerPaperProfile.setValue(paperProfileEntity);
+                        }
+                        Integer gradeIdValue = state.get(LARGER_PAPER_GRADE_ID_KEY);
+                        if (gradeIdValue != null && gradeIdValue == Integer.MIN_VALUE) {
+                            state.set(LARGER_PAPER_GRADE_ID_KEY, findDefaultPaperGradeId(paperProfileEntity));
+                        }
+                        recalculateLargerPrintExposureTime();
+                    }
+                });
+            }
+        });
+        
+        largerPaperGradeResourceId.setValue(R.string.empty);
+        largerPaperGradeResourceId.addSource(state.getLiveData(LARGER_PAPER_GRADE_ID_KEY, PaperProfile.GRADE_NONE), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer gradeId) {
+                largerPaperGradeResourceId.setValue(Converter.paperGradeToResourceId(gradeId));
+            }
+        });
 
         enlargerProfile.setValue(DEFAULT_PROFILE);
         enlargerProfile.addSource(state.getLiveData(ENLARGER_PROFILE_ID_KEY, 0), new Observer<Integer>() {
@@ -114,6 +222,26 @@ public class HomeViewModel extends AndroidViewModel {
         return state.getLiveData(SMALLER_PRINT_EXPOSURE_TIME_KEY, Double.NaN);
     }
 
+    public void setSmallerPaperProfileId(int paperProfileId) {
+        state.set(SMALLER_PAPER_PROFILE_ID_KEY, paperProfileId);
+    }
+
+    public LiveData<PaperProfile> getSmallerPaperProfile() {
+        return smallerPaperProfile;
+    }
+
+    public void setSmallerPaperGradeId(@PaperProfile.GradeId int paperGradeId) {
+        state.set(SMALLER_PAPER_GRADE_ID_KEY, paperGradeId);
+    }
+    
+    public LiveData<Integer> getSmallerPaperGradeId() {
+        return state.getLiveData(SMALLER_PAPER_GRADE_ID_KEY, PaperProfile.GRADE_NONE);
+    }
+
+    public LiveData<Integer> getSmallerPaperGradeResourceId() {
+        return smallerPaperGradeResourceId;
+    }
+
     public void setLargerPrintHeight(double largerPrintHeight) {
         state.set(LARGER_PRINT_HEIGHT_KEY, largerPrintHeight);
         recalculateLargerPrintExposureTime();
@@ -134,6 +262,44 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<Double> getLargerPrintExposureOffset() {
         return state.getLiveData(LARGER_PRINT_EXPOSURE_OFFSET_KEY, 0.0d);
+    }
+
+    public void setLargerPaperProfileId(int paperProfileId) {
+        state.set(LARGER_PAPER_PROFILE_ID_KEY, paperProfileId);
+    }
+
+    public LiveData<PaperProfile> getLargerPaperProfile() {
+        return largerPaperProfile;
+    }
+    
+    public void setLargerPaperGradeId(@PaperProfile.GradeId int paperGradeId) {
+        state.set(LARGER_PAPER_GRADE_ID_KEY, paperGradeId);
+    }
+
+    public LiveData<Integer> getLargerPaperGradeId() {
+        return state.getLiveData(LARGER_PAPER_GRADE_ID_KEY, PaperProfile.GRADE_NONE);
+    }
+
+    public LiveData<Integer> getLargerPaperGradeResourceId() {
+        return largerPaperGradeResourceId;
+    }
+
+    public void setHasPaperProfiles(boolean hasPaperProfiles) {
+        state.set(HAS_PAPER_PROFILES_KEY, hasPaperProfiles);
+
+        // If we're setting paper profiles as being disabled, clear any existing
+        // values. This ensures that we start from a clean slate if profiles are
+        // added again.
+        if (!hasPaperProfiles) {
+            state.set(SMALLER_PAPER_PROFILE_ID_KEY, 0);
+            state.set(SMALLER_PAPER_GRADE_ID_KEY, Integer.MIN_VALUE);
+            state.set(LARGER_PAPER_PROFILE_ID_KEY, 0);
+            state.set(LARGER_PAPER_GRADE_ID_KEY, Integer.MIN_VALUE);
+        }
+    }
+
+    public LiveData<Boolean> hasPaperProfiles() {
+        return state.getLiveData(HAS_PAPER_PROFILES_KEY, false);
     }
 
     public void setEnlargerProfile(int enlargerProfileId) {
@@ -158,6 +324,32 @@ public class HomeViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> getEnlargerProfileValid() {
         return enlargerProfileValid;
+    }
+
+
+    private static int findDefaultPaperGradeId(PaperProfile paperProfile) {
+        // Attempt to find a starting contrast grade setting, based on what is available in the
+        // provided paper profile. This gives a preference to grades 2 and 3, followed by the
+        // unfiltered setting, and eventually whatever we have.
+        if (paperProfile == null) {
+            return DEFAULT_PAPER_GRADE_ID;
+        } else if (paperProfile.getGrade2() != null && paperProfile.getGrade2().getIsoP() > 0) {
+            return PaperProfile.GRADE_2;
+        } else if (paperProfile.getGrade3() != null && paperProfile.getGrade3().getIsoP() > 0) {
+            return PaperProfile.GRADE_3;
+        } else if (paperProfile.getGradeNone() != null && paperProfile.getGradeNone().getIsoP() > 0) {
+            return PaperProfile.GRADE_NONE;
+        } else if (paperProfile.getGrade0() != null && paperProfile.getGrade0().getIsoP() > 0) {
+            return PaperProfile.GRADE_0;
+        } else if (paperProfile.getGrade00() != null && paperProfile.getGrade00().getIsoP() > 0) {
+            return PaperProfile.GRADE_00;
+        } else if (paperProfile.getGrade4() != null && paperProfile.getGrade4().getIsoP() > 0) {
+            return PaperProfile.GRADE_4;
+        } else if (paperProfile.getGrade5() != null && paperProfile.getGrade5().getIsoP() > 0) {
+            return PaperProfile.GRADE_5;
+        } else {
+            return PaperProfile.GRADE_NONE;
+        }
     }
 
     public boolean isPrintDataValid() {

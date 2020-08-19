@@ -32,7 +32,7 @@
             tools:ignore="UselessParent">
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/smallerPaperName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -42,11 +42,11 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
-                android:id="@+id/description"
+                android:id="@+id/smallerPaperDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/name"
+                android:layout_below="@id/smallerPaperName"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@{paperProfile.description}"

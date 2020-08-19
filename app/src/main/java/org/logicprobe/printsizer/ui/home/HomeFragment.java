@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -20,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -31,11 +33,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.logicprobe.printsizer.LiveDataUtil;
 import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.databinding.DialogChooseEnlargerBinding;
 import org.logicprobe.printsizer.databinding.FragmentHomeBinding;
 import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.model.PaperProfile;
 import org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback;
+import org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -44,6 +49,9 @@ import java.util.List;
 
 public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = HomeFragment.class.getSimpleName();
+    private static final String SELECT_PAPER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_SELECT_PAPER";
+    private static final String SMALL_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_SMALL_PAPER_SETTINGS";
+    private static final String LARGE_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_LARGE_PAPER_SETTINGS";
     private static final String ADD_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_ENLARGER";
 
     private static final double[] FULL_STOPS = { -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0 };
@@ -70,6 +78,10 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
 
     private AutoCompleteTextView editLargerExposureAdjustment;
 
+    private Button buttonAddPaperProfile;
+    private View smallerPaperProfileView;
+    private View largerPaperProfileView;
+
     private boolean height_as_cm;
     private boolean ignoreHeightChange;
     private boolean ignoreExposureOffsetChange;
@@ -77,7 +89,55 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getParentFragmentManager().setFragmentResultListener(ADD_ENLARGER_REQUEST_KEY, this, new FragmentResultListener() {
+
+        FragmentManager fragmentManager = getParentFragmentManager();
+
+        fragmentManager.setFragmentResultListener(SELECT_PAPER_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int paperProfileId = result.getInt("id", 0);
+                Log.d(TAG, "Paper profile selected: " + paperProfileId);
+                handlePaperProfileSelected(paperProfileId);
+            }
+        });
+
+        fragmentManager.setFragmentResultListener(SMALL_PAPER_SETTINGS_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int action = result.getInt("action");
+                if (action == PaperSettingsDialogFragment.ACTION_ACCEPT) {
+                    Log.d(TAG, "Small paper settings changed");
+                    int profileId = result.getInt("profileId");
+                    int gradeId = result.getInt("gradeId");
+                    handleSmallPaperSettingChanged(profileId, gradeId);
+                } else if (action == PaperSettingsDialogFragment.ACTION_CANCEL) {
+                    Log.d(TAG, "Small paper settings cancelled");
+                } if (action == PaperSettingsDialogFragment.ACTION_REMOVE) {
+                    Log.d(TAG, "Remove paper profiles");
+                    handleRemovePaperProfiles();
+                }
+            }
+        });
+
+        fragmentManager.setFragmentResultListener(LARGE_PAPER_SETTINGS_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int action = result.getInt("action");
+                if (action == PaperSettingsDialogFragment.ACTION_ACCEPT) {
+                    Log.d(TAG, "Large paper settings changed");
+                    int profileId = result.getInt("profileId");
+                    int gradeId = result.getInt("gradeId");
+                    handleLargePaperSettingChanged(profileId, gradeId);
+                } else if (action == PaperSettingsDialogFragment.ACTION_CANCEL) {
+                    Log.d(TAG, "Large paper settings cancelled");
+                } if (action == PaperSettingsDialogFragment.ACTION_REMOVE) {
+                    Log.d(TAG, "Remove paper profiles");
+                    handleRemovePaperProfiles();
+                }
+            }
+        });
+
+        fragmentManager.setFragmentResultListener(ADD_ENLARGER_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 int enlargerProfileId = result.getInt("id", 0);
@@ -114,6 +174,20 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setHomeViewModel(homeViewModel);
 
+        binding.setSmallerPaperProfileClickCallback(new PaperProfileClickCallback() {
+            @Override
+            public void onClick(PaperProfile paperProfile) {
+                smallerPaperProfileClicked(paperProfile);
+            }
+        });
+
+        binding.setLargerPaperProfileClickCallback(new PaperProfileClickCallback() {
+            @Override
+            public void onClick(PaperProfile paperProfile) {
+                largerPaperProfileClicked(paperProfile);
+            }
+        });
+
         binding.setEnlargerProfileClickCallback(new EnlargerProfileClickCallback() {
             @Override
             public void onClick(EnlargerProfile enlargerProfile) {
@@ -127,6 +201,20 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editSmallerHeightLayout = root.findViewById(R.id.editSmallerHeightLayout);
         editLargerHeightLayout = root.findViewById(R.id.editLargerHeightLayout);
         editLargerExposureAdjustment = root.findViewById(R.id.editLargerExposureAdjustment);
+
+        buttonAddPaperProfile = root.findViewById(R.id.buttonAddPaperProfile);
+        smallerPaperProfileView = root.findViewById(R.id.smallerPaperProfileView);
+        largerPaperProfileView = root.findViewById(R.id.largerPaperProfileView);
+
+        largerPaperProfileView.setVisibility(View.GONE);
+
+        buttonAddPaperProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChoosePaperDialogFragment dialog = ChoosePaperDialogFragment.create(SELECT_PAPER_REQUEST_KEY);
+                dialog.show(getParentFragmentManager(), "choose_paper_alert");
+            }
+        });
 
         return root;
     }
@@ -246,6 +334,46 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         } else if ("exposure_increments".equals(key)) {
             updateExposureIncrements(sharedPreferences);
         }
+    }
+
+    private void handlePaperProfileSelected(int paperProfileId) {
+        homeViewModel.setSmallerPaperProfileId(paperProfileId);
+        homeViewModel.setLargerPaperProfileId(paperProfileId);
+        homeViewModel.setHasPaperProfiles(true);
+    }
+
+    private void handleRemovePaperProfiles() {
+        homeViewModel.setHasPaperProfiles(false);
+    }
+
+    private void smallerPaperProfileClicked(PaperProfile paperProfile) {
+        if (paperProfile == null) { return; }
+        PaperSettingsDialogFragment paperDialog = PaperSettingsDialogFragment.create(
+                SMALL_PAPER_SETTINGS_REQUEST_KEY,
+                R.string.dialog_smaller_print_paper_profile,
+                paperProfile.getId(), LiveDataUtil.getIntValue(homeViewModel.getSmallerPaperGradeId()),
+                true);
+        paperDialog.show(getParentFragmentManager(), "smaller_paper_settings_alert");
+    }
+
+    private void handleSmallPaperSettingChanged(int profileId, int gradeId) {
+        homeViewModel.setSmallerPaperProfileId(profileId);
+        homeViewModel.setSmallerPaperGradeId(gradeId);
+    }
+
+    private void largerPaperProfileClicked(PaperProfile paperProfile) {
+        if (paperProfile == null) { return; }
+        PaperSettingsDialogFragment paperDialog = PaperSettingsDialogFragment.create(
+                LARGE_PAPER_SETTINGS_REQUEST_KEY,
+                R.string.dialog_larger_print_paper_profile,
+                paperProfile.getId(), LiveDataUtil.getIntValue(homeViewModel.getLargerPaperGradeId()),
+                false);
+        paperDialog.show(getParentFragmentManager(), "larger_paper_settings_alert");
+    }
+
+    private void handleLargePaperSettingChanged(int profileId, int gradeId) {
+        homeViewModel.setLargerPaperProfileId(profileId);
+        homeViewModel.setLargerPaperGradeId(gradeId);
     }
 
     private void updateHeightUnits(SharedPreferences sharedPreferences) {

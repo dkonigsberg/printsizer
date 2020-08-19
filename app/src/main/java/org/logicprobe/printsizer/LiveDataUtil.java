@@ -10,4 +10,9 @@ public class LiveDataUtil {
         Double value = liveData.getValue();
         return (value != null) ? value : Double.NaN;
     }
+
+    public static int getIntValue(final LiveData<Integer> liveData) {
+        Integer value = liveData.getValue();
+        return (value != null) ? value : 0;
+    }
 }
