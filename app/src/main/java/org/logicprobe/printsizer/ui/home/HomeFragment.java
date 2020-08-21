@@ -80,8 +80,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private AutoCompleteTextView editLargerExposureAdjustment;
 
     private Button buttonAddPaperProfile;
-    private View smallerPaperProfileView;
-    private View largerPaperProfileView;
 
     private boolean height_as_cm;
     private boolean ignoreHeightChange;
@@ -219,10 +217,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editLargerExposureAdjustment = root.findViewById(R.id.editLargerExposureAdjustment);
 
         buttonAddPaperProfile = root.findViewById(R.id.buttonAddPaperProfile);
-        smallerPaperProfileView = root.findViewById(R.id.smallerPaperProfileView);
-        largerPaperProfileView = root.findViewById(R.id.largerPaperProfileView);
-
-        largerPaperProfileView.setVisibility(View.GONE);
 
         buttonAddPaperProfile.setOnClickListener(new View.OnClickListener() {
             @Override
