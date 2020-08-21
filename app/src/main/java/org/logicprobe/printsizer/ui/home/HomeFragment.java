@@ -50,6 +50,7 @@ import java.util.List;
 public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private static final String SELECT_PAPER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_SELECT_PAPER";
+    private static final String INITIAL_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_INITIAL_PAPER_SETTINGS";
     private static final String SMALL_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_SMALL_PAPER_SETTINGS";
     private static final String LARGE_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_LARGE_PAPER_SETTINGS";
     private static final String ADD_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_ENLARGER";
@@ -98,6 +99,21 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                 int paperProfileId = result.getInt("id", 0);
                 Log.d(TAG, "Paper profile selected: " + paperProfileId);
                 handlePaperProfileSelected(paperProfileId);
+            }
+        });
+
+        fragmentManager.setFragmentResultListener(INITIAL_PAPER_SETTINGS_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int action = result.getInt("action");
+                if (action == PaperSettingsDialogFragment.ACTION_ACCEPT) {
+                    Log.d(TAG, "Initial paper settings accepted");
+                    int profileId = result.getInt("profileId");
+                    int gradeId = result.getInt("gradeId");
+                    handleInitialPaperProfileChanged(profileId, gradeId);
+                } else if (action == PaperSettingsDialogFragment.ACTION_CANCEL) {
+                    Log.d(TAG, "Initial paper settings cancelled");
+                }
             }
         });
 
@@ -337,8 +353,18 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     }
 
     private void handlePaperProfileSelected(int paperProfileId) {
-        homeViewModel.setSmallerPaperProfileId(paperProfileId);
-        homeViewModel.setLargerPaperProfileId(paperProfileId);
+        PaperSettingsDialogFragment paperDialog = PaperSettingsDialogFragment.create(
+                INITIAL_PAPER_SETTINGS_REQUEST_KEY,
+                R.string.dialog_choose_paper_profile,
+                paperProfileId);
+        paperDialog.show(getParentFragmentManager(), "initial_paper_settings_alert");
+    }
+
+    private void handleInitialPaperProfileChanged(int profileId, int gradeId) {
+        homeViewModel.setSmallerPaperProfileId(profileId);
+        homeViewModel.setSmallerPaperGradeId(gradeId);
+        homeViewModel.setLargerPaperProfileId(profileId);
+        homeViewModel.setLargerPaperGradeId(gradeId);
         homeViewModel.setHasPaperProfiles(true);
     }
 

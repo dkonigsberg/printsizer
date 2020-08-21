@@ -51,6 +51,21 @@ public class PaperSettingsDialogFragment extends DialogFragment {
             @StringRes int titleResourceId,
             int paperProfileId, @PaperProfile.GradeId int gradeId,
             boolean showRemove) {
+        return createImpl(requestKey, titleResourceId, paperProfileId, gradeId, showRemove);
+    }
+
+    public static PaperSettingsDialogFragment create(
+            String requestKey,
+            @StringRes int titleResourceId,
+            int paperProfileId) {
+        return createImpl(requestKey, titleResourceId, paperProfileId, Integer.MIN_VALUE, false);
+    }
+
+    private static PaperSettingsDialogFragment createImpl(
+            String requestKey,
+            @StringRes int titleResourceId,
+            int paperProfileId, int gradeId,
+            boolean showRemove) {
         Bundle args = new Bundle();
         args.putString("requestKey", requestKey);
         args.putInt("titleResourceId", titleResourceId);
