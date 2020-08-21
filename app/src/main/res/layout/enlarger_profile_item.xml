@@ -43,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:layout_alignParentStart="true"
                 android:layout_toStartOf="@+id/focal_length"
                 android:text="@{enlargerProfile.name}"
@@ -66,6 +67,7 @@
                 android:layout_toStartOf="@id/indicatorLayout"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:singleLine="true"
                 android:text="@{enlargerProfile.description}"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 

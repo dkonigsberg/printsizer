@@ -29,7 +29,7 @@
             app:strokeColor="@color/outlined_stroke_color"
             app:strokeWidth="1dp">
 
-            <LinearLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
@@ -39,13 +39,11 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp"
                 android:onClick="@{() ->  paperProfileClickCallback.onClick(dialogViewModel.paperProfile)}"
-                android:baselineAligned="false"
                 tools:ignore="UnusedAttribute">
 
                 <RelativeLayout
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:background="@drawable/background_selectable_item"
                     android:clipChildren="false"
                     android:clipToPadding="false"
@@ -61,6 +59,7 @@
                         android:layout_alignParentStart="true"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:singleLine="true"
                         android:text="@{dialogViewModel.paperProfile.name}"
                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -73,10 +72,11 @@
                         android:layout_alignParentStart="true"
                         android:ellipsize="end"
                         android:maxLines="1"
+                        android:singleLine="true"
                         android:text="@{dialogViewModel.paperProfile.description}"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
                 </RelativeLayout>
-            </LinearLayout>
+            </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <LinearLayout
@@ -88,7 +88,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="16dp"
-
             android:gravity="center_vertical"
             android:orientation="horizontal">
 

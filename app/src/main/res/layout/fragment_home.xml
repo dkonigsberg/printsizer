@@ -120,7 +120,7 @@
                                 app:strokeColor="@color/outlined_stroke_color"
                                 app:strokeWidth="1dp">
 
-                                <LinearLayout
+                                <FrameLayout
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:clickable="true"
@@ -130,17 +130,14 @@
                                     android:paddingStart="8dp"
                                     android:paddingEnd="8dp"
                                     android:onClick="@{() ->  smallerPaperProfileClickCallback.onClick(homeViewModel.smallerPaperProfile)}"
-                                    android:baselineAligned="false"
                                     tools:ignore="UnusedAttribute">
 
                                     <RelativeLayout
-                                        android:layout_width="0dp"
+                                        android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_weight="1"
                                         android:background="@drawable/background_selectable_item"
                                         android:clipChildren="false"
                                         android:clipToPadding="false"
-                                        android:orientation="vertical"
                                         android:paddingVertical="8dp"
                                         tools:ignore="UselessParent">
 
@@ -151,6 +148,7 @@
                                             android:layout_alignParentStart="true"
                                             android:ellipsize="end"
                                             android:maxLines="1"
+                                            android:singleLine="true"
                                             tools:text="Ilford MULTIGRADE IV RC DELUXE"
                                             android:text="@{homeViewModel.smallerPaperProfile.name}"
                                             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -163,6 +161,7 @@
                                             android:layout_alignParentStart="true"
                                             android:ellipsize="end"
                                             android:maxLines="1"
+                                            android:singleLine="true"
                                             tools:text="Stock paper profile"
                                             android:text="@{homeViewModel.smallerPaperProfile.description}"
                                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -182,7 +181,7 @@
                                             app:chipMinHeight="24dp"
                                             app:ensureMinTouchTargetSize="false" />
                                     </RelativeLayout>
-                                </LinearLayout>
+                                </FrameLayout>
                             </com.google.android.material.card.MaterialCardView>
                         </LinearLayout>
 
@@ -295,7 +294,7 @@
                             app:strokeColor="@color/outlined_stroke_color"
                             app:strokeWidth="1dp">
 
-                            <LinearLayout
+                            <FrameLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:clickable="true"
@@ -305,13 +304,11 @@
                                 android:paddingStart="8dp"
                                 android:paddingEnd="8dp"
                                 android:onClick="@{() ->  largerPaperProfileClickCallback.onClick(homeViewModel.largerPaperProfile)}"
-                                android:baselineAligned="false"
                                 tools:ignore="UnusedAttribute">
 
                                 <RelativeLayout
-                                    android:layout_width="0dp"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_weight="1"
                                     android:background="@drawable/background_selectable_item"
                                     android:clipChildren="false"
                                     android:clipToPadding="false"
@@ -326,6 +323,7 @@
                                         android:layout_alignParentStart="true"
                                         android:ellipsize="end"
                                         android:maxLines="1"
+                                        android:singleLine="true"
                                         tools:text="Ilford MULTIGRADE RC DELUXE"
                                         android:text="@{homeViewModel.largerPaperProfile.name}"
                                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -338,6 +336,7 @@
                                         android:layout_alignParentStart="true"
                                         android:ellipsize="end"
                                         android:maxLines="1"
+                                        android:singleLine="true"
                                         tools:text="Stock paper profile"
                                         android:text="@{homeViewModel.largerPaperProfile.description}"
                                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -357,7 +356,7 @@
                                         app:chipMinHeight="24dp"
                                         app:ensureMinTouchTargetSize="false" />
                                 </RelativeLayout>
-                            </LinearLayout>
+                            </FrameLayout>
                         </com.google.android.material.card.MaterialCardView>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
