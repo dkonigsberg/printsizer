@@ -353,9 +353,9 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     public boolean isPrintDataValid() {
-        final double smallerPrintHeight = LiveDataUtil.getValue(getSmallerPrintHeight());
-        final double smallerPrintExposureTime = LiveDataUtil.getValue(getSmallerPrintExposureTime());
-        final double largerPrintHeight = LiveDataUtil.getValue(getLargerPrintHeight());
+        final double smallerPrintHeight = LiveDataUtil.getDoubleValue(getSmallerPrintHeight());
+        final double smallerPrintExposureTime = LiveDataUtil.getDoubleValue(getSmallerPrintExposureTime());
+        final double largerPrintHeight = LiveDataUtil.getDoubleValue(getLargerPrintHeight());
         final double offset = validEnlargerHeightOffset();
 
         return !Double.isNaN(smallerPrintHeight)
@@ -394,7 +394,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     private void validateSmallerPrintHeight() {
-        final double smallerPrintHeight = LiveDataUtil.getValue(getSmallerPrintHeight());
+        final double smallerPrintHeight = LiveDataUtil.getDoubleValue(getSmallerPrintHeight());
 
         if (isEnlargerProfileValid() && !Double.isNaN(smallerPrintHeight) && smallerPrintHeight > 0) {
             final double offset = validEnlargerHeightOffset();
@@ -413,8 +413,8 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     private void validateLargerPrintHeight() {
-        final double largerPrintHeight = LiveDataUtil.getValue(getLargerPrintHeight());
-        final double smallerPrintHeight = LiveDataUtil.getValue(getSmallerPrintHeight());
+        final double largerPrintHeight = LiveDataUtil.getDoubleValue(getLargerPrintHeight());
+        final double smallerPrintHeight = LiveDataUtil.getDoubleValue(getSmallerPrintHeight());
 
         if (isEnlargerProfileValid() && !Double.isNaN(largerPrintHeight) && largerPrintHeight > 0) {
             final double offset = validEnlargerHeightOffset();
@@ -470,10 +470,10 @@ public class HomeViewModel extends AndroidViewModel {
         }
 
         final double offset = validEnlargerHeightOffset();
-        final double smallerHeightValue = LiveDataUtil.getValue(getSmallerPrintHeight()) + offset;
-        final double smallerExposureValue = LiveDataUtil.getValue(getSmallerPrintExposureTime());
-        final double largerHeightValue = LiveDataUtil.getValue(getLargerPrintHeight()) + offset;
-        final double largerExposureOffset = LiveDataUtil.getValue(getLargerPrintExposureOffset());
+        final double smallerHeightValue = LiveDataUtil.getDoubleValue(getSmallerPrintHeight()) + offset;
+        final double smallerExposureValue = LiveDataUtil.getDoubleValue(getSmallerPrintExposureTime());
+        final double largerHeightValue = LiveDataUtil.getDoubleValue(getLargerPrintHeight()) + offset;
+        final double largerExposureOffset = LiveDataUtil.getDoubleValue(getLargerPrintExposureOffset());
 
         Enlarger enlarger = Enlarger.createFromProfile(enlargerProfileValue);
         PrintScaler printScaler = new PrintScaler(enlarger);

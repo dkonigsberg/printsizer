@@ -6,7 +6,7 @@ public class LiveDataUtil {
     private LiveDataUtil() {
     }
 
-    public static double getValue(final LiveData<Double> liveData) {
+    public static double getDoubleValue(final LiveData<Double> liveData) {
         Double value = liveData.getValue();
         return (value != null) ? value : Double.NaN;
     }
