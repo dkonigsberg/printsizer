@@ -22,4 +22,12 @@ public final class PrintMath {
                 (t2 * ((x - h1) / (h2 - h1)) * ((x - h3) / (h2 - h3))) +
                 (t3 * ((x - h1) / (h3 - h1)) * ((x - h2) / (h3 - h2)));
     }
+
+    public static double isoPaperDifferenceInEv(double isoP1, double isoP2) {
+        return Math.log(isoP1 / isoP2) / Math.log(2.0d);
+    }
+
+    public static double timeAdjustInStops(double time, double stops) {
+        return time * Math.pow(2, stops);
+    }
 }

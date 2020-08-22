@@ -15,4 +15,9 @@ public class LiveDataUtil {
         Integer value = liveData.getValue();
         return (value != null) ? value : 0;
     }
+
+    public static boolean getBooleanValue(final LiveData<Boolean> liveData) {
+        Boolean value = liveData.getValue();
+        return (value != null) ? value : false;
+    }
 }

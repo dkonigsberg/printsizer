@@ -17,9 +17,11 @@ import org.logicprobe.printsizer.DataRepository;
 import org.logicprobe.printsizer.LiveDataUtil;
 import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.db.entity.EnlargerProfileEntity;
+import org.logicprobe.printsizer.db.entity.PaperGradeEntity;
 import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.Enlarger;
 import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.model.PaperGrade;
 import org.logicprobe.printsizer.model.PaperProfile;
 import org.logicprobe.printsizer.model.PrintMath;
 import org.logicprobe.printsizer.model.PrintScaler;
@@ -364,7 +366,7 @@ public class HomeViewModel extends AndroidViewModel {
                 && (smallerPrintHeight + offset) > 0
                 && smallerPrintExposureTime > 0
                 && (largerPrintHeight + offset) > 0
-                && largerPrintHeight > smallerPrintHeight;
+                && largerPrintHeight >= smallerPrintHeight;
     }
 
     public boolean isEnlargerProfileValid() {
@@ -423,7 +425,7 @@ public class HomeViewModel extends AndroidViewModel {
             if (largerHeightValue <= 0
                     || (!Double.isNaN(smallerPrintHeight)
                     && smallerPrintHeight > 0
-                    && smallerPrintHeight + offset >= largerHeightValue)) {
+                    && smallerPrintHeight + offset > largerHeightValue)) {
                 largerPrintHeightError.setValue(EnlargerHeightErrorEvent.INVALID);
             } else if (enlargerProfileValue != null && largerHeightValue < PrintMath.computeMinimumHeight(enlargerProfileValue.getLensFocalLength())) {
                 largerPrintHeightError.setValue(EnlargerHeightErrorEvent.TOO_LOW_FOR_FOCAL_LENGTH);
@@ -475,6 +477,21 @@ public class HomeViewModel extends AndroidViewModel {
         final double largerHeightValue = LiveDataUtil.getDoubleValue(getLargerPrintHeight()) + offset;
         final double largerExposureOffset = LiveDataUtil.getDoubleValue(getLargerPrintExposureOffset());
 
+        // Pluck out the ISO(P) values for the two paper configurations, if they are available.
+        // (This should probably be replaced with something more elegant later.)
+        int smallerIsoP = 0;
+        int largerIsoP = 0;
+        if (LiveDataUtil.getBooleanValue(hasPaperProfiles())) {
+            PaperGrade smallerGrade = getSelectedGrade(
+                    smallerPaperProfile.getValue(), LiveDataUtil.getIntValue(getSmallerPaperGradeId()));
+            PaperGrade largerGrade = getSelectedGrade(
+                    largerPaperProfile.getValue(), LiveDataUtil.getIntValue(getLargerPaperGradeId()));
+            if (smallerGrade.getIsoP() > 0 && largerGrade.getIsoP() > 0) {
+                smallerIsoP = smallerGrade.getIsoP();
+                largerIsoP = largerGrade.getIsoP();
+            }
+        }
+
         Enlarger enlarger = Enlarger.createFromProfile(enlargerProfileValue);
         PrintScaler printScaler = new PrintScaler(enlarger);
         double largerExposureValue = printScaler.scalePrintTime(smallerHeightValue, smallerExposureValue, largerHeightValue);
@@ -483,11 +500,57 @@ public class HomeViewModel extends AndroidViewModel {
         Log.d(TAG, "Larger Print: " + largerHeightValue + "mm" + ", " + largerExposureValue + "s, "
                 + largerExposureOffset + " EV");
 
+        // Quick and dirty paper profile exposure adjustment.
+        // (This should be replaced by something more elegant done inside of PrintScaler)
+        if (smallerIsoP > 0 && largerIsoP > 0 && smallerIsoP != largerIsoP) {
+            double stops = PrintMath.isoPaperDifferenceInEv(smallerIsoP, largerIsoP);
+            Log.d(TAG, "Paper profiles (" + smallerIsoP + "->" + largerIsoP + ") adjustment: " + stops + " EV");
+
+            largerExposureValue = PrintMath.timeAdjustInStops(largerExposureValue, stops);
+            Log.d(TAG, "Paper adjusted larger exposure: " + largerExposureValue + "s");
+        }
+
         if (Math.abs(largerExposureOffset) > 0.0001d) {
-            largerExposureValue *= Math.pow(2, largerExposureOffset);
-            Log.d(TAG, "Adjusted larger exposure: " + largerExposureValue + "s");
+            largerExposureValue = PrintMath.timeAdjustInStops(largerExposureValue, largerExposureOffset);
+            Log.d(TAG, "User adjusted larger exposure: " + largerExposureValue + "s");
         }
 
         state.set(LARGER_PRINT_EXPOSURE_TIME_KEY, largerExposureValue);
+    }
+
+    private PaperGrade getSelectedGrade(PaperProfile paperProfile, int gradeId) {
+        PaperGrade grade = null;
+        if (paperProfile != null) {
+            switch (gradeId) {
+                case PaperProfile.GRADE_00:
+                    grade = paperProfile.getGrade00();
+                    break;
+                case PaperProfile.GRADE_0:
+                    grade = paperProfile.getGrade0();
+                    break;
+                case PaperProfile.GRADE_1:
+                    grade = paperProfile.getGrade1();
+                    break;
+                case PaperProfile.GRADE_2:
+                    grade = paperProfile.getGrade2();
+                    break;
+                case PaperProfile.GRADE_3:
+                    grade = paperProfile.getGrade3();
+                    break;
+                case PaperProfile.GRADE_4:
+                    grade = paperProfile.getGrade4();
+                    break;
+                case PaperProfile.GRADE_5:
+                    grade = paperProfile.getGrade5();
+                    break;
+                case PaperProfile.GRADE_NONE:
+                    grade = paperProfile.getGradeNone();
+                    break;
+            }
+        }
+        if (grade == null) {
+            grade = new PaperGradeEntity();
+        }
+        return grade;
     }
 }
