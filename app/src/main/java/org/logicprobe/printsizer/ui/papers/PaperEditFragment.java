@@ -164,7 +164,24 @@ public class PaperEditFragment extends Fragment {
 
         // Validation checks that only run on accept
         if (result && editable == null) {
-            //TODO
+            boolean hasIsoP = false;
+            for (int i = 0; i < editGradeISOP.length; i++) {
+                int isoP = safeGetEditTextIso(editGradeISOP[i]);
+                int isoR = safeGetEditTextIso(editGradeISOR[i]);
+                if (isoR > 0 && isoP == 0) {
+                    editGradeISOP[i].requestFocus();
+                    result = false;
+                    break;
+                } else if (isoP > 0) {
+                    hasIsoP = true;
+                }
+            }
+            if (!hasIsoP) {
+                // Default to requesting Grade 2, because its a common default
+                // and not as far down the screen as Unfiltered.
+                editGradeISOP[3].requestFocus();
+                result = false;
+            }
         }
 
         return result;

@@ -63,6 +63,15 @@
                 android:layout_height="1dp"
                 android:background="?android:attr/listDivider" />
 
+            <TextView
+                android:id="@+id/memoPaperProperties"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:text="@string/note_paper_properties"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Caption" />
+
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -358,7 +367,6 @@
                             android:ems="3"/>
                     </com.google.android.material.textfield.TextInputLayout>
                 </TableRow>
-
             </TableLayout>
         </LinearLayout>
     </ScrollView>
