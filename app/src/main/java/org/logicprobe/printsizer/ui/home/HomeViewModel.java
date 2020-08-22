@@ -115,6 +115,9 @@ public class HomeViewModel extends AndroidViewModel {
                         if (gradeIdValue != null && gradeIdValue == Integer.MIN_VALUE) {
                             state.set(SMALLER_PAPER_GRADE_ID_KEY, findDefaultPaperGradeId(paperProfileEntity));
                         }
+                        if (paperProfileEntity == null) {
+                            setHasPaperProfiles(false);
+                        }
                         recalculateLargerPrintExposureTime();
                     }
                 });
@@ -155,6 +158,9 @@ public class HomeViewModel extends AndroidViewModel {
                         Integer gradeIdValue = state.get(LARGER_PAPER_GRADE_ID_KEY);
                         if (gradeIdValue != null && gradeIdValue == Integer.MIN_VALUE) {
                             state.set(LARGER_PAPER_GRADE_ID_KEY, findDefaultPaperGradeId(paperProfileEntity));
+                        }
+                        if (paperProfileEntity == null) {
+                            setHasPaperProfiles(false);
                         }
                         recalculateLargerPrintExposureTime();
                     }

@@ -99,7 +99,11 @@ public class PaperSettingsDialogViewModel extends AndroidViewModel {
     }
 
     public void setGradeIndex(int index) {
-        setPaperGrade(gradeIdList.get(index));
+        if (index < 0 || index >= gradeIdList.size()) {
+            setPaperGrade(PaperProfile.GRADE_NONE);
+        } else {
+            setPaperGrade(gradeIdList.get(index));
+        }
     }
 
     public LiveData<Integer> getGradeIndex() {
