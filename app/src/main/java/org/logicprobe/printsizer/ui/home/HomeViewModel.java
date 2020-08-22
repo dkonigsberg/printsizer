@@ -4,12 +4,14 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.SavedStateHandle;
+import androidx.lifecycle.Transformations;
 import androidx.preference.PreferenceManager;
 
 import org.logicprobe.printsizer.App;
@@ -48,6 +50,7 @@ public class HomeViewModel extends AndroidViewModel {
     private final SavedStateHandle state;
     private final DataRepository repository;
 
+    private LiveData<Boolean> hasPaperProfiles;
     private MediatorLiveData<PaperProfile> smallerPaperProfile;
     private LiveData<PaperProfileEntity> loadedSmallerPaperProfile;
     private MediatorLiveData<Integer> smallerPaperGradeResourceId;
@@ -72,6 +75,13 @@ public class HomeViewModel extends AndroidViewModel {
         this.smallerPrintHeightError = new MutableLiveData<>(EnlargerHeightErrorEvent.NONE);
         this.largerPrintHeightError = new MutableLiveData<>(EnlargerHeightErrorEvent.NONE);
         this.enlargerProfileValid = new MutableLiveData<>(true);
+
+        this.hasPaperProfiles = Transformations.map(repository.numPaperProfiles(), new Function<Integer, Boolean>() {
+            @Override
+            public Boolean apply(Integer num) {
+                return num != null && num > 0;
+            }
+        });
 
         // Set placeholder values indicating unset paper grades, so that our change listeners
         // will work correctly when they are set.
@@ -204,6 +214,10 @@ public class HomeViewModel extends AndroidViewModel {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(application);
         int profileId = prefs.getInt(DEFAULT_PROFILE_ID_KEY, 0);
         state.set(ENLARGER_PROFILE_ID_KEY, profileId);
+    }
+
+    public LiveData<Boolean> getHasPaperProfiles() {
+        return hasPaperProfiles;
     }
 
     public void setSmallerPrintHeight(double smallerPrintHeight) {

@@ -31,6 +31,7 @@ public class DataRepository {
 
     private MediatorLiveData<List<EnlargerProfileEntity>> observableEnlargers;
     private MediatorLiveData<List<PaperProfileEntity>> observablePapers;
+    private MediatorLiveData<Integer> observableNumPapers;
 
     private DataRepository(final Context context, final AppDatabase database, final AppExecutors appExecutors) {
         this.database = database;
@@ -57,6 +58,20 @@ public class DataRepository {
                     public void onChanged(List<PaperProfileEntity> paperProfileEntities) {
                         if (DataRepository.this.database.getDatabaseCreated().getValue() != null) {
                             observablePapers.postValue(paperProfileEntities);
+                        }
+                    }
+                });
+
+        observableNumPapers = new MediatorLiveData<>();
+        observableNumPapers.addSource(this.database.paperProfileDao().numPaperProfiles(),
+                new Observer<Integer>() {
+                    @Override
+                    public void onChanged(Integer numPapers) {
+                        if (DataRepository.this.database.getDatabaseCreated().getValue() != null) {
+                            if (numPapers == null) {
+                                numPapers = Integer.valueOf(0);
+                            }
+                            observableNumPapers.postValue(numPapers);
                         }
                     }
                 });
@@ -115,6 +130,10 @@ public class DataRepository {
     
     public LiveData<List<PaperProfileEntity>> getPaperProfiles() {
         return observablePapers;
+    }
+
+    public LiveData<Integer> numPaperProfiles() {
+        return observableNumPapers;
     }
 
     public LiveData<List<PaperProfileEntity>> getStockPaperProfiles() {

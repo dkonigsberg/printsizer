@@ -10,6 +10,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.parameterized.TestWithParameters;
 import org.logicprobe.printsizer.LiveDataTestUtil;
 import org.logicprobe.printsizer.db.dao.PaperProfileDao;
 import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
@@ -48,7 +49,7 @@ public class PaperProfileDaoTest {
     }
 
     @Test
-    public void getEnlargersAfterInserted() throws InterruptedException {
+    public void getPapersAfterInserted() throws InterruptedException {
         paperDao.insertAll(TestData.PAPERS);
 
         List<PaperProfileEntity> profiles = LiveDataTestUtil.getValue(paperDao.loadAllPaperProfiles());
@@ -56,7 +57,21 @@ public class PaperProfileDaoTest {
     }
 
     @Test
-    public void getEnlargerById() throws InterruptedException {
+    public void getNumPaperProfiles() throws InterruptedException {
+        int numBefore = LiveDataTestUtil.getValue(paperDao.numPaperProfiles());
+        assertEquals(numBefore, 0);
+
+        paperDao.insert(TestData.PAPER_ENTITY1);
+        int numAfter1 = LiveDataTestUtil.getValue(paperDao.numPaperProfiles());
+        assertEquals(numAfter1, 1);
+
+        paperDao.insert(TestData.PAPER_ENTITY2);
+        int numAfter2 = LiveDataTestUtil.getValue(paperDao.numPaperProfiles());
+        assertEquals(numAfter2, 2);
+    }
+
+    @Test
+    public void getPapersById() throws InterruptedException {
         paperDao.insertAll(TestData.PAPERS);
 
         PaperProfileEntity profile = LiveDataTestUtil.getValue(paperDao.loadPaperProfile(2));

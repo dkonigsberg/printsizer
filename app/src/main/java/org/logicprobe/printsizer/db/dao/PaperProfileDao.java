@@ -12,6 +12,9 @@ import java.util.List;
 
 @Dao
 public interface PaperProfileDao {
+    @Query("SELECT COUNT(*) FROM "+ PaperProfileEntity.TABLE_NAME)
+    LiveData<Integer> numPaperProfiles();
+
     @Query("SELECT * FROM " + PaperProfileEntity.TABLE_NAME + " ORDER BY name, description, id")
     LiveData<List<PaperProfileEntity>> loadAllPaperProfiles();
 
