@@ -1,7 +1,7 @@
 [
   {
     "name": "Ilford MULTIGRADE RC DELUXE",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 240, "isoR": 160 },
       "0":    { "isoP": 240, "isoR": 130 },
@@ -15,7 +15,7 @@
   },
   {
     "name": "Ilford MULTIGRADE IV RC DELUXE",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 200, "isoR": 180 },
       "0":    { "isoP": 200, "isoR": 160 },
@@ -29,7 +29,7 @@
   },
   {
     "name": "Ilford MULTIGRADE RC WARMTONE",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 100, "isoR": 190 },
       "0":    { "isoP": 100, "isoR": 160 },
@@ -43,7 +43,7 @@
   },
   {
     "name": "Ilford MULTIGRADE RC COOLTONE",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 200, "isoR": 180 },
       "0":    { "isoP": 200, "isoR": 160 },
@@ -57,7 +57,7 @@
   },
   {
     "name": "Ilford MULTIGRADE IV RC PORTFOLIO",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 200, "isoR": 180 },
       "0":    { "isoP": 200, "isoR": 160 },
@@ -71,7 +71,7 @@
   },
   {
     "name": "Kentmere VC SELECT",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 320, "isoR": 150 },
       "0":    { "isoP": 320, "isoR": 130 },
@@ -85,7 +85,7 @@
   },
   {
     "name": "Ilford ILFOSPEED RC DELUXE",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "0":    { "isoP": 500, "isoR": 140 },
       "1":    { "isoP": 500, "isoR": 120 },
@@ -97,7 +97,7 @@
   },
   {
     "name": "Ilford MULTIGRADE FB CLASSIC",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 230, "isoR": 170 },
       "0":    { "isoP": 230, "isoR": 140 },
@@ -111,7 +111,7 @@
   },
   {
     "name": "Ilford MULTIGRADE FB WARMTONE",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 100, "isoR": 170 },
       "0":    { "isoP": 100, "isoR": 160 },
@@ -125,7 +125,7 @@
   },
   {
     "name": "Ilford MULTIGRADE FB COOLTONE",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 250, "isoR": 130 },
       "0":    { "isoP": 250, "isoR": 115 },
@@ -139,7 +139,7 @@
   },
   {
     "name": "Ilford ILFOBROM GALERIE FB",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "1":    { "isoP": 400, "isoR": 130 },
       "2":    { "isoP": 400, "isoR": 110 },
@@ -149,7 +149,7 @@
   },
   {
     "name": "Ilford MULTIGRADE ART 300",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 100, "isoR": 170 },
       "0":    { "isoP": 100, "isoR": 160 },
@@ -163,7 +163,7 @@
   },
   {
     "name": "Adox MCP 310/312 RC",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "0":    { "isoP": 160 },
       "1":    { "isoP": 160 },
@@ -176,7 +176,7 @@
   },
   {
     "name": "Adox MCC 110/112 FB",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "0":    { "isoP": 160, "isoR": 140 },
       "1":    { "isoP": 160, "isoR": 120 },
@@ -189,7 +189,7 @@
   },
   {
     "name": "Foma FOMABROM FB",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "1":    { "isoP": 400, "isoR": 120 },
       "2":    { "isoP": 400, "isoR": 100 },
@@ -226,7 +226,7 @@
   },
   {
     "name": "Foma FOMASPEED RC",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "1":    { "isoP": 400, "isoR": 120 },
       "2":    { "isoP": 400, "isoR": 100 },
@@ -263,14 +263,14 @@
   },
   {
     "name": "Foma RETROBROM Sp",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
-      "none": { "isoP": 200, "isoR": 110 }
+      "2": { "isoP": 200, "isoR": 110 }
     }
   },
   {
     "name": "Arista EDU ULTRA FB VC",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 200 },
       "0":    { "isoP": 200 },
@@ -283,7 +283,7 @@
   },
   {
     "name": "Arista EDU ULTRA VC RC",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 200 },
       "0":    { "isoP": 200 },
@@ -296,7 +296,7 @@
   },
   {
     "name": "Arista EDU ULTRA GRADED RC",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "2":    { "isoP": 400 },
       "3":    { "isoP": 400 }
@@ -304,7 +304,7 @@
   },
   {
     "name": "Bergger PRESTIGE RC 1",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 250 },
       "0":    { "isoP": 250 },
@@ -318,7 +318,7 @@
   },
   {
     "name": "Bergger PRESTIGE VARIABLE NB",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "00":   { "isoP": 250 },
       "0":    { "isoP": 250 },
@@ -332,14 +332,14 @@
   },
   {
     "name": "Bergger PRESTIGE VARIABLE CB",
-    "description": "Default paper",
+    "description": "Variable contrast paper",
     "grades": {
       "none": { "isoP": 200 }
     }
   },
   {
     "name": "Oriental Seagull G",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "2":    { "isoP": 640, "isoR": 100 },
       "3":    { "isoP": 400, "isoR": 80  },
@@ -348,7 +348,7 @@
   },
   {
     "name": "Oriental Seagull RP-M PREMIUM",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "2":    { "isoP": 640, "isoR": 110 },
       "3":    { "isoP": 400, "isoR": 90  },
@@ -357,7 +357,7 @@
   },
   {
     "name": "Oriental Seagull RP",
-    "description": "Default paper",
+    "description": "Fixed grade paper",
     "grades": {
       "2":    { "isoP": 640, "isoR": 110 },
       "3":    { "isoP": 400, "isoR": 90  },
