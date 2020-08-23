@@ -1,7 +1,5 @@
 package org.logicprobe.printsizer.ui.home;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,7 +17,6 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentResultListener;
@@ -28,14 +25,11 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.preference.PreferenceManager;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.logicprobe.printsizer.LiveDataUtil;
 import org.logicprobe.printsizer.R;
-import org.logicprobe.printsizer.databinding.DialogChooseEnlargerBinding;
 import org.logicprobe.printsizer.databinding.FragmentHomeBinding;
 import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.EnlargerProfile;
@@ -47,7 +41,6 @@ import org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
-import java.util.List;
 
 public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = HomeFragment.class.getSimpleName();
@@ -55,6 +48,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private static final String INITIAL_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_INITIAL_PAPER_SETTINGS";
     private static final String SMALL_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_SMALL_PAPER_SETTINGS";
     private static final String LARGE_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_LARGE_PAPER_SETTINGS";
+    private static final String CHOOSE_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_CHOOSE_ENLARGER";
     private static final String ADD_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_ENLARGER";
 
     private static final double[] FULL_STOPS = { -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0 };
@@ -151,6 +145,22 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                 } if (action == PaperSettingsDialogFragment.ACTION_REMOVE) {
                     Log.d(TAG, "Remove paper profiles");
                     handleRemovePaperProfiles();
+                }
+            }
+        });
+
+        fragmentManager.setFragmentResultListener(CHOOSE_ENLARGER_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int action = result.getInt("action");
+                if (action == ChooseEnlargerDialogFragment.ACTION_SELECTED_ENLARGER) {
+                    int profileId = result.getInt("profileId");
+                    Log.d(TAG, "Enlarger profile selected: " + profileId);
+                    homeViewModel.setEnlargerProfile(profileId);
+                } else if (action == ChooseEnlargerDialogFragment.ACTION_ADD_ENLARGER) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("requestKey", ADD_ENLARGER_REQUEST_KEY);
+                    Navigation.findNavController(requireView()).navigate(R.id.action_add_enlarger, bundle);
                 }
             }
         });
@@ -482,19 +492,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     }
 
     private void enlargerViewClicked() {
-        ChooseEnlargerDialogFragment dialog = new ChooseEnlargerDialogFragment(new ChooseEnlargerClickCallback() {
-            @Override
-            public void onClickProfile(EnlargerProfile enlargerProfile) {
-                homeViewModel.setEnlargerProfile(enlargerProfile);
-            }
-
-            @Override
-            public void onClickAction(int actionId) {
-                Bundle bundle = new Bundle();
-                bundle.putString("requestKey", ADD_ENLARGER_REQUEST_KEY);
-                Navigation.findNavController(requireView()).navigate(R.id.action_add_enlarger, bundle);
-            }
-        });
+        ChooseEnlargerDialogFragment dialog = ChooseEnlargerDialogFragment.create(CHOOSE_ENLARGER_REQUEST_KEY);
         dialog.show(getParentFragmentManager(), "choose_enlarger_alert");
     }
 
@@ -606,70 +604,6 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             return 0.0d;
         } else {
             return value;
-        }
-    }
-
-    public static class ChooseEnlargerDialogFragment extends DialogFragment {
-        private ChooseEnlargerDialogViewModel viewModel;
-        private DialogChooseEnlargerBinding binding;
-        private ChooseEnlargerDialogAdapter adapter;
-        private ChooseEnlargerClickCallback clickCallback;
-
-        public ChooseEnlargerDialogFragment(ChooseEnlargerClickCallback clickCallback) {
-            this.clickCallback = clickCallback;
-        }
-
-        private ChooseEnlargerClickCallback adapterClickCallback = new ChooseEnlargerClickCallback() {
-            @Override
-            public void onClickProfile(EnlargerProfile enlargerProfile) {
-                if (clickCallback != null) {
-                    clickCallback.onClickProfile(enlargerProfile);
-                }
-                dismiss();
-            }
-
-            @Override
-            public void onClickAction(int actionId) {
-                if (clickCallback != null) {
-                    clickCallback.onClickAction(actionId);
-                }
-                dismiss();
-            }
-        };
-
-        @NonNull
-        @Override
-        public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = requireActivity().getLayoutInflater();
-
-            binding = DataBindingUtil.inflate(inflater, R.layout.dialog_choose_enlarger, null, false);
-
-            adapter = new ChooseEnlargerDialogAdapter(adapterClickCallback);
-            binding.enlargerProfileList.setAdapter(adapter);
-
-            viewModel = new ViewModelProvider(this).get(ChooseEnlargerDialogViewModel.class);
-            binding.setLifecycleOwner(getActivity());
-            binding.setDialogViewModel(viewModel);
-
-            viewModel.getSelectionList().observe(requireActivity(),
-                    new Observer<List<ChooseEnlargerElement>>() {
-                        @Override
-                        public void onChanged(List<ChooseEnlargerElement> chooseEnlargerElements) {
-                            if (chooseEnlargerElements != null) {
-                                adapter.setSelectionList(chooseEnlargerElements);
-                            }
-                            binding.executePendingBindings();
-                        }
-                    });
-
-            View view = binding.getRoot();
-
-            RecyclerView recyclerView = view.findViewById(R.id.enlarger_profile_list);
-            recyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
-
-            builder.setView(view).setTitle(R.string.dialog_choose_enlarger_profile);
-            return builder.create();
         }
     }
 }
