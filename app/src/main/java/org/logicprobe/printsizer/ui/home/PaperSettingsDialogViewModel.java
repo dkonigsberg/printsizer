@@ -5,7 +5,9 @@ import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.SavedStateHandle;
 
 import org.logicprobe.printsizer.R;
@@ -25,6 +27,7 @@ public class PaperSettingsDialogViewModel extends AndroidViewModel {
     private static final String PAPER_PROFILE_KEY = "paper_profile";
     private static final String PAPER_GRADE_ID_KEY = "paper_grade_id";
     private static final String REFERENCE_ISOR_KEY = "reference_isor";
+    private static final String MATCHING_GRADE_ID_KEY = "matching_grade_id";
 
     private static final int GRADE_UNSET = -10;
 
@@ -34,6 +37,7 @@ public class PaperSettingsDialogViewModel extends AndroidViewModel {
     private MutableLiveData<Integer> gradeIndex;
     private MutableLiveData<Integer> gradeLabelResourceId;
     private List<Integer> gradeIdList;
+    private MediatorLiveData<Boolean> matchingGradeSelected;
 
     public PaperSettingsDialogViewModel(Application application, SavedStateHandle savedStateHandle) {
         super(application);
@@ -42,6 +46,22 @@ public class PaperSettingsDialogViewModel extends AndroidViewModel {
         this.gradeIndex = new MutableLiveData<>();
         this.gradeLabelResourceId = new MutableLiveData<>(R.string.empty);
         this.gradeIdList = new ArrayList<>();
+
+        this.matchingGradeSelected = new MediatorLiveData<>();
+        this.matchingGradeSelected.addSource(state.getLiveData(PAPER_GRADE_ID_KEY, PaperProfile.GRADE_NONE), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer paperGradeId) {
+                int matchingGradeId = Util.safeGetStateInt(state, MATCHING_GRADE_ID_KEY, GRADE_UNSET);
+                matchingGradeSelected.setValue(paperGradeId == matchingGradeId);
+            }
+        });
+        this.matchingGradeSelected.addSource(state.getLiveData(MATCHING_GRADE_ID_KEY, GRADE_UNSET), new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer matchingGradeId) {
+                int paperGradeId = Util.safeGetStateInt(state, PAPER_GRADE_ID_KEY, GRADE_UNSET);
+                matchingGradeSelected.setValue(paperGradeId == matchingGradeId);
+            }
+        });
     }
 
     public void setInitialized(boolean initialized) {
@@ -107,6 +127,10 @@ public class PaperSettingsDialogViewModel extends AndroidViewModel {
         state.set(REFERENCE_ISOR_KEY, isoR);
     }
 
+    public LiveData<Boolean> getMatchingGradeSelected() {
+        return matchingGradeSelected;
+    }
+
     private void handleInitialState() {
         Log.d(TAG, "Paper settings updating for initial state");
 
@@ -131,8 +155,12 @@ public class PaperSettingsDialogViewModel extends AndroidViewModel {
         }
         updatePaperGradeIdDependents(gradeId);
 
-        // Note: The reference ISO(R) is not typically used unless the paper profile is
-        // explicitly changed after initialization.
+        // Find and store the matching grade based on the ISO(R) value, so we can highlight it
+        int referenceIsoR = Util.safeGetStateInt(state, REFERENCE_ISOR_KEY, 0);
+        if (referenceIsoR > 0) {
+            int matchingGradeId = findMatchingGradeId(paperProfile, referenceIsoR);
+            state.set(MATCHING_GRADE_ID_KEY, matchingGradeId);
+        }
     }
 
     private void handlePaperProfileChanged(PaperProfileEntity paperProfile) {
@@ -148,6 +176,7 @@ public class PaperSettingsDialogViewModel extends AndroidViewModel {
         int referenceIsoR = Util.safeGetStateInt(state, REFERENCE_ISOR_KEY, 0);
         if (referenceIsoR > 0) {
             gradeId = findMatchingGradeId(paperProfile, referenceIsoR);
+            state.set(MATCHING_GRADE_ID_KEY, gradeId);
         }
 
         if (gradeId == GRADE_UNSET) {

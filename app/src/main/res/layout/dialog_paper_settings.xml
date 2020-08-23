@@ -106,6 +106,7 @@
                 android:layout_height="wrap_content"
                 android:textAlignment="textEnd"
                 tools:text="Grade 00"
+                android:textColor="@{dialogViewModel.matchingGradeSelected ? @color/primaryColor : @color/primaryTextColor}"
                 android:text="@{dialogViewModel.gradeLabelResourceId}"/>
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
