@@ -1,5 +1,8 @@
 package org.logicprobe.printsizer.db.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Ignore;
 
@@ -7,7 +10,7 @@ import org.logicprobe.printsizer.model.PaperGrade;
 
 import java.util.Objects;
 
-public class PaperGradeEntity implements PaperGrade {
+public class PaperGradeEntity implements PaperGrade, Parcelable {
     @ColumnInfo(name = "iso_p")
     private int isoP;
 
@@ -47,6 +50,33 @@ public class PaperGradeEntity implements PaperGrade {
     }
 
     public PaperGradeEntity() {
+    }
+
+    @Ignore
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        @Override
+        public PaperGradeEntity createFromParcel(Parcel in) {
+            PaperGradeEntity gradeEntity = new PaperGradeEntity();
+            gradeEntity.isoP = in.readInt();
+            gradeEntity.isoR = in.readInt();
+            return gradeEntity;
+        }
+
+        @Override
+        public PaperGradeEntity[] newArray(int size) {
+            return new PaperGradeEntity[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(isoP);
+        out.writeInt(isoR);
     }
 
     @Ignore

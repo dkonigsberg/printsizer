@@ -1,5 +1,8 @@
 package org.logicprobe.printsizer.db.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Embedded;
 import androidx.room.Entity;
@@ -11,7 +14,7 @@ import org.logicprobe.printsizer.model.PaperProfile;
 import java.util.Objects;
 
 @Entity(tableName = PaperProfileEntity.TABLE_NAME)
-public class PaperProfileEntity implements PaperProfile {
+public class PaperProfileEntity implements PaperProfile, Parcelable {
     public static final String TABLE_NAME = "paper_profiles";
 
     @PrimaryKey(autoGenerate = true)
@@ -168,6 +171,51 @@ public class PaperProfileEntity implements PaperProfile {
     }
 
     public PaperProfileEntity() {
+    }
+
+    @Ignore
+    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+        @Override
+        public PaperProfileEntity createFromParcel(Parcel in) {
+            PaperProfileEntity profileEntity = new PaperProfileEntity();
+            profileEntity.id = in.readInt();
+            profileEntity.name = in.readString();
+            profileEntity.description = in.readString();
+            profileEntity.grade00 = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            profileEntity.grade0 = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            profileEntity.grade1 = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            profileEntity.grade2 = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            profileEntity.grade3 = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            profileEntity.grade4 = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            profileEntity.grade5 = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            profileEntity.gradeNone = in.readParcelable(PaperGradeEntity.class.getClassLoader());
+            return profileEntity;
+        }
+
+        @Override
+        public PaperProfileEntity[] newArray(int size) {
+            return new PaperProfileEntity[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel out, int flags) {
+        out.writeInt(id);
+        out.writeString(name);
+        out.writeString(description);
+        out.writeParcelable(grade00, flags);
+        out.writeParcelable(grade0, flags);
+        out.writeParcelable(grade1, flags);
+        out.writeParcelable(grade2, flags);
+        out.writeParcelable(grade3, flags);
+        out.writeParcelable(grade4, flags);
+        out.writeParcelable(grade5, flags);
+        out.writeParcelable(gradeNone, flags);
     }
 
     @Ignore
