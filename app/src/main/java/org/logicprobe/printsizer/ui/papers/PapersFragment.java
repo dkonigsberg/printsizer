@@ -1,6 +1,5 @@
 package org.logicprobe.printsizer.ui.papers;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.res.Resources;
@@ -19,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -28,6 +28,7 @@ import androidx.recyclerview.selection.StorageStrategy;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
@@ -43,10 +44,12 @@ import java.util.List;
 
 public class PapersFragment extends Fragment {
     private static final String TAG = PapersFragment.class.getSimpleName();
+    private static final String DELETE_PROFILES_KEY = PapersFragment.class.getSimpleName() + "_DELETE_PROFILES";
     private FragmentPapersBinding binding;
     private PapersViewModel papersViewModel;
     private PaperProfileAdapter paperProfileAdapter;
     private SelectionTracker<Long> selectionTracker;
+    private ActionMode actionMode = null;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -97,6 +100,19 @@ public class PapersFragment extends Fragment {
                 return false;
             }
         });
+
+        getParentFragmentManager().setFragmentResultListener(DELETE_PROFILES_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int which = result.getInt("which");
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    if (actionMode != null) {
+                        actionMode.finish();
+                    }
+                }
+            }
+        });
+
         return root;
     }
 
@@ -143,7 +159,6 @@ public class PapersFragment extends Fragment {
         paperProfileAdapter.setSelectionTracker(selectionTracker);
 
         selectionTracker.addObserver(new SelectionTracker.SelectionObserver<Long>() {
-            private ActionMode actionMode = null;
             @Override
             public void onSelectionChanged() {
                 if (selectionTracker.hasSelection()) {
@@ -211,8 +226,8 @@ public class PapersFragment extends Fragment {
         if (idList.size() == 0) {
             return;
         }
-        PapersFragment.ConfirmDeleteDialogFragment dialog = new PapersFragment.ConfirmDeleteDialogFragment(actionMode, idList);
-        dialog.show(getParentFragmentManager(), "delete_paper_alert");
+        ConfirmDeleteDialogFragment dialog = ConfirmDeleteDialogFragment.create(DELETE_PROFILES_KEY, idList);
+        dialog.show(getParentFragmentManager(), "delete_papers_alert");
     }
 
     private int getFirstSelectedId() {
@@ -248,34 +263,53 @@ public class PapersFragment extends Fragment {
     }
 
     public static class ConfirmDeleteDialogFragment extends DialogFragment {
-        private ActionMode actionMode;
-        private int[] idList;
-        public ConfirmDeleteDialogFragment(ActionMode actionMode, List<Integer> idList) {
-            this.actionMode = actionMode;
-            this.idList = new int[idList.size()];
-            for (int i = 0; i < idList.size(); i++) {
-                this.idList[i] = idList.get(i);
-            }
+        public ConfirmDeleteDialogFragment() {
         }
+
+        public static ConfirmDeleteDialogFragment create(String requestKey, List<Integer> idList) {
+            int[] idArray = new int[idList.size()];
+            for (int i = 0; i < idList.size(); i++) {
+                idArray[i] = idList.get(i);
+            }
+
+            ConfirmDeleteDialogFragment dialog = new ConfirmDeleteDialogFragment();
+            Bundle args = new Bundle();
+            args.putString("requestKey", requestKey);
+            args.putIntArray("idList", idArray);
+            dialog.setArguments(args);
+            return dialog;
+        }
+
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            final Bundle args = getArguments();
+            final String requestKey = args.getString("requestKey");
+            final int[] idList = args.getIntArray("idList");
+
+            MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity());
             Resources res = getResources();
-            builder.setMessage(res.getQuantityString(R.plurals.title_delete_profiles_dialog, idList.length, idList.length))
+            builder.setTitle(res.getQuantityString(R.plurals.title_delete_profiles_dialog, idList.length, idList.length))
                     .setPositiveButton(R.string.action_delete, new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        public void onClick(DialogInterface dialogInterface, int which) {
                             Log.d(TAG, "Delete confirmed for: " + Arrays.toString(idList));
                             App app = (App)requireActivity().getApplication();
                             app.getRepository().deletePaperProfilesById(idList);
-                            actionMode.finish();
+
+                            Bundle result = new Bundle();
+                            result.putInt("which", which);
+                            getParentFragmentManager().setFragmentResult(requestKey, result);
                         }
                     })
                     .setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
+                        public void onClick(DialogInterface dialogInterface, int which) {
                             Log.d(TAG, "Delete canceled for: " + Arrays.toString(idList));
+
+                            Bundle result = new Bundle();
+                            result.putInt("which", which);
+                            getParentFragmentManager().setFragmentResult(requestKey, result);
                         }
                     });
 

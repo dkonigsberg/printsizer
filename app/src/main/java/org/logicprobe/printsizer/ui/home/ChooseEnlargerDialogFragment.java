@@ -1,6 +1,5 @@
 package org.logicprobe.printsizer.ui.home;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,6 +13,8 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.databinding.DialogChooseEnlargerBinding;
@@ -43,7 +44,7 @@ public class ChooseEnlargerDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
 
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_choose_enlarger, null, false);
