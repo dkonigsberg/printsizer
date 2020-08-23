@@ -30,4 +30,6 @@ public interface PaperProfile {
     PaperGrade getGrade4();
     PaperGrade getGrade5();
     PaperGrade getGradeNone();
+
+    PaperGrade getGrade(@GradeId int gradeId);
 }

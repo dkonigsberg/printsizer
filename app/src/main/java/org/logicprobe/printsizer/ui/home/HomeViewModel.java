@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -538,35 +539,10 @@ public class HomeViewModel extends AndroidViewModel {
         state.set(LARGER_PRINT_EXPOSURE_TIME_KEY, largerExposureValue);
     }
 
-    private PaperGrade getSelectedGrade(PaperProfile paperProfile, int gradeId) {
+    private PaperGrade getSelectedGrade(@Nullable PaperProfile paperProfile, int gradeId) {
         PaperGrade grade = null;
         if (paperProfile != null) {
-            switch (gradeId) {
-                case PaperProfile.GRADE_00:
-                    grade = paperProfile.getGrade00();
-                    break;
-                case PaperProfile.GRADE_0:
-                    grade = paperProfile.getGrade0();
-                    break;
-                case PaperProfile.GRADE_1:
-                    grade = paperProfile.getGrade1();
-                    break;
-                case PaperProfile.GRADE_2:
-                    grade = paperProfile.getGrade2();
-                    break;
-                case PaperProfile.GRADE_3:
-                    grade = paperProfile.getGrade3();
-                    break;
-                case PaperProfile.GRADE_4:
-                    grade = paperProfile.getGrade4();
-                    break;
-                case PaperProfile.GRADE_5:
-                    grade = paperProfile.getGrade5();
-                    break;
-                case PaperProfile.GRADE_NONE:
-                    grade = paperProfile.getGradeNone();
-                    break;
-            }
+            grade = paperProfile.getGrade(gradeId);
         }
         if (grade == null) {
             grade = new PaperGradeEntity();

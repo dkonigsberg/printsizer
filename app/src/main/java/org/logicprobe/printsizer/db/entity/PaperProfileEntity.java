@@ -9,6 +9,7 @@ import androidx.room.Entity;
 import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
+import org.logicprobe.printsizer.model.PaperGrade;
 import org.logicprobe.printsizer.model.PaperProfile;
 
 import java.util.Objects;
@@ -69,6 +70,10 @@ public class PaperProfileEntity implements PaperProfile, Parcelable {
 
     public String getDescription() {
         return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override
@@ -143,8 +148,39 @@ public class PaperProfileEntity implements PaperProfile, Parcelable {
         this.gradeNone = gradeNone;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    @Ignore
+    @Override
+    public PaperGrade getGrade(int gradeId) {
+        PaperGrade grade;
+        switch (gradeId) {
+            case GRADE_00:
+                grade = this.grade00;
+                break;
+            case GRADE_0:
+                grade = this.grade0;
+                break;
+            case GRADE_1:
+                grade = this.grade1;
+                break;
+            case GRADE_2:
+                grade = this.grade2;
+                break;
+            case GRADE_3:
+                grade = this.grade3;
+                break;
+            case GRADE_4:
+                grade = this.grade4;
+                break;
+            case GRADE_5:
+                grade = this.grade5;
+                break;
+            case GRADE_NONE:
+                grade = this.gradeNone;
+                break;
+            default:
+                grade = null;
+        }
+        return grade;
     }
 
     @Override

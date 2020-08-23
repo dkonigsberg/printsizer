@@ -86,7 +86,9 @@ public class ChoosePaperDialogFragment extends DialogFragment {
         @Override
         public void onClick(PaperProfile paperProfile) {
             Bundle result = new Bundle();
-            result.putInt("id", paperProfile.getId());
+            if (paperProfile instanceof PaperProfileEntity) {
+                result.putParcelable("paperProfile", (PaperProfileEntity)paperProfile);
+            }
             getParentFragmentManager().setFragmentResult(requestKey, result);
             dismiss();
         }

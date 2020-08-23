@@ -46,35 +46,48 @@ public class PaperSettingsDialogFragment extends DialogFragment {
     public PaperSettingsDialogFragment() {
     }
 
-    public static PaperSettingsDialogFragment create(
-            String requestKey,
-            @StringRes int titleResourceId,
-            int paperProfileId, @PaperProfile.GradeId int gradeId,
-            boolean showRemove) {
-        return createImpl(requestKey, titleResourceId, paperProfileId, gradeId, showRemove);
-    }
+    public static class Builder {
+        private final Bundle args;
 
-    public static PaperSettingsDialogFragment create(
-            String requestKey,
-            @StringRes int titleResourceId,
-            int paperProfileId) {
-        return createImpl(requestKey, titleResourceId, paperProfileId, Integer.MIN_VALUE, false);
-    }
+        public Builder() {
+            args = new Bundle();
+        }
 
-    private static PaperSettingsDialogFragment createImpl(
-            String requestKey,
-            @StringRes int titleResourceId,
-            int paperProfileId, int gradeId,
-            boolean showRemove) {
-        Bundle args = new Bundle();
-        args.putString("requestKey", requestKey);
-        args.putInt("titleResourceId", titleResourceId);
-        args.putInt("profileId", paperProfileId);
-        args.putInt("gradeId", gradeId);
-        args.putBoolean("showRemove", showRemove);
-        PaperSettingsDialogFragment dialog = new PaperSettingsDialogFragment();
-        dialog.setArguments(args);
-        return dialog;
+        public Builder setRequestKey(String requestKey) {
+            args.putString("requestKey", requestKey);
+            return this;
+        }
+
+        public Builder setTitle(@StringRes int titleResourceId) {
+            args.putInt("titleResourceId", titleResourceId);
+            return this;
+        }
+
+        public Builder setPaperProfile(PaperProfileEntity paperProfile) {
+            args.putParcelable("paperProfile", paperProfile);
+            return this;
+        }
+
+        public Builder setPaperGradeId(@PaperProfile.GradeId int paperGradeId) {
+            args.putInt("gradeId", paperGradeId);
+            return this;
+        }
+
+        public Builder setRemoveButton(boolean showRemove) {
+            args.putBoolean("showRemove", showRemove);
+            return this;
+        }
+
+        public Builder setReferencePaperIsoR(int isoR) {
+            args.putInt("referenceIsoR", isoR);
+            return this;
+        }
+
+        public PaperSettingsDialogFragment create() {
+            final PaperSettingsDialogFragment dialog = new PaperSettingsDialogFragment();
+            dialog.setArguments(args);
+            return dialog;
+        }
     }
 
     @NonNull
@@ -122,25 +135,40 @@ public class PaperSettingsDialogFragment extends DialogFragment {
         final Bundle args = requireArguments();
         requestKey = args.getString("requestKey");
         int titleResourceId = args.getInt("titleResourceId");
-        int profileId = args.getInt("profileId");
-        int gradeId = args.getInt("gradeId");
 
         if (args.getBoolean("showRemove")) {
             builder.setNeutralButton(R.string.action_remove, buttonClickListener);
         }
 
         builder.setTitle(titleResourceId);
-        viewModel.setPaperProfileId(profileId);
-        viewModel.setPaperGrade(gradeId);
+
+        // Only set arguments to the model if the model has not yet been initialized.
+        // Otherwise, we might wipe out any user changes that have occurred before an
+        // activity recreation.
+        if (!viewModel.isInitialized()) {
+            PaperProfileEntity paperProfile = args.getParcelable("paperProfile");
+            int gradeId = args.getInt("gradeId", -10);
+            int referenceIsoR = args.getInt("referenceIsoR");
+
+            viewModel.setPaperProfile(paperProfile);
+            viewModel.setReferenceIsoR(referenceIsoR);
+            if (gradeId != -10) {
+                viewModel.setPaperGrade(gradeId);
+            }
+        }
 
         getParentFragmentManager().setFragmentResultListener(SELECT_PAPER_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                int paperProfileId = result.getInt("id", 0);
-                Log.d(TAG, "Paper profile selected: " + paperProfileId);
-                handlePaperProfileSelected(paperProfileId);
+                PaperProfileEntity paperProfile = result.getParcelable("paperProfile");
+                if (paperProfile != null) {
+                    Log.d(TAG, "Paper profile selected: [" + paperProfile.getId() + "] " + paperProfile.getName());
+                    handlePaperProfileSelected(paperProfile);
+                }
             }
         });
+
+        viewModel.setInitialized(true);
 
         return builder.create();
     }
@@ -152,7 +180,7 @@ public class PaperSettingsDialogFragment extends DialogFragment {
                 Bundle result = new Bundle();
                 if (which == DialogInterface.BUTTON_POSITIVE) {
                     // Accept
-                    LiveData<PaperProfile> livePaperProfile = viewModel.getPaperProfile();
+                    LiveData<PaperProfileEntity> livePaperProfile = viewModel.getPaperProfile();
                     PaperProfile paperProfile = livePaperProfile != null ? livePaperProfile.getValue() : null;
                     if (paperProfile == null) { paperProfile = new PaperProfileEntity(); }
 
@@ -197,8 +225,8 @@ public class PaperSettingsDialogFragment extends DialogFragment {
         dialog.show(getParentFragmentManager(), "paper_settings_choose_paper_alert");
     }
 
-    private void handlePaperProfileSelected(int paperProfileId) {
-        viewModel.setPaperProfileId(paperProfileId);
+    private void handlePaperProfileSelected(PaperProfileEntity paperProfile) {
+        viewModel.setPaperProfile(paperProfile);
         // If the new paper profile does not contain the currently selected grade,
         // then the model will attempt to select a next best choice.
     }

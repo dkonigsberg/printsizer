@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
+import androidx.lifecycle.SavedStateHandle;
+
 public final class Util {
     private Util() { }
 
@@ -45,6 +47,24 @@ public final class Util {
             return editText.getText().toString();
         } else {
             return "";
+        }
+    }
+
+    public static boolean safeGetStateBoolean(SavedStateHandle state, String key) {
+        Object obj = state.get(key);
+        if (obj instanceof Boolean) {
+            return (Boolean)obj;
+        } else {
+            return false;
+        }
+    }
+
+    public static int safeGetStateInt(SavedStateHandle state, String key, int defaultValue) {
+        Object obj = state.get(key);
+        if (obj instanceof Integer) {
+            return (Integer)obj;
+        } else {
+            return defaultValue;
         }
     }
 }

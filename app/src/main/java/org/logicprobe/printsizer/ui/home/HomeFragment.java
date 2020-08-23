@@ -37,7 +37,9 @@ import org.logicprobe.printsizer.LiveDataUtil;
 import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.databinding.DialogChooseEnlargerBinding;
 import org.logicprobe.printsizer.databinding.FragmentHomeBinding;
+import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.model.PaperGrade;
 import org.logicprobe.printsizer.model.PaperProfile;
 import org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback;
 import org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback;
@@ -94,9 +96,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         fragmentManager.setFragmentResultListener(SELECT_PAPER_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-                int paperProfileId = result.getInt("id", 0);
-                Log.d(TAG, "Paper profile selected: " + paperProfileId);
-                handlePaperProfileSelected(paperProfileId);
+                PaperProfileEntity paperProfile = result.getParcelable("paperProfile");
+                if (paperProfile != null) {
+                    Log.d(TAG, "Paper profile selected: [" + paperProfile.getId() + "] " + paperProfile.getName());
+                    handlePaperProfileSelected(paperProfile);
+                }
             }
         });
 
@@ -191,14 +195,18 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         binding.setSmallerPaperProfileClickCallback(new PaperProfileClickCallback() {
             @Override
             public void onClick(PaperProfile paperProfile) {
-                smallerPaperProfileClicked(paperProfile);
+                if (paperProfile instanceof PaperProfileEntity) {
+                    smallerPaperProfileClicked((PaperProfileEntity)paperProfile);
+                }
             }
         });
 
         binding.setLargerPaperProfileClickCallback(new PaperProfileClickCallback() {
             @Override
             public void onClick(PaperProfile paperProfile) {
-                largerPaperProfileClicked(paperProfile);
+                if (paperProfile instanceof PaperProfileEntity) {
+                    largerPaperProfileClicked((PaperProfileEntity)paperProfile);
+                }
             }
         });
 
@@ -346,11 +354,12 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         }
     }
 
-    private void handlePaperProfileSelected(int paperProfileId) {
-        PaperSettingsDialogFragment paperDialog = PaperSettingsDialogFragment.create(
-                INITIAL_PAPER_SETTINGS_REQUEST_KEY,
-                R.string.dialog_choose_paper_profile,
-                paperProfileId);
+    private void handlePaperProfileSelected(PaperProfileEntity paperProfile) {
+        PaperSettingsDialogFragment paperDialog = new PaperSettingsDialogFragment.Builder()
+                .setRequestKey(INITIAL_PAPER_SETTINGS_REQUEST_KEY)
+                .setTitle(R.string.dialog_choose_paper_profile)
+                .setPaperProfile(paperProfile)
+                .create();
         paperDialog.show(getParentFragmentManager(), "initial_paper_settings_alert");
     }
 
@@ -366,13 +375,16 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         homeViewModel.setHasPaperProfiles(false);
     }
 
-    private void smallerPaperProfileClicked(PaperProfile paperProfile) {
+    private void smallerPaperProfileClicked(PaperProfileEntity paperProfile) {
         if (paperProfile == null) { return; }
-        PaperSettingsDialogFragment paperDialog = PaperSettingsDialogFragment.create(
-                SMALL_PAPER_SETTINGS_REQUEST_KEY,
-                R.string.dialog_smaller_print_paper_profile,
-                paperProfile.getId(), LiveDataUtil.getIntValue(homeViewModel.getSmallerPaperGradeId()),
-                true);
+
+        PaperSettingsDialogFragment paperDialog = new PaperSettingsDialogFragment.Builder()
+                .setRequestKey(SMALL_PAPER_SETTINGS_REQUEST_KEY)
+                .setTitle(R.string.dialog_smaller_print_paper_profile)
+                .setPaperProfile(paperProfile)
+                .setPaperGradeId(LiveDataUtil.getIntValue(homeViewModel.getSmallerPaperGradeId()))
+                .setRemoveButton(true)
+                .create();
         paperDialog.show(getParentFragmentManager(), "smaller_paper_settings_alert");
     }
 
@@ -381,13 +393,30 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         homeViewModel.setSmallerPaperGradeId(gradeId);
     }
 
-    private void largerPaperProfileClicked(PaperProfile paperProfile) {
+    private void largerPaperProfileClicked(PaperProfileEntity paperProfile) {
         if (paperProfile == null) { return; }
-        PaperSettingsDialogFragment paperDialog = PaperSettingsDialogFragment.create(
-                LARGE_PAPER_SETTINGS_REQUEST_KEY,
-                R.string.dialog_larger_print_paper_profile,
-                paperProfile.getId(), LiveDataUtil.getIntValue(homeViewModel.getLargerPaperGradeId()),
-                false);
+
+        // Get the "reference" ISO(R) value from the smaller print paper profile.
+        // This will be used to recommend a starting contrast grade if a different
+        // paper is selected for the larger print.
+        int smallerIsoR = 0;
+        PaperProfile smallerProfile = homeViewModel.getSmallerPaperProfile().getValue();
+        if (smallerProfile != null) {
+            int smallerGradeId = LiveDataUtil.getIntValue(homeViewModel.getSmallerPaperGradeId());
+            PaperGrade smallerGrade = smallerProfile.getGrade(smallerGradeId);
+            if (smallerGrade != null && smallerGrade.getIsoP() > 0 && smallerGrade.getIsoR() > 0) {
+                smallerIsoR = smallerGrade.getIsoR();
+            }
+        }
+
+        PaperSettingsDialogFragment paperDialog = new PaperSettingsDialogFragment.Builder()
+                .setRequestKey(LARGE_PAPER_SETTINGS_REQUEST_KEY)
+                .setTitle(R.string.dialog_larger_print_paper_profile)
+                .setPaperProfile(paperProfile)
+                .setPaperGradeId(LiveDataUtil.getIntValue(homeViewModel.getLargerPaperGradeId()))
+                .setReferencePaperIsoR(smallerIsoR)
+                .setRemoveButton(false)
+                .create();
         paperDialog.show(getParentFragmentManager(), "larger_paper_settings_alert");
     }
 
