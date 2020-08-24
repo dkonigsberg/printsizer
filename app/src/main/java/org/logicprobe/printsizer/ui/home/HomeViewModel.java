@@ -2,7 +2,6 @@ package org.logicprobe.printsizer.ui.home;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.arch.core.util.Function;
@@ -515,26 +514,17 @@ public class HomeViewModel extends AndroidViewModel {
 
         Enlarger enlarger = Enlarger.createFromProfile(enlargerProfileValue);
         PrintScaler printScaler = new PrintScaler(enlarger);
-        double largerExposureValue = printScaler.scalePrintTime(smallerHeightValue, smallerExposureValue, largerHeightValue);
 
-        Log.d(TAG, "Smaller Print: " + smallerHeightValue + "mm" + ", " + smallerExposureValue + "s");
-        Log.d(TAG, "Larger Print: " + largerHeightValue + "mm" + ", " + largerExposureValue + "s, "
-                + largerExposureOffset + " EV");
+        printScaler.setBaseHeight(smallerHeightValue);
+        printScaler.setBaseExposureTime(smallerExposureValue);
+        printScaler.setBaseIsoP(smallerIsoP);
 
-        // Quick and dirty paper profile exposure adjustment.
-        // (This should be replaced by something more elegant done inside of PrintScaler)
-        if (smallerIsoP > 0 && largerIsoP > 0 && smallerIsoP != largerIsoP) {
-            double stops = PrintMath.isoPaperDifferenceInEv(smallerIsoP, largerIsoP);
-            Log.d(TAG, "Paper profiles (" + smallerIsoP + "->" + largerIsoP + ") adjustment: " + stops + " EV");
+        printScaler.setTargetHeight(largerHeightValue);
+        printScaler.setTargetIsoP(largerIsoP);
 
-            largerExposureValue = PrintMath.timeAdjustInStops(largerExposureValue, stops);
-            Log.d(TAG, "Paper adjusted larger exposure: " + largerExposureValue + "s");
-        }
+        printScaler.setExposureCompensation(largerExposureOffset);
 
-        if (Math.abs(largerExposureOffset) > 0.0001d) {
-            largerExposureValue = PrintMath.timeAdjustInStops(largerExposureValue, largerExposureOffset);
-            Log.d(TAG, "User adjusted larger exposure: " + largerExposureValue + "s");
-        }
+        double largerExposureValue = printScaler.calculateTargetExposureTime();
 
         state.set(LARGER_PRINT_EXPOSURE_TIME_KEY, largerExposureValue);
     }
