@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.parameterized.TestWithParameters;
 import org.logicprobe.printsizer.LiveDataTestUtil;
 import org.logicprobe.printsizer.db.dao.PaperProfileDao;
 import org.logicprobe.printsizer.db.entity.PaperProfileEntity;

@@ -53,7 +53,7 @@ public class PaperGradeEntity implements PaperGrade, Parcelable {
     }
 
     @Ignore
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<PaperGradeEntity> CREATOR = new Parcelable.Creator<PaperGradeEntity>() {
         @Override
         public PaperGradeEntity createFromParcel(Parcel in) {
             PaperGradeEntity gradeEntity = new PaperGradeEntity();

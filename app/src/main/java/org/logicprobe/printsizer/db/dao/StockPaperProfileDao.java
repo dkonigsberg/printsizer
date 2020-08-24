@@ -69,14 +69,19 @@ public class StockPaperProfileDao {
         reader.beginObject();
         while (reader.hasNext()) {
             String name = reader.nextName();
-            if (name.equals("name")) {
-                entity.setName(reader.nextString());
-            } else if (name.equals("description")) {
-                entity.setDescription(reader.nextString());
-            } else if (name.equals("grades")) {
-                readPaperGrades(reader, entity);
-            } else {
-                reader.skipValue();
+            switch (name) {
+                case "name":
+                    entity.setName(reader.nextString());
+                    break;
+                case "description":
+                    entity.setDescription(reader.nextString());
+                    break;
+                case "grades":
+                    readPaperGrades(reader, entity);
+                    break;
+                default:
+                    reader.skipValue();
+                    break;
             }
         }
         reader.endObject();

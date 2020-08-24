@@ -210,7 +210,7 @@ public class PaperProfileEntity implements PaperProfile, Parcelable {
     }
 
     @Ignore
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public static final Parcelable.Creator<PaperProfileEntity> CREATOR = new Parcelable.Creator<PaperProfileEntity>() {
         @Override
         public PaperProfileEntity createFromParcel(Parcel in) {
             PaperProfileEntity profileEntity = new PaperProfileEntity();

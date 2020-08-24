@@ -252,9 +252,13 @@ public class EnlargersFragment extends Fragment {
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            final Bundle args = getArguments();
+            final Bundle args = requireArguments();
             final String requestKey = args.getString("requestKey");
             final int[] idList = args.getIntArray("idList");
+
+            if (requestKey == null || idList == null) {
+                throw new IllegalStateException("Dialog created without required arguments");
+            }
 
             MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(requireActivity());
             Resources res = getResources();

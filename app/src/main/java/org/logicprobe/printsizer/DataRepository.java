@@ -69,7 +69,7 @@ public class DataRepository {
                     public void onChanged(Integer numPapers) {
                         if (DataRepository.this.database.getDatabaseCreated().getValue() != null) {
                             if (numPapers == null) {
-                                numPapers = Integer.valueOf(0);
+                                numPapers = 0;
                             }
                             observableNumPapers.postValue(numPapers);
                         }
