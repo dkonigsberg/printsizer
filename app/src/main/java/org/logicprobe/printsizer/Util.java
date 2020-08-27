@@ -9,6 +9,8 @@ import android.widget.EditText;
 import androidx.lifecycle.SavedStateHandle;
 
 public final class Util {
+    public static final double EPSILON = 0.0001d;
+
     private Util() { }
 
     /**
@@ -66,5 +68,13 @@ public final class Util {
         } else {
             return defaultValue;
         }
+    }
+
+    public static boolean isValidNonZero(double value) {
+        return !Double.isNaN(value) && !Double.isInfinite(value) && Math.abs(value) > EPSILON;
+    }
+
+    public static boolean isValidPositive(double value) {
+        return !Double.isNaN(value) && !Double.isInfinite(value) && value > EPSILON;
     }
 }

@@ -1,13 +1,17 @@
 package org.logicprobe.printsizer.model;
 
+import org.logicprobe.printsizer.Util;
+
 public class Enlarger {
     private static final String TAG = Enlarger.class.getSimpleName();
-    protected double lensFocalLength;
+    protected final double lensFocalLength;
 
     public Enlarger(double lensFocalLength) {
-        this.lensFocalLength = lensFocalLength;
+        if (!Util.isValidPositive(lensFocalLength)) {
+            throw new IllegalArgumentException("lensFocalLength is not valid");
+        }
 
-        //TODO validate input parameters for acceptable values
+        this.lensFocalLength = lensFocalLength;
     }
 
     public static Enlarger createFromProfile(EnlargerProfile enlargerProfile) {

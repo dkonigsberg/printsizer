@@ -61,9 +61,17 @@ public class PrintScalerTest {
         assertTrue(Double.isNaN(targetTime));
     }
 
-    @Test
+    @Test()
     public void invalidEnlarger() {
-        Enlarger enlarger = new Enlarger(0);
+        // Force an apparently invalid enlarger, because validation checks prevent
+        // us from easily constructing one.
+        Enlarger enlarger = new Enlarger(50) {
+            @Override
+            public double getLensFocalLength() {
+                return 0;
+            }
+        };
+
         PrintScaler printScaler = new PrintScaler(enlarger);
         printScaler.setBaseHeight(HEIGHT_50MM_1X);
         printScaler.setBaseExposureTime(10.0d);

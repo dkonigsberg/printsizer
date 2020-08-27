@@ -2,6 +2,8 @@ package org.logicprobe.printsizer.model;
 
 import android.util.Log;
 
+import org.logicprobe.printsizer.Util;
+
 /**
  * PrintScaler is the central class for calculating printing time adjustments.
  *
@@ -15,7 +17,6 @@ import android.util.Log;
  */
 public class PrintScaler {
     private static final String TAG = PrintScaler.class.getSimpleName();
-    private static final double EPSILON = 0.0001d;
     private Enlarger enlarger;
     private double baseHeight;
     private double baseExposureTime;
@@ -56,12 +57,12 @@ public class PrintScaler {
         Log.d(TAG, "Compute target exposure time: " +
                 "(" + baseHeight + "mm, " + baseExposureTime + "s) -> " + targetHeight + "mm");
 
-        if (enlarger == null || !isValidPositive(enlarger.getLensFocalLength())) {
+        if (enlarger == null || !Util.isValidPositive(enlarger.getLensFocalLength())) {
             Log.e(TAG, "Enlarger is missing or invalid");
             return Double.NaN;
         }
 
-        if (!(isValidPositive(baseHeight) && isValidPositive(baseExposureTime) && isValidPositive(targetHeight))) {
+        if (!(Util.isValidPositive(baseHeight) && Util.isValidPositive(baseExposureTime) && Util.isValidPositive(targetHeight))) {
             Log.e(TAG, "Required parameter is missing!");
             return Double.NaN;
         }
@@ -99,7 +100,7 @@ public class PrintScaler {
             Log.d(TAG, "Paper adjusted target exposure: " + targetExposureTime + "s");
         }
 
-        if (isValidNonZero(exposureCompensation)) {
+        if (Util.isValidNonZero(exposureCompensation)) {
             Log.d(TAG, "Exposure compensation: " + exposureCompensation + " EV");
             targetExposureTime = PrintMath.timeAdjustInStops(targetExposureTime, exposureCompensation);
             Log.d(TAG, "Compensated target exposure: " + targetExposureTime + "s");
@@ -109,15 +110,7 @@ public class PrintScaler {
     }
 
     private boolean hasPaperIsoChange() {
-        return isValidPositive(baseIsoP) && isValidPositive(targetIsoP)
-                && Math.abs(baseIsoP - targetIsoP) > EPSILON;
-    }
-
-    private static boolean isValidNonZero(double value) {
-        return !Double.isNaN(value) && !Double.isInfinite(value) && Math.abs(value) > EPSILON;
-    }
-
-    private static boolean isValidPositive(double value) {
-        return !Double.isNaN(value) && !Double.isInfinite(value) && value > EPSILON;
+        return Util.isValidPositive(baseIsoP) && Util.isValidPositive(targetIsoP)
+                && Math.abs(baseIsoP - targetIsoP) > Util.EPSILON;
     }
 }

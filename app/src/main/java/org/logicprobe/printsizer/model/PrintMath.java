@@ -6,15 +6,19 @@ public final class PrintMath {
     }
 
     public static double computeMinimumHeight(double lensFocalLength) {
-        return 4.0d * lensFocalLength;
+        return 4d * lensFocalLength;
     }
 
     public static double computeMagnification(double enlargerHeight, double lensFocalLength) {
-        return (Math.sqrt(enlargerHeight * (enlargerHeight - 4 * lensFocalLength)) - 2 * lensFocalLength + enlargerHeight) / (2 * lensFocalLength);
+        return (Math.sqrt(enlargerHeight * (enlargerHeight - 4d * lensFocalLength)) - 2d * lensFocalLength + enlargerHeight) / (2d * lensFocalLength);
+    }
+
+    public static double computeHeightFromMagnification(double magnification, double lensFocalLength) {
+        return (lensFocalLength * Math.pow(magnification + 1, 2d)) / magnification;
     }
 
     public static double computeTimeAdjustment(double oldTime, double oldMagnification, double newMagnification) {
-        return oldTime * Math.pow(newMagnification + 1, 2) / Math.pow(oldMagnification + 1, 2);
+        return oldTime * Math.pow(newMagnification + 1d, 2d) / Math.pow(oldMagnification + 1d, 2d);
     }
 
     public static double interpolate(double h1, double t1, double h2, double t2, double h3, double t3, double x) {
@@ -24,10 +28,10 @@ public final class PrintMath {
     }
 
     public static double isoPaperDifferenceInEv(double isoP1, double isoP2) {
-        return Math.log(isoP1 / isoP2) / Math.log(2.0d);
+        return Math.log(isoP1 / isoP2) / Math.log(2d);
     }
 
     public static double timeAdjustInStops(double time, double stops) {
-        return time * Math.pow(2, stops);
+        return time * Math.pow(2d, stops);
     }
 }
