@@ -140,9 +140,23 @@ public class EnlargerEditFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final Bundle arguments = getArguments();
+        if (savedInstanceState != null) {
+            Log.d(TAG, "Restoring instance state");
+            requestKey = savedInstanceState.getString("requestKey");
+            profileId = savedInstanceState.getInt("profileId", 0);
 
-        if (arguments != null) {
+            // Have to handle view state like this, since it is not automatically saved
+            // as part of the saved instance state.
+            if (savedInstanceState.getBoolean("hasTestExposures", false)) {
+                addTestExposureView();
+            } else {
+                removeTestExposureView();
+            }
+        }
+
+        final Bundle arguments = getArguments();
+        if (profileId == 0 && arguments != null) {
+            Log.d(TAG, "Populating from arguments bundle");
             int profileId = arguments.getInt("id");
             if (profileId > 0) {
                 buttonAddTestExposures.setVisibility(View.GONE);
@@ -164,6 +178,24 @@ public class EnlargerEditFragment extends Fragment {
             }
             requestKey = arguments.getString("requestKey");
         }
+
+        buttonAddTestExposures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addTestExposureView();
+            }
+        });
+        buttonRemoveTestExposures.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeTestExposureView();
+            }
+        });
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
         final TextWatcher validator = new TextWatcher() {
             @Override
@@ -188,19 +220,15 @@ public class EnlargerEditFragment extends Fragment {
         editSmallerTime.addTextChangedListener(validator);
         editLargerHeight.addTextChangedListener(validator);
         editLargerTime.addTextChangedListener(validator);
+    }
 
-        buttonAddTestExposures.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addTestExposureView();
-            }
-        });
-        buttonRemoveTestExposures.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeTestExposureView();
-            }
-        });
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "Saving instance state");
+        outState.putString("requestKey", requestKey);
+        outState.putInt("profileId", profileId);
+        outState.putBoolean("hasTestExposures", hasTestExposures);
     }
 
     private void enableTextHintAnimations(boolean enabled) {

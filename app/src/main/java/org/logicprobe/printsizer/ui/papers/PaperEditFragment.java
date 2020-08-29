@@ -31,8 +31,6 @@ public class PaperEditFragment extends Fragment {
     private String requestKey;
     private int profileId = 0;
 
-    private ViewGroup mainContentLayout;
-
     private EditText editName;
     private EditText editDescription;
     private EditText[] editGradeISOP;
@@ -45,8 +43,6 @@ public class PaperEditFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_paper_edit, container, false);
-
-        mainContentLayout = root.findViewById(R.id.mainContentLayout);
 
         editName = root.findViewById(R.id.editName);
         editDescription = root.findViewById(R.id.editDescription);
@@ -89,9 +85,14 @@ public class PaperEditFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final Bundle arguments = getArguments();
+        if (savedInstanceState != null) {
+            Log.d(TAG, "Restoring instance state");
+            requestKey = savedInstanceState.getString("requestKey");
+            profileId = savedInstanceState.getInt("profileId", 0);
+        }
 
-        if (arguments != null) {
+        final Bundle arguments = getArguments();
+        if (profileId == 0 && arguments != null) {
             int profileId = arguments.getInt("id");
             if (profileId > 0) {
                 App app = (App) requireActivity().getApplication();
@@ -108,8 +109,14 @@ public class PaperEditFragment extends Fragment {
             }
             requestKey = arguments.getString("requestKey");
         }
+    }
 
-        //TODO add change listeners
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d(TAG, "Saving instance state");
+        outState.putString("requestKey", requestKey);
+        outState.putInt("profileId", profileId);
     }
 
     private void enableTextHintAnimations(boolean enabled) {
