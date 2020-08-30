@@ -497,6 +497,11 @@ public class HomeViewModel extends AndroidViewModel {
         final double largerHeightValue = LiveDataUtil.getDoubleValue(getLargerPrintHeight()) + offset;
         final double largerExposureOffset = LiveDataUtil.getDoubleValue(getLargerPrintExposureOffset());
 
+        if (smallerHeightValue < PrintMath.computeMinimumHeight(enlargerProfileValue.getLensFocalLength())) {
+            state.set(LARGER_PRINT_EXPOSURE_TIME_KEY, Double.NaN);
+            return;
+        }
+
         // Pluck out the ISO(P) values for the two paper configurations, if they are available.
         // (This should probably be replaced with something more elegant later.)
         int smallerIsoP = 0;
