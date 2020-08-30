@@ -7,4 +7,8 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="form_vertical_margin">8dp</dimen>
     <dimen name="sd_label_max_width">240dp</dimen>
+
+    <!-- Dimensions adjusted for different screen sizes -->
+    <integer name="home_edit_ems">12</integer>
+    <dimen name="paper_edit_filter_grade_label_margin">32dp</dimen>
 </resources>

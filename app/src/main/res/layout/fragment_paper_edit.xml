@@ -83,7 +83,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/form_vertical_margin">
                     <TextView
-                        android:layout_marginEnd="32dp"
+                        android:layout_marginEnd="@dimen/paper_edit_filter_grade_label_margin"
                         android:text="@string/heading_filter_grade"
                         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"/>
                     <TextView

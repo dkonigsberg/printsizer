@@ -87,7 +87,7 @@
                                     android:id="@+id/editSmallerHeight"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:ems="12"
+                                    android:ems="@integer/home_edit_ems"
                                     android:inputType="number" />
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -106,7 +106,7 @@
                                     android:id="@+id/editSmallerTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:ems="12"
+                                    android:ems="@integer/home_edit_ems"
                                     android:inputType="numberDecimal" />
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -159,6 +159,7 @@
                                             android:layout_height="wrap_content"
                                             android:layout_below="@id/smallerPaperName"
                                             android:layout_alignParentStart="true"
+                                            android:layout_toStartOf="@id/smallerPaperGradeChip"
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:singleLine="true"
@@ -237,7 +238,7 @@
                                 android:id="@+id/editLargerHeight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:ems="12"
+                                android:ems="@integer/home_edit_ems"
                                 android:inputType="number" />
                         </com.google.android.material.textfield.TextInputLayout>
 
@@ -262,7 +263,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:editable="false"
-                                    android:ems="12"
+                                    android:ems="@integer/home_edit_ems"
                                     android:inputType="none"
                                     android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}"
                                     tools:ignore="Deprecated" />
@@ -335,6 +336,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_below="@id/largerPaperName"
                                         android:layout_alignParentStart="true"
+                                        android:layout_toStartOf="@id/largerPaperGradeChip"
                                         android:ellipsize="end"
                                         android:maxLines="1"
                                         android:singleLine="true"
