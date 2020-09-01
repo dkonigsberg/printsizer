@@ -385,8 +385,7 @@ public class HomeViewModel extends AndroidViewModel {
                 && !Double.isNaN(targetPrintHeight)
                 && (basePrintHeight + offset) > 0
                 && basePrintExposureTime > 0
-                && (targetPrintHeight + offset) > 0
-                && targetPrintHeight >= basePrintHeight;
+                && (targetPrintHeight + offset) > 0;
     }
 
     public boolean isEnlargerProfileValid() {
@@ -436,16 +435,12 @@ public class HomeViewModel extends AndroidViewModel {
 
     private void validateTargetPrintHeight() {
         final double targetPrintHeight = LiveDataUtil.getDoubleValue(getTargetPrintHeight());
-        final double basePrintHeight = LiveDataUtil.getDoubleValue(getBasePrintHeight());
 
         if (isEnlargerProfileValid() && !Double.isNaN(targetPrintHeight) && targetPrintHeight > 0) {
             final double offset = validEnlargerHeightOffset();
             final double targetHeightValue = targetPrintHeight + offset;
             final EnlargerProfile enlargerProfileValue = enlargerProfile.getValue();
-            if (targetHeightValue <= 0
-                    || (!Double.isNaN(basePrintHeight)
-                    && basePrintHeight > 0
-                    && basePrintHeight + offset > targetHeightValue)) {
+            if (targetHeightValue <= 0) {
                 targetPrintHeightError.setValue(EnlargerHeightErrorEvent.INVALID);
             } else if (enlargerProfileValue != null && targetHeightValue < PrintMath.computeMinimumHeight(enlargerProfileValue.getLensFocalLength())) {
                 targetPrintHeightError.setValue(EnlargerHeightErrorEvent.TOO_LOW_FOR_FOCAL_LENGTH);
@@ -496,8 +491,9 @@ public class HomeViewModel extends AndroidViewModel {
         final double baseExposureValue = LiveDataUtil.getDoubleValue(getBasePrintExposureTime());
         final double targetHeightValue = LiveDataUtil.getDoubleValue(getTargetPrintHeight()) + offset;
         final double targetExposureOffset = LiveDataUtil.getDoubleValue(getTargetPrintExposureOffset());
+        final double minHeight = PrintMath.computeMinimumHeight(enlargerProfileValue.getLensFocalLength());
 
-        if (baseHeightValue < PrintMath.computeMinimumHeight(enlargerProfileValue.getLensFocalLength())) {
+        if (baseHeightValue < minHeight || targetHeightValue < minHeight) {
             state.set(TARGET_PRINT_EXPOSURE_TIME_KEY, Double.NaN);
             return;
         }
