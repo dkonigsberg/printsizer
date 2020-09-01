@@ -41,13 +41,13 @@
     <string name="enlarger_profile_copy_name_template">Copy of %1$s</string>
     <string name="paper_profile_copy_name_template">Copy of %1$s</string>
     <string name="action_about">About</string>
-    <string name="label_smaller_print">Smaller Print</string>
-    <string name="label_larger_print">Larger Print</string>
+    <string name="label_base_print">Smaller Print</string>
+    <string name="label_target_print">Larger Print</string>
     <string name="action_choose_enlarger_profile">Choose Enlarger Profile…</string>
     <string name="dialog_choose_enlarger_profile">Choose enlarger profile</string>
     <string name="dialog_choose_paper_profile">Choose paper profile</string>
-    <string name="dialog_smaller_print_paper_profile">Smaller print paper profile</string>
-    <string name="dialog_larger_print_paper_profile">Larger print paper profile</string>
+    <string name="dialog_base_print_paper_profile">Smaller print paper profile</string>
+    <string name="dialog_target_print_paper_profile">Larger print paper profile</string>
     <string name="action_add_enlarger_profile">Add Enlarger Profile</string>
     <string name="action_add_paper_profile">Add paper profile</string>
     <string name="action_add_stock_profile">Add stock profile</string>

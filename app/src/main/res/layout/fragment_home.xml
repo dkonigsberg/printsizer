@@ -11,10 +11,10 @@
             name="homeViewModel"
             type="org.logicprobe.printsizer.ui.home.HomeViewModel" />
         <variable
-            name="smallerPaperProfileClickCallback"
+            name="basePaperProfileClickCallback"
             type="org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback" />
         <variable
-            name="largerPaperProfileClickCallback"
+            name="targetPaperProfileClickCallback"
             type="org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback" />
         <variable
             name="enlargerProfileClickCallback"
@@ -62,18 +62,18 @@
                             android:clipToPadding="false">
 
                             <TextView
-                                android:id="@+id/textViewSmallerPrint"
+                                android:id="@+id/textViewBasePrint"
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
                                 android:layout_weight="1"
-                                android:text="@string/label_smaller_print"
+                                android:text="@string/label_base_print"
                                 android:textAppearance="?attr/textAppearanceHeadline6"
                                 android:includeFontPadding="false"
                                 android:layout_marginTop="-2dp"
                                 android:textColor="@color/primaryColor" />
 
                             <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/editSmallerHeightLayout"
+                                android:id="@+id/editBaseHeightLayout"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
                                 app:suffixText="@string/unit_suffix_mm">
 
                                 <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/editSmallerHeight"
+                                    android:id="@+id/editBaseHeight"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:ems="@integer/home_edit_ems"
@@ -92,7 +92,7 @@
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/editSmallerTimeLayout"
+                                android:id="@+id/editBaseTimeLayout"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
                                 app:suffixText="@string/unit_suffix_seconds">
 
                                 <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/editSmallerTime"
+                                    android:id="@+id/editBaseTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:ems="@integer/home_edit_ems"
@@ -111,7 +111,7 @@
                             </com.google.android.material.textfield.TextInputLayout>
 
                             <com.google.android.material.card.MaterialCardView
-                                android:id="@+id/smallerPaperProfileView"
+                                android:id="@+id/basePaperProfileView"
                                 android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
                                     android:orientation="horizontal"
                                     android:paddingStart="8dp"
                                     android:paddingEnd="8dp"
-                                    android:onClick="@{() ->  smallerPaperProfileClickCallback.onClick(homeViewModel.smallerPaperProfile)}"
+                                    android:onClick="@{() ->  basePaperProfileClickCallback.onClick(homeViewModel.basePaperProfile)}"
                                     tools:ignore="UnusedAttribute">
 
                                     <RelativeLayout
@@ -142,7 +142,7 @@
                                         tools:ignore="UselessParent">
 
                                         <TextView
-                                            android:id="@+id/smallerPaperName"
+                                            android:id="@+id/basePaperName"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_alignParentStart="true"
@@ -150,25 +150,25 @@
                                             android:maxLines="1"
                                             android:singleLine="true"
                                             tools:text="Ilford MULTIGRADE IV RC DELUXE"
-                                            android:text="@{homeViewModel.smallerPaperProfile.name}"
+                                            android:text="@{homeViewModel.basePaperProfile.name}"
                                             android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                                         <TextView
-                                            android:id="@+id/smallerPaperDescription"
+                                            android:id="@+id/basePaperDescription"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:layout_below="@id/smallerPaperName"
+                                            android:layout_below="@id/basePaperName"
                                             android:layout_alignParentStart="true"
-                                            android:layout_toStartOf="@id/smallerPaperGradeChip"
+                                            android:layout_toStartOf="@id/basePaperGradeChip"
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:singleLine="true"
                                             tools:text="Stock paper profile"
-                                            android:text="@{homeViewModel.smallerPaperProfile.description}"
+                                            android:text="@{homeViewModel.basePaperProfile.description}"
                                             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                                         <com.google.android.material.chip.Chip
-                                            android:id="@+id/smallerPaperGradeChip"
+                                            android:id="@+id/basePaperGradeChip"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_alignParentEnd="true"
@@ -177,7 +177,7 @@
                                             android:clickable="false"
                                             android:longClickable="false"
                                             tools:text="Grade 00"
-                                            android:text="@{homeViewModel.smallerPaperGradeResourceId}"
+                                            android:text="@{homeViewModel.basePaperGradeResourceId}"
                                             android:translationY="2dp"
                                             app:chipMinHeight="24dp"
                                             app:ensureMinTouchTargetSize="false" />
@@ -214,17 +214,17 @@
                         android:clipToPadding="false">
 
                         <TextView
-                            android:id="@+id/textViewLargerPrint"
+                            android:id="@+id/textViewTargetPrint"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="@string/label_larger_print"
+                            android:text="@string/label_target_print"
                             android:textAppearance="?attr/textAppearanceHeadline6"
                             android:includeFontPadding="false"
                             android:layout_marginTop="-2dp"
                             android:textColor="@color/primaryColor" />
 
                         <com.google.android.material.textfield.TextInputLayout
-                            android:id="@+id/editLargerHeightLayout"
+                            android:id="@+id/editTargetHeightLayout"
                             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -235,7 +235,7 @@
                             app:suffixText="@string/unit_suffix_mm">
 
                             <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/editLargerHeight"
+                                android:id="@+id/editTargetHeight"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:ems="@integer/home_edit_ems"
@@ -249,7 +249,7 @@
                             android:orientation="horizontal">
 
                             <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/editLargerTimeLayout"
+                                android:id="@+id/editTargetTimeLayout"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -259,13 +259,13 @@
                                 app:suffixText="@string/unit_suffix_seconds">
 
                                 <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/editLargerTime"
+                                    android:id="@+id/editTargetTime"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:editable="false"
                                     android:ems="@integer/home_edit_ems"
                                     android:inputType="none"
-                                    android:text="@{Converter.calculatedTimeToString(homeViewModel.largerPrintExposureTime)}"
+                                    android:text="@{Converter.calculatedTimeToString(homeViewModel.targetPrintExposureTime)}"
                                     tools:ignore="Deprecated" />
                             </com.google.android.material.textfield.TextInputLayout>
 
@@ -276,7 +276,7 @@
                                 app:endIconDrawable="@drawable/ic_exposure">
 
                                 <AutoCompleteTextView
-                                    android:id="@+id/editLargerExposureAdjustment"
+                                    android:id="@+id/editTargetExposureAdjustment"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="8dp"
@@ -287,7 +287,7 @@
                         </LinearLayout>
 
                         <com.google.android.material.card.MaterialCardView
-                            android:id="@+id/largerPaperProfileView"
+                            android:id="@+id/targetPaperProfileView"
                             android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -305,7 +305,7 @@
                                 android:orientation="horizontal"
                                 android:paddingStart="8dp"
                                 android:paddingEnd="8dp"
-                                android:onClick="@{() ->  largerPaperProfileClickCallback.onClick(homeViewModel.largerPaperProfile)}"
+                                android:onClick="@{() ->  targetPaperProfileClickCallback.onClick(homeViewModel.targetPaperProfile)}"
                                 tools:ignore="UnusedAttribute">
 
                                 <RelativeLayout
@@ -319,7 +319,7 @@
                                     tools:ignore="UselessParent">
 
                                     <TextView
-                                        android:id="@+id/largerPaperName"
+                                        android:id="@+id/targetPaperName"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentStart="true"
@@ -327,25 +327,25 @@
                                         android:maxLines="1"
                                         android:singleLine="true"
                                         tools:text="Ilford MULTIGRADE RC DELUXE"
-                                        android:text="@{homeViewModel.largerPaperProfile.name}"
+                                        android:text="@{homeViewModel.targetPaperProfile.name}"
                                         android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
                                     <TextView
-                                        android:id="@+id/largerPaperDescription"
+                                        android:id="@+id/targetPaperDescription"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:layout_below="@id/largerPaperName"
+                                        android:layout_below="@id/targetPaperName"
                                         android:layout_alignParentStart="true"
-                                        android:layout_toStartOf="@id/largerPaperGradeChip"
+                                        android:layout_toStartOf="@id/targetPaperGradeChip"
                                         android:ellipsize="end"
                                         android:maxLines="1"
                                         android:singleLine="true"
                                         tools:text="Stock paper profile"
-                                        android:text="@{homeViewModel.largerPaperProfile.description}"
+                                        android:text="@{homeViewModel.targetPaperProfile.description}"
                                         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                                     <com.google.android.material.chip.Chip
-                                        android:id="@+id/largerPaperGradeChip"
+                                        android:id="@+id/targetPaperGradeChip"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_alignParentEnd="true"
@@ -354,7 +354,7 @@
                                         android:clickable="false"
                                         android:longClickable="false"
                                         tools:text="Grade 2"
-                                        android:text="@{homeViewModel.largerPaperGradeResourceId}"
+                                        android:text="@{homeViewModel.targetPaperGradeResourceId}"
                                         android:translationY="2dp"
                                         app:chipMinHeight="24dp"
                                         app:ensureMinTouchTargetSize="false" />

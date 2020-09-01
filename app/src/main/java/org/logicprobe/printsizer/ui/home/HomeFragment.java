@@ -46,8 +46,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private static final String TAG = HomeFragment.class.getSimpleName();
     private static final String SELECT_PAPER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_SELECT_PAPER";
     private static final String INITIAL_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_INITIAL_PAPER_SETTINGS";
-    private static final String SMALL_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_SMALL_PAPER_SETTINGS";
-    private static final String LARGE_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_LARGE_PAPER_SETTINGS";
+    private static final String BASE_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_BASE_PAPER_SETTINGS";
+    private static final String TARGET_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_TARGET_PAPER_SETTINGS";
     private static final String CHOOSE_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_CHOOSE_ENLARGER";
     private static final String ADD_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_ENLARGER";
 
@@ -66,14 +66,14 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
 
-    private EditText editSmallerHeight;
-    private EditText editSmallerTime;
-    private EditText editLargerHeight;
+    private EditText editBaseHeight;
+    private EditText editBaseTime;
+    private EditText editTargetHeight;
 
-    private TextInputLayout editSmallerHeightLayout;
-    private TextInputLayout editLargerHeightLayout;
+    private TextInputLayout editBaseHeightLayout;
+    private TextInputLayout editTargetHeightLayout;
 
-    private AutoCompleteTextView editLargerExposureAdjustment;
+    private AutoCompleteTextView editTargetExposureAdjustment;
 
     private Button buttonAddPaperProfile;
 
@@ -113,7 +113,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             }
         });
 
-        fragmentManager.setFragmentResultListener(SMALL_PAPER_SETTINGS_REQUEST_KEY, this, new FragmentResultListener() {
+        fragmentManager.setFragmentResultListener(BASE_PAPER_SETTINGS_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 int action = result.getInt("action");
@@ -131,7 +131,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             }
         });
 
-        fragmentManager.setFragmentResultListener(LARGE_PAPER_SETTINGS_REQUEST_KEY, this, new FragmentResultListener() {
+        fragmentManager.setFragmentResultListener(TARGET_PAPER_SETTINGS_REQUEST_KEY, this, new FragmentResultListener() {
             @Override
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 int action = result.getInt("action");
@@ -202,20 +202,20 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setHomeViewModel(homeViewModel);
 
-        binding.setSmallerPaperProfileClickCallback(new PaperProfileClickCallback() {
+        binding.setBasePaperProfileClickCallback(new PaperProfileClickCallback() {
             @Override
             public void onClick(PaperProfile paperProfile) {
                 if (paperProfile instanceof PaperProfileEntity) {
-                    smallerPaperProfileClicked((PaperProfileEntity)paperProfile);
+                    basePaperProfileClicked((PaperProfileEntity)paperProfile);
                 }
             }
         });
 
-        binding.setLargerPaperProfileClickCallback(new PaperProfileClickCallback() {
+        binding.setTargetPaperProfileClickCallback(new PaperProfileClickCallback() {
             @Override
             public void onClick(PaperProfile paperProfile) {
                 if (paperProfile instanceof PaperProfileEntity) {
-                    largerPaperProfileClicked((PaperProfileEntity)paperProfile);
+                    targetPaperProfileClicked((PaperProfileEntity)paperProfile);
                 }
             }
         });
@@ -227,12 +227,12 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             }
         });
 
-        editSmallerHeight = root.findViewById(R.id.editSmallerHeight);
-        editSmallerTime = root.findViewById(R.id.editSmallerTime);
-        editLargerHeight = root.findViewById(R.id.editLargerHeight);
-        editSmallerHeightLayout = root.findViewById(R.id.editSmallerHeightLayout);
-        editLargerHeightLayout = root.findViewById(R.id.editLargerHeightLayout);
-        editLargerExposureAdjustment = root.findViewById(R.id.editLargerExposureAdjustment);
+        editBaseHeight = root.findViewById(R.id.editBaseHeight);
+        editBaseTime = root.findViewById(R.id.editBaseTime);
+        editTargetHeight = root.findViewById(R.id.editTargetHeight);
+        editBaseHeightLayout = root.findViewById(R.id.editBaseHeightLayout);
+        editTargetHeightLayout = root.findViewById(R.id.editTargetHeightLayout);
+        editTargetExposureAdjustment = root.findViewById(R.id.editTargetExposureAdjustment);
 
         buttonAddPaperProfile = root.findViewById(R.id.buttonAddPaperProfile);
 
@@ -251,23 +251,23 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
-        editSmallerHeight.setText(modelHeightValueToString(homeViewModel.getSmallerPrintHeight()));
-        editSmallerTime.setText(modelTimeValueToString(homeViewModel.getSmallerPrintExposureTime()));
-        editLargerHeight.setText(modelHeightValueToString(homeViewModel.getLargerPrintHeight()));
-        editLargerExposureAdjustment.setText(modelExposureOffsetValueToString(homeViewModel.getLargerPrintExposureOffset()));
+        editBaseHeight.setText(modelHeightValueToString(homeViewModel.getBasePrintHeight()));
+        editBaseTime.setText(modelTimeValueToString(homeViewModel.getBasePrintExposureTime()));
+        editTargetHeight.setText(modelHeightValueToString(homeViewModel.getTargetPrintHeight()));
+        editTargetExposureAdjustment.setText(modelExposureOffsetValueToString(homeViewModel.getTargetPrintExposureOffset()));
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         updateHeightUnits(sharedPreferences);
         updateExposureIncrements(sharedPreferences);
 
-        editSmallerHeight.addTextChangedListener(new TextWatcher() {
+        editBaseHeight.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!ignoreHeightChange) {
-                    homeViewModel.setSmallerPrintHeight(charSequenceToModelHeightDouble(charSequence));
+                    homeViewModel.setBasePrintHeight(charSequenceToModelHeightDouble(charSequence));
                 }
             }
 
@@ -275,27 +275,27 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             public void afterTextChanged(Editable editable) { }
         });
 
-        editSmallerTime.addTextChangedListener(new TextWatcher() {
+        editBaseTime.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                homeViewModel.setSmallerPrintExposureTime(charSequenceToModelTimeDouble(charSequence));
+                homeViewModel.setBasePrintExposureTime(charSequenceToModelTimeDouble(charSequence));
             }
 
             @Override
             public void afterTextChanged(Editable editable) { }
         });
 
-        editLargerHeight.addTextChangedListener(new TextWatcher() {
+        editTargetHeight.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!ignoreHeightChange) {
-                    homeViewModel.setLargerPrintHeight(charSequenceToModelHeightDouble(charSequence));
+                    homeViewModel.setTargetPrintHeight(charSequenceToModelHeightDouble(charSequence));
                 }
             }
 
@@ -303,14 +303,14 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             public void afterTextChanged(Editable editable) { }
         });
 
-        editLargerExposureAdjustment.addTextChangedListener(new TextWatcher() {
+        editTargetExposureAdjustment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (!ignoreExposureOffsetChange) {
-                    homeViewModel.setLargerPrintExposureOffset(charSequenceToModelExposureOffset(charSequence));
+                    homeViewModel.setTargetPrintExposureOffset(charSequenceToModelExposureOffset(charSequence));
                 }
             }
 
@@ -318,24 +318,24 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             public void afterTextChanged(Editable editable) { }
         });
 
-        homeViewModel.getSmallerPrintHeightError().observe(getViewLifecycleOwner(), new Observer<EnlargerHeightErrorEvent>() {
+        homeViewModel.getBasePrintHeightError().observe(getViewLifecycleOwner(), new Observer<EnlargerHeightErrorEvent>() {
             @Override
             public void onChanged(EnlargerHeightErrorEvent enlargerHeightErrorEvent) {
                 if (enlargerHeightErrorEvent != EnlargerHeightErrorEvent.NONE) {
-                    editSmallerHeightLayout.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
+                    editBaseHeightLayout.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
                 } else {
-                    editSmallerHeightLayout.setError(null);
+                    editBaseHeightLayout.setError(null);
                 }
             }
         });
 
-        homeViewModel.getLargerPrintHeightError().observe(getViewLifecycleOwner(), new Observer<EnlargerHeightErrorEvent>() {
+        homeViewModel.getTargetPrintHeightError().observe(getViewLifecycleOwner(), new Observer<EnlargerHeightErrorEvent>() {
             @Override
             public void onChanged(EnlargerHeightErrorEvent enlargerHeightErrorEvent) {
                 if (enlargerHeightErrorEvent != EnlargerHeightErrorEvent.NONE) {
-                    editLargerHeightLayout.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
+                    editTargetHeightLayout.setError(getString(enlargerHeightErrorEvent.getErrorResource()));
                 } else {
-                    editLargerHeightLayout.setError(null);
+                    editTargetHeightLayout.setError(null);
                 }
             }
         });
@@ -374,10 +374,10 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     }
 
     private void handleInitialPaperProfileChanged(int profileId, int gradeId) {
-        homeViewModel.setSmallerPaperProfileId(profileId);
-        homeViewModel.setSmallerPaperGradeId(gradeId);
-        homeViewModel.setLargerPaperProfileId(profileId);
-        homeViewModel.setLargerPaperGradeId(gradeId);
+        homeViewModel.setBasePaperProfileId(profileId);
+        homeViewModel.setBasePaperGradeId(gradeId);
+        homeViewModel.setTargetPaperProfileId(profileId);
+        homeViewModel.setTargetPaperGradeId(gradeId);
         homeViewModel.setHasPaperProfiles(true);
     }
 
@@ -385,54 +385,54 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         homeViewModel.setHasPaperProfiles(false);
     }
 
-    private void smallerPaperProfileClicked(PaperProfileEntity paperProfile) {
+    private void basePaperProfileClicked(PaperProfileEntity paperProfile) {
         if (paperProfile == null) { return; }
 
         PaperSettingsDialogFragment paperDialog = new PaperSettingsDialogFragment.Builder()
-                .setRequestKey(SMALL_PAPER_SETTINGS_REQUEST_KEY)
-                .setTitle(R.string.dialog_smaller_print_paper_profile)
+                .setRequestKey(BASE_PAPER_SETTINGS_REQUEST_KEY)
+                .setTitle(R.string.dialog_base_print_paper_profile)
                 .setPaperProfile(paperProfile)
-                .setPaperGradeId(LiveDataUtil.getIntValue(homeViewModel.getSmallerPaperGradeId()))
+                .setPaperGradeId(LiveDataUtil.getIntValue(homeViewModel.getBasePaperGradeId()))
                 .setRemoveButton(true)
                 .create();
-        paperDialog.show(getParentFragmentManager(), "smaller_paper_settings_alert");
+        paperDialog.show(getParentFragmentManager(), "base_paper_settings_alert");
     }
 
     private void handleSmallPaperSettingChanged(int profileId, int gradeId) {
-        homeViewModel.setSmallerPaperProfileId(profileId);
-        homeViewModel.setSmallerPaperGradeId(gradeId);
+        homeViewModel.setBasePaperProfileId(profileId);
+        homeViewModel.setBasePaperGradeId(gradeId);
     }
 
-    private void largerPaperProfileClicked(PaperProfileEntity paperProfile) {
+    private void targetPaperProfileClicked(PaperProfileEntity paperProfile) {
         if (paperProfile == null) { return; }
 
-        // Get the "reference" ISO(R) value from the smaller print paper profile.
+        // Get the "reference" ISO(R) value from the base print paper profile.
         // This will be used to recommend a starting contrast grade if a different
-        // paper is selected for the larger print.
-        int smallerIsoR = 0;
-        PaperProfile smallerProfile = homeViewModel.getSmallerPaperProfile().getValue();
-        if (smallerProfile != null) {
-            int smallerGradeId = LiveDataUtil.getIntValue(homeViewModel.getSmallerPaperGradeId());
-            PaperGrade smallerGrade = smallerProfile.getGrade(smallerGradeId);
-            if (smallerGrade != null && smallerGrade.getIsoP() > 0 && smallerGrade.getIsoR() > 0) {
-                smallerIsoR = smallerGrade.getIsoR();
+        // paper is selected for the target print.
+        int baseIsoR = 0;
+        PaperProfile baseProfile = homeViewModel.getBasePaperProfile().getValue();
+        if (baseProfile != null) {
+            int baseGradeId = LiveDataUtil.getIntValue(homeViewModel.getBasePaperGradeId());
+            PaperGrade baseGrade = baseProfile.getGrade(baseGradeId);
+            if (baseGrade != null && baseGrade.getIsoP() > 0 && baseGrade.getIsoR() > 0) {
+                baseIsoR = baseGrade.getIsoR();
             }
         }
 
         PaperSettingsDialogFragment paperDialog = new PaperSettingsDialogFragment.Builder()
-                .setRequestKey(LARGE_PAPER_SETTINGS_REQUEST_KEY)
-                .setTitle(R.string.dialog_larger_print_paper_profile)
+                .setRequestKey(TARGET_PAPER_SETTINGS_REQUEST_KEY)
+                .setTitle(R.string.dialog_target_print_paper_profile)
                 .setPaperProfile(paperProfile)
-                .setPaperGradeId(LiveDataUtil.getIntValue(homeViewModel.getLargerPaperGradeId()))
-                .setReferencePaperIsoR(smallerIsoR)
+                .setPaperGradeId(LiveDataUtil.getIntValue(homeViewModel.getTargetPaperGradeId()))
+                .setReferencePaperIsoR(baseIsoR)
                 .setRemoveButton(false)
                 .create();
-        paperDialog.show(getParentFragmentManager(), "larger_paper_settings_alert");
+        paperDialog.show(getParentFragmentManager(), "target_paper_settings_alert");
     }
 
     private void handleLargePaperSettingChanged(int profileId, int gradeId) {
-        homeViewModel.setLargerPaperProfileId(profileId);
-        homeViewModel.setLargerPaperGradeId(gradeId);
+        homeViewModel.setTargetPaperProfileId(profileId);
+        homeViewModel.setTargetPaperGradeId(gradeId);
     }
 
     private void updateHeightUnits(SharedPreferences sharedPreferences) {
@@ -440,24 +440,24 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         if (prefValue == null || prefValue.length() == 0 || prefValue.equals("millimeters")) {
             height_as_cm = false;
 
-            editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
-            editSmallerHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
+            editBaseHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editBaseHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
 
-            editLargerHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
-            editLargerHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
+            editTargetHeight.setInputType(InputType.TYPE_CLASS_NUMBER);
+            editTargetHeightLayout.setSuffixText(getString(R.string.unit_suffix_mm));
         } else {
             height_as_cm = true;
 
-            editSmallerHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            editSmallerHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
+            editBaseHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            editBaseHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
 
-            editLargerHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            editLargerHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
+            editTargetHeight.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            editTargetHeightLayout.setSuffixText(getString(R.string.unit_suffix_cm));
         }
 
         ignoreHeightChange = true;
-        editSmallerHeight.setText(modelHeightValueToString(homeViewModel.getSmallerPrintHeight()));
-        editLargerHeight.setText(modelHeightValueToString(homeViewModel.getLargerPrintHeight()));
+        editBaseHeight.setText(modelHeightValueToString(homeViewModel.getBasePrintHeight()));
+        editTargetHeight.setText(modelHeightValueToString(homeViewModel.getTargetPrintHeight()));
         ignoreHeightChange = false;
     }
 
@@ -487,7 +487,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
                 requireContext(),
                 R.layout.exposure_offset_popup_item,
                 stringArray);
-        editLargerExposureAdjustment.setAdapter(exposureAdapter);
+        editTargetExposureAdjustment.setAdapter(exposureAdapter);
         ignoreExposureOffsetChange = false;
     }
 
