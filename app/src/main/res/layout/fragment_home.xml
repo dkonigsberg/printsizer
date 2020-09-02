@@ -94,7 +94,7 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/editBaseTimeLayout"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="wrap_content"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/form_vertical_margin"
                                 android:hint="@string/label_exposure_time"
@@ -215,7 +215,7 @@
 
                         <TextView
                             android:id="@+id/textViewTargetPrint"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/label_target_print"
                             android:textAppearance="?attr/textAppearanceHeadline6"
