@@ -9,8 +9,13 @@ import android.widget.EditText;
 
 import androidx.lifecycle.SavedStateHandle;
 
+import org.apache.commons.math3.fraction.Fraction;
+
 public final class Util {
     public static final double EPSILON = 0.0001d;
+    private static final Fraction ONE_SIXTH = new Fraction(1, 6);
+    private static final Fraction ONE_TWELFTH = new Fraction(1, 12);
+    private static final Fraction ONE_TWENTY_FOURTH = new Fraction(1, 24);
 
     private Util() { }
 
@@ -71,6 +76,24 @@ public final class Util {
         }
     }
 
+    public static long safeGetStateLong(SavedStateHandle state, String key, long defaultValue) {
+        Object obj = state.get(key);
+        if (obj instanceof Long) {
+            return (Long)obj;
+        } else {
+            return defaultValue;
+        }
+    }
+
+    public static double safeGetStateDouble(SavedStateHandle state, String key, double defaultValue) {
+        Object obj = state.get(key);
+        if (obj instanceof Double) {
+            return (Double)obj;
+        } else {
+            return defaultValue;
+        }
+    }
+
     public static boolean isValidNonZero(double value) {
         return !Double.isNaN(value) && !Double.isInfinite(value) && Math.abs(value) > EPSILON;
     }
@@ -92,6 +115,26 @@ public final class Util {
             default:
                 // Assume false if unknown
                 return false;
+        }
+    }
+
+    public static Fraction preferenceValueToFraction(String prefValue) {
+        if ("1_stop".equals(prefValue)) {
+            return Fraction.ONE;
+        } else if ("1_2_stop".equals(prefValue)) {
+            return Fraction.ONE_HALF;
+        } else if ("1_3_stop".equals(prefValue)) {
+            return Fraction.ONE_THIRD;
+        } else if ("1_4_stop".equals(prefValue)) {
+            return Fraction.ONE_QUARTER;
+        } else if ("1_6_stop".equals(prefValue)) {
+            return ONE_SIXTH;
+        } else if ("1_12_stop".equals(prefValue)) {
+            return ONE_TWELFTH;
+        } else if ("1_24_stop".equals(prefValue)) {
+            return ONE_TWENTY_FOURTH;
+        } else {
+            return Fraction.ZERO;
         }
     }
 }

@@ -32,6 +32,44 @@
         <item>third_stops</item>
     </string-array>
 
+    <string-array name="burndodge_type_entries">
+        <item>Seconds</item>
+        <item>Percentage</item>
+        <item>Stops</item>
+    </string-array>
+
+    <string-array name="burndodge_type_values" translatable="false">
+        <item>time</item>
+        <item>percent</item>
+        <item>stops</item>
+    </string-array>
+
+    <string-array name="burndodge_stops_coarse_entries">
+        <item>Full stops</item>
+        <item>Half stops</item>
+        <item>Third stops</item>
+    </string-array>
+
+    <string-array name="burndodge_stops_coarse_values" translatable="false">
+        <item>1_stop</item>
+        <item>1_2_stop</item>
+        <item>1_3_stop</item>
+    </string-array>
+
+    <string-array name="burndodge_stops_fine_entries">
+        <item>¼ stops</item>
+        <item>⅙ stops</item>
+        <item>¹⁄₁₂ stops</item>
+        <item>¹⁄₂₄ stops</item>
+    </string-array>
+
+    <string-array name="burndodge_stops_fine_values" translatable="false">
+        <item>1_4_stop</item>
+        <item>1_6_stop</item>
+        <item>1_12_stop</item>
+        <item>1_24_stop</item>
+    </string-array>
+
     <string-array name="exposure_offset_full_stops" translatable="false">
         <item>-3</item>
         <item>-2</item>

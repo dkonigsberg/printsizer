@@ -86,4 +86,11 @@
     <string name="error_paper_missing_name">Paper must have a name</string>
     <string name="note_paper_properties">Paper properties are based on ISO 6846:1992 and typically come from the manufacturer\'s datasheet. Adjusting them based on your own testing will make results more accurate.</string>
     <string name="label_theme_setting">Theme</string>
+    <string name="label_burndodge_default_type">Default adjustment type</string>
+    <string name="label_burndodge_stops_coarse">Coarse stops adjustment</string>
+    <string name="label_burndodge_stops_fine">Fine stops adjustment</string>
+    <string name="burndodge_area_default_name">Burn/Dodge Area %s</string>
+    <string name="label_burndodge_area_name">Burn/Dodge area name</string>
+    <string name="label_adjustment_time">Adjustment time</string>
+    <string name="label_adjustment_percentage">Adjustment percentage</string>
 </resources>

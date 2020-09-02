@@ -46,30 +46,34 @@
                     android:layout_marginHorizontal="8dp"
                     android:layout_marginTop="8dp">
 
-                    <FrameLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
                             android:animateLayoutChanges="true"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
                             android:orientation="vertical"
                             android:paddingVertical="16dp"
                             android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:clipChildren="false"
-                            android:clipToPadding="false">
+                            android:paddingEnd="0dp">
 
                             <TextView
                                 android:id="@+id/textViewBasePrint"
                                 android:layout_width="wrap_content"
                                 android:layout_height="0dp"
+                                android:layout_marginTop="-2dp"
                                 android:layout_weight="1"
+                                android:includeFontPadding="false"
                                 android:text="@string/label_base_print"
                                 android:textAppearance="?attr/textAppearanceHeadline6"
-                                android:includeFontPadding="false"
-                                android:layout_marginTop="-2dp"
                                 android:textColor="@color/primaryColor" />
 
                             <com.google.android.material.textfield.TextInputLayout
@@ -110,12 +114,20 @@
                                     android:inputType="numberDecimal" />
                             </com.google.android.material.textfield.TextInputLayout>
 
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/baseBurnDodgeList"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:nestedScrollingEnabled="false"
+                                app:layoutManager="LinearLayoutManager"/>
+
                             <com.google.android.material.card.MaterialCardView
                                 android:id="@+id/basePaperProfileView"
-                                android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/form_vertical_margin"
+                                android:layout_marginEnd="16dp"
+                                android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
                                 app:cardElevation="0dp"
                                 app:strokeColor="@color/outlined_stroke_color"
                                 app:strokeWidth="1dp">
@@ -126,10 +138,10 @@
                                     android:clickable="true"
                                     android:focusable="true"
                                     android:foreground="?android:attr/selectableItemBackground"
+                                    android:onClick="@{() ->  basePaperProfileClickCallback.onClick(homeViewModel.basePaperProfile)}"
                                     android:orientation="horizontal"
                                     android:paddingStart="8dp"
                                     android:paddingEnd="8dp"
-                                    android:onClick="@{() ->  basePaperProfileClickCallback.onClick(homeViewModel.basePaperProfile)}"
                                     tools:ignore="UnusedAttribute">
 
                                     <RelativeLayout
@@ -149,9 +161,9 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:singleLine="true"
-                                            tools:text="Ilford MULTIGRADE IV RC DELUXE"
                                             android:text="@{homeViewModel.basePaperProfile.name}"
-                                            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                                            tools:text="Ilford MULTIGRADE IV RC DELUXE" />
 
                                         <TextView
                                             android:id="@+id/basePaperDescription"
@@ -163,9 +175,9 @@
                                             android:ellipsize="end"
                                             android:maxLines="1"
                                             android:singleLine="true"
-                                            tools:text="Stock paper profile"
                                             android:text="@{homeViewModel.basePaperProfile.description}"
-                                            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                                            tools:text="Stock paper profile" />
 
                                         <com.google.android.material.chip.Chip
                                             android:id="@+id/basePaperGradeChip"
@@ -176,11 +188,11 @@
                                             android:checkable="false"
                                             android:clickable="false"
                                             android:longClickable="false"
-                                            tools:text="Grade 00"
                                             android:text="@{homeViewModel.basePaperGradeResourceId}"
                                             android:translationY="2dp"
                                             app:chipMinHeight="24dp"
-                                            app:ensureMinTouchTargetSize="false" />
+                                            app:ensureMinTouchTargetSize="false"
+                                            tools:text="Grade 00" />
                                     </RelativeLayout>
                                 </FrameLayout>
                             </com.google.android.material.card.MaterialCardView>
@@ -188,14 +200,24 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/buttonAddPaperProfile"
-                            android:visibility="@{homeViewModel.hasPaperProfiles() ? View.INVISIBLE : View.VISIBLE}"
-                            style="@style/Widget.App.Button.TextButton.IconOnly"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="top|end"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:visibility="@{homeViewModel.hasPaperProfiles() ? View.INVISIBLE : View.VISIBLE}"
+                            style="@style/Widget.App.Button.TextButton.IconOnly"
                             android:enabled="@{homeViewModel.hasPaperProfiles}"
                             app:icon="@drawable/ic_add_paper_profile" />
-                    </FrameLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/buttonAddBurnDodge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toBottomOf="@id/buttonAddPaperProfile"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            style="@style/Widget.App.Button.TextButton.IconOnly"
+                            app:icon="@drawable/ic_adjust" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
@@ -285,6 +307,15 @@
                                     tools:ignore="LabelFor" />
                             </com.google.android.material.textfield.TextInputLayout>
                         </LinearLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/targetBurnDodgeList"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:paddingStart="0dp"
+                            android:paddingEnd="32dp"
+                            android:nestedScrollingEnabled="false"
+                            app:layoutManager="LinearLayoutManager"/>
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/targetPaperProfileView"

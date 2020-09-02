@@ -1,27 +1,59 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <ListPreference
-        android:icon="@drawable/ic_theme"
-        app:defaultValue="default"
-        app:entries="@array/theme_pref_entries"
-        app:entryValues="@array/theme_pref_values"
-        app:key="theme_pref"
-        app:title="@string/label_theme_setting"
-        app:useSimpleSummaryProvider="true"/>
-    <ListPreference
-        android:icon="@drawable/ic_height"
-        app:defaultValue="millimeters"
-        app:entries="@array/distance_units_entries"
-        app:entryValues="@array/distance_units_values"
-        app:key="enlarger_height_units"
-        app:title="@string/label_enlarger_height_units"
-        app:useSimpleSummaryProvider="true" />
-    <ListPreference
-        android:icon="@drawable/ic_exposure"
-        app:defaultValue="full_stops"
-        app:entries="@array/exposure_increments_entries"
-        app:entryValues="@array/exposure_increments_values"
-        app:key="exposure_increments"
-        app:title="@string/label_exposure_increments"
-        app:useSimpleSummaryProvider="true" />
+    <PreferenceCategory
+        app:key="general_category"
+        app:title="General settings">
+        <ListPreference
+            android:icon="@drawable/ic_theme"
+            app:defaultValue="default"
+            app:entries="@array/theme_pref_entries"
+            app:entryValues="@array/theme_pref_values"
+            app:key="theme_pref"
+            app:title="@string/label_theme_setting"
+            app:useSimpleSummaryProvider="true"/>
+        <ListPreference
+            android:icon="@drawable/ic_height"
+            app:defaultValue="millimeters"
+            app:entries="@array/distance_units_entries"
+            app:entryValues="@array/distance_units_values"
+            app:key="enlarger_height_units"
+            app:title="@string/label_enlarger_height_units"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            android:icon="@drawable/ic_exposure"
+            app:defaultValue="full_stops"
+            app:entries="@array/exposure_increments_entries"
+            app:entryValues="@array/exposure_increments_values"
+            app:key="exposure_increments"
+            app:title="@string/label_exposure_increments"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:key="burndodge_category"
+        app:title="Burn/Dodge settings">
+        <ListPreference
+            android:icon="@drawable/ic_adjust"
+            app:defaultValue="stops"
+            app:entries="@array/burndodge_type_entries"
+            app:entryValues="@array/burndodge_type_values"
+            app:key="burndodge_type"
+            app:title="@string/label_burndodge_default_type"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            android:icon="@drawable/ic_inc_large"
+            app:defaultValue="1_stop"
+            app:entries="@array/burndodge_stops_coarse_entries"
+            app:entryValues="@array/burndodge_stops_coarse_values"
+            app:key="burndodge_stops_coarse"
+            app:title="@string/label_burndodge_stops_coarse"
+            app:useSimpleSummaryProvider="true" />
+        <ListPreference
+            android:icon="@drawable/ic_inc_small"
+            app:defaultValue="1_12_stop"
+            app:entries="@array/burndodge_stops_fine_entries"
+            app:entryValues="@array/burndodge_stops_fine_values"
+            app:key="burndodge_stops_fine"
+            app:title="@string/label_burndodge_stops_fine"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
 </PreferenceScreen>

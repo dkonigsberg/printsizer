@@ -34,4 +34,8 @@ public final class PrintMath {
     public static double timeAdjustInStops(double time, double stops) {
         return time * Math.pow(2d, stops);
     }
+
+    public static double timeDifferenceInStops(double t1, double t2) {
+        return (Math.log(t2) - Math.log(t1)) / Math.log(2d);
+    }
 }

@@ -33,6 +33,7 @@ import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.databinding.FragmentHomeBinding;
 import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.model.ExposureAdjustment;
 import org.logicprobe.printsizer.model.PaperGrade;
 import org.logicprobe.printsizer.model.PaperProfile;
 import org.logicprobe.printsizer.ui.enlargers.EnlargerProfileClickCallback;
@@ -41,6 +42,7 @@ import org.logicprobe.printsizer.ui.papers.PaperProfileClickCallback;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.HashMap;
+import java.util.List;
 
 public class HomeFragment extends Fragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = HomeFragment.class.getSimpleName();
@@ -50,6 +52,8 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private static final String TARGET_PAPER_SETTINGS_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_TARGET_PAPER_SETTINGS";
     private static final String CHOOSE_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_CHOOSE_ENLARGER";
     private static final String ADD_ENLARGER_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_ENLARGER";
+    private static final String ADD_BURN_DODGE_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_ADD_BURN_DODGE";
+    private static final String EDIT_BURN_DODGE_REQUEST_KEY = HomeFragment.class.getSimpleName() + "_EDIT_BURN_DODGE";
 
     private static final double[] FULL_STOPS = { -3.0, -2.0, -1.0, 0.0, 1.0, 2.0, 3.0 };
     private static final double[] HALF_STOPS = {
@@ -66,6 +70,9 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private FragmentHomeBinding binding;
     private HomeViewModel homeViewModel;
 
+    private BurnDodgeAdapter baseBurnDodgeAdapter;
+    private BurnDodgeTargetAdapter targetBurnDodgeAdapter;
+
     private EditText editBaseHeight;
     private EditText editBaseTime;
     private EditText editTargetHeight;
@@ -76,6 +83,7 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
     private AutoCompleteTextView editTargetExposureAdjustment;
 
     private Button buttonAddPaperProfile;
+    private Button buttonAddBurnDodge;
 
     private boolean height_as_cm;
     private boolean ignoreHeightChange;
@@ -174,6 +182,39 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
             }
         });
 
+        fragmentManager.setFragmentResultListener(ADD_BURN_DODGE_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                BurnDodgeItem burnDodgeItem = result.getParcelable("burnDodgeItem");
+                if (burnDodgeItem != null) {
+                    Log.d(TAG, "Burn/dodge item added");
+                    homeViewModel.addBaseBurnDodgeItem(burnDodgeItem);
+                }
+            }
+        });
+
+        fragmentManager.setFragmentResultListener(EDIT_BURN_DODGE_REQUEST_KEY, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                int action = result.getInt("action");
+                BurnDodgeItem item = result.getParcelable("burnDodgeItem");
+                if (action == BurnDodgeDialogFragment.ACTION_ACCEPT) {
+                    if (item != null) {
+                        if (homeViewModel.updateBaseBurnDodgeItem(item)) {
+                            Log.d(TAG, "Burn/dodge item updated: " + item.getIndex());
+                        } else {
+                            Log.d(TAG, "Burn/dodge item could not be updated");
+                        }
+                    }
+                } else if (action == BurnDodgeDialogFragment.ACTION_REMOVE) {
+                    if (item != null) {
+                        Log.d(TAG, "Remove burn/dodge item: " + item.getIndex() + " [id=" + item.getItemId() + "]");
+                        homeViewModel.removeBaseBurnDodgeItem(item);
+                    }
+                }
+            }
+        });
+
         exposureOffsetLabelToValue = new HashMap<>();
         exposureOffsetValueToLabel = new HashMap<>();
         populateExposureOffsetMaps(R.array.exposure_offset_full_stops, FULL_STOPS);
@@ -201,6 +242,54 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         homeViewModel = new ViewModelProvider(requireActivity()).get(HomeViewModel.class);
         binding.setLifecycleOwner(getViewLifecycleOwner());
         binding.setHomeViewModel(homeViewModel);
+
+        final BurnDodgeClickCallback burnDodgeBaseClickCallback = new BurnDodgeClickCallback() {
+            @Override
+            public void onEditItem(BurnDodgeItem item) {
+                Log.d(TAG, "Edit burn/dodge item: " + item.getIndex() + " [id=" + item.getItemId() + "]");
+
+                double baseExposureTime = LiveDataUtil.getDoubleValue(homeViewModel.getBasePrintExposureTime());
+                BurnDodgeDialogFragment dialog = new BurnDodgeDialogFragment.Builder()
+                        .setRequestKey(EDIT_BURN_DODGE_REQUEST_KEY)
+                        .setBurnDodgeItem(item)
+                        .setBaseExposureTime(baseExposureTime)
+                        .setRemoveButton(true)
+                        .create();
+                dialog.show(getParentFragmentManager(), "burn_dodge_alert");
+            }
+
+            @Override
+            public void onRemoveItem(BurnDodgeItem item) {
+                Log.d(TAG, "Remove burn/dodge item: " + item.getIndex() + " [id=" + item.getItemId() + "]");
+                homeViewModel.removeBaseBurnDodgeItem(item);
+            }
+        };
+
+        baseBurnDodgeAdapter = new BurnDodgeAdapter(burnDodgeBaseClickCallback);
+        binding.baseBurnDodgeList.setAdapter(baseBurnDodgeAdapter);
+
+        targetBurnDodgeAdapter = new BurnDodgeTargetAdapter();
+        binding.targetBurnDodgeList.setAdapter(targetBurnDodgeAdapter);
+
+        homeViewModel.getBaseBurnDodgeList().observe(requireActivity(),
+                new Observer<List<BurnDodgeItem>>() {
+                    @Override
+                    public void onChanged(List<BurnDodgeItem> burnDodgeItems) {
+                        if (burnDodgeItems != null) {
+                            baseBurnDodgeAdapter.setBurnDodgeList(burnDodgeItems);
+                        }
+                    }
+                });
+
+        homeViewModel.getTargetBurnDodgeList().observe(requireActivity(),
+                new Observer<List<BurnDodgeTargetItem>>() {
+                    @Override
+                    public void onChanged(List<BurnDodgeTargetItem> burnDodgeTargetItems) {
+                        if (burnDodgeTargetItems != null) {
+                            targetBurnDodgeAdapter.setBurnDodgeTargetList(burnDodgeTargetItems);
+                        }
+                    }
+                });
 
         binding.setBasePaperProfileClickCallback(new PaperProfileClickCallback() {
             @Override
@@ -235,12 +324,45 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         editTargetExposureAdjustment = root.findViewById(R.id.editTargetExposureAdjustment);
 
         buttonAddPaperProfile = root.findViewById(R.id.buttonAddPaperProfile);
+        buttonAddBurnDodge = root.findViewById(R.id.buttonAddBurnDodge);
 
         buttonAddPaperProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChoosePaperDialogFragment dialog = ChoosePaperDialogFragment.create(SELECT_PAPER_REQUEST_KEY);
                 dialog.show(getParentFragmentManager(), "choose_paper_alert");
+            }
+        });
+
+        buttonAddBurnDodge.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Add burn/dodge area");
+
+                int adjustmentUnit;
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+                String prefValue = sharedPreferences.getString("burndodge_type", null);
+                if ("time".equals(prefValue)) {
+                    adjustmentUnit = ExposureAdjustment.UNIT_SECONDS;
+                } else if ("percent".equals(prefValue)) {
+                    adjustmentUnit = ExposureAdjustment.UNIT_PERCENT;
+                } else {
+                    adjustmentUnit = ExposureAdjustment.UNIT_STOPS;
+                }
+
+                List<BurnDodgeItem> itemList = homeViewModel.getBaseBurnDodgeList().getValue();
+                int nextIndex = itemList != null ? itemList.size() : 0;
+                String defaultName = BurnDodgeItem.getDefaultName(getResources(), nextIndex);
+
+                double baseExposureTime = LiveDataUtil.getDoubleValue(homeViewModel.getBasePrintExposureTime());
+
+                BurnDodgeDialogFragment dialog = new BurnDodgeDialogFragment.Builder()
+                        .setRequestKey(ADD_BURN_DODGE_REQUEST_KEY)
+                        .setDefaultName(defaultName)
+                        .setAdjustmentUnit(adjustmentUnit)
+                        .setBaseExposureTime(baseExposureTime)
+                        .create();
+                dialog.show(getParentFragmentManager(), "burn_dodge_alert");
             }
         });
 

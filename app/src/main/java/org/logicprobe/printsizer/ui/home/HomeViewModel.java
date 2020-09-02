@@ -18,16 +18,21 @@ import org.logicprobe.printsizer.App;
 import org.logicprobe.printsizer.DataRepository;
 import org.logicprobe.printsizer.LiveDataUtil;
 import org.logicprobe.printsizer.R;
+import org.logicprobe.printsizer.Util;
 import org.logicprobe.printsizer.db.entity.EnlargerProfileEntity;
 import org.logicprobe.printsizer.db.entity.PaperGradeEntity;
 import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.Enlarger;
 import org.logicprobe.printsizer.model.EnlargerProfile;
+import org.logicprobe.printsizer.model.ExposureAdjustment;
 import org.logicprobe.printsizer.model.PaperGrade;
 import org.logicprobe.printsizer.model.PaperProfile;
 import org.logicprobe.printsizer.model.PrintMath;
 import org.logicprobe.printsizer.model.PrintScaler;
 import org.logicprobe.printsizer.ui.Converter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
     private static final String TAG = HomeViewModel.class.getSimpleName();
@@ -46,6 +51,9 @@ public class HomeViewModel extends AndroidViewModel {
     private static final String TARGET_PAPER_GRADE_ID_KEY = "target_paper_grade_id";
     private static final String HAS_PAPER_PROFILES_KEY = "has_paper_profiles";
     private static final String ENLARGER_PROFILE_ID_KEY = "enlarger_profile_id";
+    private static final String BURN_DODGE_ITEM_COUNTER_KEY = "burn_dodge_item_counter";
+    private static final String BASE_BURN_DODGE_LIST_KEY = "base_burn_dodge_list";
+    private static final String TARGET_BURN_DODGE_LIST_KEY = "target_burn_dodge_list";
 
     private final SavedStateHandle state;
     private final DataRepository repository;
@@ -82,6 +90,13 @@ public class HomeViewModel extends AndroidViewModel {
                 return num != null && num > 0;
             }
         });
+
+        // Set empty lists for the burn/dodge item lists
+        state.set(BURN_DODGE_ITEM_COUNTER_KEY, 0L);
+        List<BurnDodgeItem> emptyBaseList = new ArrayList<>();
+        state.set(BASE_BURN_DODGE_LIST_KEY, emptyBaseList);
+        List<BurnDodgeTargetItem> emptyTargetList = new ArrayList<>();
+        state.set(TARGET_BURN_DODGE_LIST_KEY, emptyTargetList);
 
         // Set placeholder values indicating unset paper grades, so that our change listeners
         // will work correctly when they are set.
@@ -324,6 +339,73 @@ public class HomeViewModel extends AndroidViewModel {
         return state.getLiveData(HAS_PAPER_PROFILES_KEY, false);
     }
 
+    public LiveData<List<BurnDodgeItem>> getBaseBurnDodgeList() {
+        return state.getLiveData(BASE_BURN_DODGE_LIST_KEY);
+    }
+
+    public void addBaseBurnDodgeItem(BurnDodgeItem item) {
+        // Ensure that the newly added item has a unique ID
+        long counter = Util.safeGetStateLong(state, BURN_DODGE_ITEM_COUNTER_KEY, 0L);
+        item.setItemId(counter++);
+        state.set(BURN_DODGE_ITEM_COUNTER_KEY, counter);
+
+        List<BurnDodgeItem> itemList = state.get(BASE_BURN_DODGE_LIST_KEY);
+        if (itemList == null) {
+            itemList = new ArrayList<>();
+        } else {
+            itemList = new ArrayList<>(itemList);
+        }
+        itemList.add(item);
+        reindexBurnDodgeItemList(itemList);
+        state.set(BASE_BURN_DODGE_LIST_KEY, itemList);
+        recalculateTargetBurnDodgeTimes();
+    }
+
+    public boolean updateBaseBurnDodgeItem(BurnDodgeItem item) {
+        if (item == null || item.getItemId() < 0) {
+            return false;
+        }
+
+        List<BurnDodgeItem> itemList = state.get(BASE_BURN_DODGE_LIST_KEY);
+        if (itemList == null || itemList.size() == 0) {
+            return false;
+        }
+
+        for (int i = 0; i < itemList.size(); i++) {
+            if (itemList.get(i).getItemId() == item.getItemId()) {
+                itemList = new ArrayList<>(itemList);
+                itemList.set(i, new BurnDodgeItem(item));
+                state.set(BASE_BURN_DODGE_LIST_KEY, itemList);
+                recalculateTargetBurnDodgeTimes();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void removeBaseBurnDodgeItem(BurnDodgeItem item) {
+        List<BurnDodgeItem> itemList = state.get(BASE_BURN_DODGE_LIST_KEY);
+        if (itemList != null) {
+            itemList = new ArrayList<>(itemList);
+            if (itemList.remove(item)) {
+                reindexBurnDodgeItemList(itemList);
+                state.set(BASE_BURN_DODGE_LIST_KEY, itemList);
+                recalculateTargetBurnDodgeTimes();
+            }
+        }
+    }
+
+    private void reindexBurnDodgeItemList(List<BurnDodgeItem> itemList) {
+        int index = 0;
+        for (BurnDodgeItem item : itemList) {
+            item.setIndex(index++);
+        }
+    }
+
+    public LiveData<List<BurnDodgeTargetItem>> getTargetBurnDodgeList() {
+        return state.getLiveData(TARGET_BURN_DODGE_LIST_KEY);
+    }
+
     public void setEnlargerProfile(int enlargerProfileId) {
         state.set(ENLARGER_PROFILE_ID_KEY, enlargerProfileId);
     }
@@ -528,6 +610,54 @@ public class HomeViewModel extends AndroidViewModel {
         double targetExposureValue = printScaler.calculateTargetExposureTime();
 
         state.set(TARGET_PRINT_EXPOSURE_TIME_KEY, targetExposureValue);
+        recalculateTargetBurnDodgeTimes();
+    }
+
+    private void recalculateTargetBurnDodgeTimes() {
+        double baseExposureTime = Util.safeGetStateDouble(state, BASE_PRINT_EXPOSURE_TIME_KEY, Double.NaN);
+        double targetExposureTime = Util.safeGetStateDouble(state, TARGET_PRINT_EXPOSURE_TIME_KEY, Double.NaN);
+        List<BurnDodgeItem> itemList = state.get(BASE_BURN_DODGE_LIST_KEY);
+        if (itemList != null && itemList.size() > 0
+                && Util.isValidPositive(baseExposureTime)
+                && Util.isValidPositive(targetExposureTime)) {
+            List<BurnDodgeTargetItem> targetItemList = new ArrayList<>(itemList.size());
+            for (BurnDodgeItem item : itemList) {
+                BurnDodgeTargetItem targetItem = new BurnDodgeTargetItem();
+                targetItem.setItemId(item.getItemId());
+                targetItem.setIndex(item.getIndex());
+                targetItem.setName(item.getName());
+                double burnDodgeTime = calculateBurnDodgeTime(baseExposureTime, targetExposureTime, item.getAdjustment());
+                if ((targetExposureTime + burnDodgeTime) < 0.1d) {
+                    burnDodgeTime = targetExposureTime * -1.0d;
+                }
+                targetItem.setSecondsValue(burnDodgeTime);
+                targetItemList.add(targetItem);
+            }
+            state.set(TARGET_BURN_DODGE_LIST_KEY, targetItemList);
+        } else {
+            List<BurnDodgeTargetItem> targetItemList = state.get(TARGET_BURN_DODGE_LIST_KEY);
+            if (targetItemList != null && targetItemList.size() > 0) {
+                targetItemList.clear();
+                state.set(TARGET_BURN_DODGE_LIST_KEY, targetItemList);
+            }
+        }
+    }
+
+    private double calculateBurnDodgeTime(double baseExposureTime, double targetExposureTime, ExposureAdjustment adjustment) {
+        if (adjustment.getUnit() == ExposureAdjustment.UNIT_SECONDS) {
+            if (baseExposureTime + adjustment.getSecondsValue() < 0.1d) {
+                return targetExposureTime * -1.0d;
+            } else {
+                double stopsDiff = PrintMath.timeDifferenceInStops(baseExposureTime, baseExposureTime + adjustment.getSecondsValue());
+                return PrintMath.timeAdjustInStops(targetExposureTime, stopsDiff) - targetExposureTime;
+            }
+        } else if (adjustment.getUnit() == ExposureAdjustment.UNIT_PERCENT) {
+            return (adjustment.getPercentValue() / 100d) * targetExposureTime;
+        } else if (adjustment.getUnit() == ExposureAdjustment.UNIT_STOPS) {
+            return PrintMath.timeAdjustInStops(targetExposureTime, adjustment.getStopsValue().doubleValue()) - targetExposureTime;
+        } else {
+            return 0d;
+        }
     }
 
     private PaperGrade getSelectedGrade(@Nullable PaperProfile paperProfile, int gradeId) {
