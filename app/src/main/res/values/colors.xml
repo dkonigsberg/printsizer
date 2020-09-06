@@ -3,13 +3,15 @@
     <color name="primaryColor">#ff6d00</color>
     <color name="primaryLightColor">#ff9e40</color>
     <color name="primaryDarkColor">#c43c00</color>
-    <color name="primaryTextColor">#000000</color>
+    <color name="primaryTextColor">#de000000</color>
     <color name="onPrimaryColor">#ffffff</color>
-    <color name="secondaryTextColor">#ffffff</color>
+    <color name="secondaryTextColor">#8a000000</color>
+    <color name="disabledTextColor">#61000000</color>
     <color name="surfaceColor">#ffffff</color>
     <color name="onSurfaceColor">#212121</color>
-    <color name="errorColor">#F44336</color>
-    <color name="icons">#FFFFFF</color>
-    <color name="divider">#BDBDBD</color>
+    <color name="errorColor">#f44336</color>
+    <color name="icons">#ffffff</color>
+    <color name="divider">#1f000000</color>
     <color name="backgroundColor">#fafafa</color>
+    <color name="sd_overlay_color">#aaffffff</color>
 </resources>

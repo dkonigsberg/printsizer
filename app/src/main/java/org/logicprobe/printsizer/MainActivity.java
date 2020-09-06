@@ -1,5 +1,6 @@
 package org.logicprobe.printsizer;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -9,6 +10,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
@@ -18,8 +20,9 @@ import androidx.navigation.ui.NavigationUI;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.preference.PreferenceManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = MainActivity.class.getSimpleName();
     private AppBarConfiguration appBarConfiguration;
     private boolean menuVisible = true;
@@ -27,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        updateThemeSetting(sharedPreferences);
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -54,6 +61,28 @@ public class MainActivity extends AppCompatActivity {
                 invalidateOptionsMenu();
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if ("theme_pref".equals(key)) {
+            Log.d(TAG, "Theme preference changed");
+            updateThemeSetting(sharedPreferences);
+        }
     }
 
     private static boolean menuVisibleDestination(NavDestination destination) {
@@ -94,6 +123,19 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void updateThemeSetting(SharedPreferences sharedPreferences) {
+        String prefValue = sharedPreferences.getString("theme_pref", "default");
+        int mode;
+        if ("light".equals(prefValue)) {
+            mode = AppCompatDelegate.MODE_NIGHT_NO;
+        } else if ("dark".equals(prefValue)) {
+            mode = AppCompatDelegate.MODE_NIGHT_YES;
+        } else {
+            mode = AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
+        }
+        AppCompatDelegate.setDefaultNightMode(mode);
     }
 
     private void showSettingsFragment() {

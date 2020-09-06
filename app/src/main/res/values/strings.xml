@@ -85,4 +85,5 @@
     <string name="heading_iso_r">ISO (R)</string>
     <string name="error_paper_missing_name">Paper must have a name</string>
     <string name="note_paper_properties">Paper properties are based on ISO 6846:1992 and typically come from the manufacturer\'s datasheet. Adjusting them based on your own testing will make results more accurate.</string>
+    <string name="label_theme_setting">Theme</string>
 </resources>

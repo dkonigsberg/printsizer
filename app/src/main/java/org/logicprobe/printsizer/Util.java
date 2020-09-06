@@ -2,6 +2,7 @@ package org.logicprobe.printsizer;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -76,5 +77,21 @@ public final class Util {
 
     public static boolean isValidPositive(double value) {
         return !Double.isNaN(value) && !Double.isInfinite(value) && value > EPSILON;
+    }
+
+    public static boolean isNightMode(Context context) {
+        Configuration configuration = context.getResources().getConfiguration();
+        int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        switch (currentNightMode) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                // Night mode is not active, we're using the light theme
+                return false;
+            case Configuration.UI_MODE_NIGHT_YES:
+                // Night mode is active, we're using dark theme
+                return true;
+            default:
+                // Assume false if unknown
+                return false;
+        }
     }
 }

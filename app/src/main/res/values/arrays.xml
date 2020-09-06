@@ -1,4 +1,15 @@
 <resources>
+    <string-array name="theme_pref_entries">
+        <item>System default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string-array name="theme_pref_values" translatable="false">
+        <item>default</item>
+        <item>light</item>
+        <item>dark</item>
+    </string-array>
+
     <string-array name="distance_units_entries">
         <item>Millimeters</item>
         <item>Centimeters</item>

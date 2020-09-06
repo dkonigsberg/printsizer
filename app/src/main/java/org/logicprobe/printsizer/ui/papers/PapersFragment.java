@@ -1,6 +1,7 @@
 package org.logicprobe.printsizer.ui.papers;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
@@ -34,6 +36,7 @@ import com.leinardi.android.speeddial.SpeedDialView;
 
 import org.logicprobe.printsizer.App;
 import org.logicprobe.printsizer.R;
+import org.logicprobe.printsizer.Util;
 import org.logicprobe.printsizer.databinding.FragmentPapersBinding;
 import org.logicprobe.printsizer.db.entity.PaperProfileEntity;
 import org.logicprobe.printsizer.model.PaperProfile;
@@ -65,19 +68,31 @@ public class PapersFragment extends Fragment {
 
         SpeedDialView speedDial = root.findViewById(R.id.speedDial);
 
+        Context context = requireContext();
+        Resources res = getResources();
+        Resources.Theme theme = context.getTheme();
+        
+        boolean isNightMode = Util.isNightMode(context);
+        int fabBackgroundId = isNightMode ? R.color.surfaceColor : R.color.onPrimaryColor;
+        int fabLabelColor = isNightMode ? R.color.primaryTextColor : R.color.secondaryTextColor;
+
         speedDial.addActionItem(new SpeedDialActionItem.Builder(
                 R.id.action_add_user_paper, R.drawable.ic_add_paper_profile)
                 .setLabel(R.string.action_add_paper_profile)
-                .setFabBackgroundColor(getResources().getColor(R.color.onPrimaryColor))
-                .setFabImageTintColor(getResources().getColor(R.color.primaryColor))
+                .setFabBackgroundColor(ResourcesCompat.getColor(res, fabBackgroundId, theme))
+                .setFabImageTintColor(ResourcesCompat.getColor(res, R.color.primaryColor, theme))
+                .setLabelColor(ResourcesCompat.getColor(res, fabLabelColor, theme))
+                .setLabelBackgroundColor(ResourcesCompat.getColor(res, fabBackgroundId, theme))
                 .setLabelClickable(true)
                 .create());
 
         speedDial.addActionItem(new SpeedDialActionItem.Builder(
                 R.id.action_add_stock_paper, R.drawable.ic_add_stock_profile)
                 .setLabel(R.string.action_add_stock_profile)
-                .setFabBackgroundColor(getResources().getColor(R.color.onPrimaryColor))
-                .setFabImageTintColor(getResources().getColor(R.color.primaryColor))
+                .setFabBackgroundColor(ResourcesCompat.getColor(res, fabBackgroundId, theme))
+                .setFabImageTintColor(ResourcesCompat.getColor(res, R.color.primaryColor, theme))
+                .setLabelColor(ResourcesCompat.getColor(res, fabLabelColor, theme))
+                .setLabelBackgroundColor(ResourcesCompat.getColor(res, fabBackgroundId, theme))
                 .setLabelClickable(true)
                 .create());
 

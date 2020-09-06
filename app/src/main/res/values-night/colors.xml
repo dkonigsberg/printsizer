@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="UnusedResources">
+    <color name="primaryColor">#db8600</color>
+    <color name="primaryLightColor">#ffbb67</color>
+    <color name="primaryDarkColor">#c44f00</color>
+    <color name="primaryTextColor">#ffffffff</color>
+    <color name="onPrimaryColor">#ffffff</color>
+    <color name="secondaryTextColor">#b3ffffff</color>
+    <color name="disabledTextColor">#80ffffff</color>
+    <color name="surfaceColor">#121212</color>
+    <color name="onSurfaceColor">#ffffff</color>
+    <color name="errorColor">#e57373</color>
+    <color name="icons">#ffffff</color>
+    <color name="divider">#1fffffff</color>
+    <color name="backgroundColor">#121212</color>
+    <color name="sd_overlay_color">#aa000000</color>
+</resources>

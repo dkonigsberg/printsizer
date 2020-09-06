@@ -1,6 +1,14 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListPreference
+        android:icon="@drawable/ic_theme"
+        app:defaultValue="default"
+        app:entries="@array/theme_pref_entries"
+        app:entryValues="@array/theme_pref_values"
+        app:key="theme_pref"
+        app:title="@string/label_theme_setting"
+        app:useSimpleSummaryProvider="true"/>
+    <ListPreference
         android:icon="@drawable/ic_height"
         app:defaultValue="millimeters"
         app:entries="@array/distance_units_entries"
