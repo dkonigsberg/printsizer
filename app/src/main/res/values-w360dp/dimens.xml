@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <integer name="home_edit_ems">12</integer>
+    <integer name="burn_dodge_label_ems">8</integer>
+    <dimen name="burn_dodge_field_margin">16dp</dimen>
+    <dimen name="burn_dodge_target_end_padding">32dp</dimen>
+    <dimen name="burn_dodge_adj_button_edge">40dp</dimen>
+    <dimen name="burn_dodge_adj_button_margin">8dp</dimen>
     <dimen name="paper_edit_filter_grade_label_margin">32dp</dimen>
 </resources>

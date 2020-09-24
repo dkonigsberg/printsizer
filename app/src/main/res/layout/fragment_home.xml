@@ -313,7 +313,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:paddingStart="0dp"
-                            android:paddingEnd="32dp"
+                            android:paddingEnd="@dimen/burn_dodge_target_end_padding"
                             android:nestedScrollingEnabled="false"
                             app:layoutManager="LinearLayoutManager"/>
 

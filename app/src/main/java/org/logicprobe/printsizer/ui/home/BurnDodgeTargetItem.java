@@ -4,8 +4,6 @@ import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import org.logicprobe.printsizer.ui.Converter;
-
 import java.util.Objects;
 
 public class BurnDodgeTargetItem implements Parcelable {

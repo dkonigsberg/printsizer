@@ -17,19 +17,22 @@
 
         <TextView
             android:id="@+id/textViewBurnDodgeLabel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:minEms="8"
+            android:layout_marginEnd="@dimen/burn_dodge_field_margin"
+            android:layout_weight="1"
+            android:minEms="@integer/burn_dodge_label_ems"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
             tools:text="Burn/Dodge Area A"
             android:text="@{burnDodge.getDisplayName(textViewBurnDodgeLabel.getResources())}"
             android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"/>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/editBurnDodgeValueLayout"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
             android:clickable="true"
             android:focusable="true"
@@ -43,6 +46,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="none"
                 tools:text="+25%"
+                android:minEms="6"
                 android:text="@{burnDodge.valueText}"
                 android:editable="false"
                 android:textAlignment="center"
@@ -53,7 +57,7 @@
             android:id="@+id/buttonRemoveBurnDodge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="@dimen/burn_dodge_field_margin"
             app:icon="@drawable/ic_close"
             style="@style/Widget.App.Button.TextButton.IconOnly"/>
     </LinearLayout>

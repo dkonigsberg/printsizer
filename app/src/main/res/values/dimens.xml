@@ -10,5 +10,10 @@
 
     <!-- Dimensions adjusted for different screen sizes -->
     <integer name="home_edit_ems">12</integer>
+    <integer name="burn_dodge_label_ems">8</integer>
+    <dimen name="burn_dodge_field_margin">16dp</dimen>
+    <dimen name="burn_dodge_target_end_padding">32dp</dimen>
+    <dimen name="burn_dodge_adj_button_edge">48dp</dimen>
+    <dimen name="burn_dodge_adj_button_margin">8dp</dimen>
     <dimen name="paper_edit_filter_grade_label_margin">32dp</dimen>
 </resources>

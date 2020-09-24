@@ -372,7 +372,8 @@ public class BurnDodgeDialogFragment extends DialogFragment {
     private Fraction getStopsAdjustmentAmount(boolean fine, boolean increment) {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         String prefKey = fine ? "burndodge_stops_fine" : "burndodge_stops_coarse";
-        String prefValue = sharedPreferences.getString(prefKey, null);
+        String defValue = fine ? "1_12_stop" : "1_stop";
+        String prefValue = sharedPreferences.getString(prefKey, defValue);
         Fraction amount = Util.preferenceValueToFraction(prefValue);
 
         if (increment) {

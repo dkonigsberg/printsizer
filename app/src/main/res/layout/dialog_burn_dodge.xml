@@ -90,8 +90,8 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonDecCoarse"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/burn_dodge_adj_button_edge"
+                    android:layout_height="@dimen/burn_dodge_adj_button_edge"
                     android:insetLeft="0dp"
                     android:insetTop="0dp"
                     android:insetRight="0dp"
@@ -103,8 +103,8 @@
                     app:icon="@drawable/ic_dec_large" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonDecFine"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/burn_dodge_adj_button_edge"
+                    android:layout_height="@dimen/burn_dodge_adj_button_edge"
                     android:insetLeft="0dp"
                     android:insetTop="0dp"
                     android:insetRight="0dp"
@@ -113,7 +113,7 @@
                     app:iconGravity="textStart"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/buttonDecCoarse"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="@dimen/burn_dodge_adj_button_margin"
                     app:icon="@drawable/ic_dec_small" />
                 <TextView
                     android:id="@+id/textViewStopsAdj"
@@ -129,8 +129,8 @@
                     android:text="@{Converter.stopsValueToString(dialogViewModel.stopsValue)}"/>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonIncFine"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/burn_dodge_adj_button_edge"
+                    android:layout_height="@dimen/burn_dodge_adj_button_edge"
                     android:insetLeft="0dp"
                     android:insetTop="0dp"
                     android:insetRight="0dp"
@@ -139,12 +139,12 @@
                     app:iconGravity="textStart"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/buttonIncCoarse"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="@dimen/burn_dodge_adj_button_margin"
                     app:icon="@drawable/ic_inc_small" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonIncCoarse"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/burn_dodge_adj_button_edge"
+                    android:layout_height="@dimen/burn_dodge_adj_button_edge"
                     android:insetLeft="0dp"
                     android:insetTop="0dp"
                     android:insetRight="0dp"
