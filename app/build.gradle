@@ -26,7 +26,7 @@ android {
         applicationId "org.logicprobe.printsizer"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 6
+        versionCode 7
         versionName "${getVersionName()}"
         buildConfigField "String", "VERSION_DESCRIBE", "\"${getVersionDescribe()}\""
 
