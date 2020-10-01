@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 import androidx.annotation.IntDef;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.logicprobe.printsizer.Util;
 
 import java.lang.annotation.Retention;
@@ -136,45 +135,42 @@ public class ExposureAdjustment implements Parcelable {
             return null;
         }
 
-        ExposureAdjustment nextAdjustment = null;
+        ExposureAdjustment nextAdjustment = new ExposureAdjustment();
 
         if (unit == UNIT_SECONDS) {
             if (nextUnit == UNIT_PERCENT) {
-                nextAdjustment = new ExposureAdjustment();
                 nextAdjustment.setPercentValue((int) Math.round(100d * (secondsValue / baseExposureTime)));
             } else if (nextUnit == UNIT_STOPS) {
                 nextAdjustment = new ExposureAdjustment();
                 double stopsValue = PrintMath.timeDifferenceInStops(baseExposureTime, baseExposureTime + secondsValue);
-                if (!Double.isNaN(stopsValue) && !Double.isInfinite(stopsValue)) {
-                    nextAdjustment.setStopsValue(new Fraction(stopsValue, 24));
-                } else {
-                    nextAdjustment = null;
+                Fraction stopsFraction = Util.buildConstrainedStopsFraction(stopsValue);
+                if (stopsFraction != null) {
+                    nextAdjustment.setStopsValue(stopsFraction);
                 }
             }
         } else if (unit == UNIT_PERCENT) {
             if (nextUnit == UNIT_SECONDS) {
-                nextAdjustment = new ExposureAdjustment();
                 nextAdjustment.setSecondsValue((percentValue / 100d) * baseExposureTime);
             } else if (nextUnit == UNIT_STOPS) {
-                nextAdjustment = new ExposureAdjustment();
                 double multiplier = (percentValue + 100d) / 100d;
-                double stops = Math.log(multiplier) / Math.log(2d);
-                if (!Double.isNaN(stops) && !Double.isInfinite(stops)) {
-                    nextAdjustment.setStopsValue(new Fraction(stops, 24));
-                } else {
-                    nextAdjustment = null;
+                double stopsValue = Math.log(multiplier) / Math.log(2d);
+                Fraction stopsFraction = Util.buildConstrainedStopsFraction(stopsValue);
+                if (stopsFraction != null) {
+                    nextAdjustment.setStopsValue(stopsFraction);
                 }
             }
         } else if (unit == UNIT_STOPS) {
             if (nextUnit == UNIT_SECONDS) {
-                nextAdjustment = new ExposureAdjustment();
                 double adjustedTime = PrintMath.timeAdjustInStops(baseExposureTime, stopsValue.doubleValue());
                 nextAdjustment.setSecondsValue(adjustedTime - baseExposureTime);
             } else if (nextUnit == UNIT_PERCENT) {
-                nextAdjustment = new ExposureAdjustment();
                 double multiplier = Math.pow(2, stopsValue.doubleValue());
                 nextAdjustment.setPercentValue((int) Math.round((multiplier * 100d) - 100d));
             }
+        }
+
+        if (nextAdjustment.getUnit() == ExposureAdjustment.UNIT_NONE) {
+            nextAdjustment = null;
         }
 
         return nextAdjustment;

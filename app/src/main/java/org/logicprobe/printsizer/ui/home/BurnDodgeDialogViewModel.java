@@ -7,9 +7,9 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.SavedStateHandle;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.logicprobe.printsizer.Util;
 import org.logicprobe.printsizer.model.ExposureAdjustment;
+import org.logicprobe.printsizer.model.Fraction;
 
 public class BurnDodgeDialogViewModel extends AndroidViewModel {
     private static final String TAG = BurnDodgeDialogViewModel.class.getSimpleName();
@@ -18,12 +18,17 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
     private static final String INDEX_KEY = "index";
     private static final String NAME_KEY = "name";
     private static final String DEFAULT_NAME_KEY = "default_name";
+    private static final String FINE_STOP_INC_KEY = "fine_stop_inc";
+    private static final String COARSE_STOP_INC_KEY = "coarse_stop_inc";
     private static final String ADJ_MODE_KEY = "adj_mode";
     private static final String SECONDS_VALUE_KEY = "seconds_value";
     private static final String PERCENT_VALUE_KEY = "percent_value";
     private static final String STOPS_VALUE_KEY = "stops_value";
     private static final String BASE_EXPOSURE_TIME_KEY = "base_exposure_time";
     private static final String HAS_VALUE_KEY = "has_value";
+
+    private static final Fraction FINE_STOP_INC_DEFAULT = new Fraction(1, 12);
+    private static final Fraction COARSE_STOP_INC_DEFAULT = Fraction.ONE;
 
     private final SavedStateHandle state;
 
@@ -110,12 +115,36 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
         return state.getLiveData(DEFAULT_NAME_KEY);
     }
 
+    public void setFineStopIncrement(Fraction increment) {
+        state.set(FINE_STOP_INC_KEY, increment);
+    }
+
+    public void setCoarseStopIncrement(Fraction increment) {
+        state.set(COARSE_STOP_INC_KEY, increment);
+    }
+
     public void setAdjustmentMode(@ExposureAdjustment.AdjustmentUnit int mode) {
         ExposureAdjustment prevAdjustment = buildExposureAdjustment();
         double baseExposureTime = Util.safeGetStateDouble(state, BASE_EXPOSURE_TIME_KEY, 0.0d);
         ExposureAdjustment nextAdjustment = prevAdjustment.convertTo(mode, baseExposureTime);
 
         state.set(ADJ_MODE_KEY, mode);
+
+        // If converting to stops, make sure to twiddle our fractional result so that it only uses
+        // a denominator that we can currently set via the UI.
+        if (prevAdjustment != null && nextAdjustment != null &&
+                prevAdjustment.getUnit() != ExposureAdjustment.UNIT_STOPS && nextAdjustment.getUnit() == ExposureAdjustment.UNIT_STOPS) {
+            int coarseDenominator = Util.safeGetStateFraction(state, COARSE_STOP_INC_KEY, COARSE_STOP_INC_DEFAULT).getDenominator();
+            int fineDenominator = Util.safeGetStateFraction(state, FINE_STOP_INC_KEY, FINE_STOP_INC_DEFAULT).getDenominator();
+            Fraction stopsFraction = nextAdjustment.getStopsValue();
+            if (stopsFraction.getDenominator() != coarseDenominator && stopsFraction.getDenominator() != fineDenominator) {
+                Fraction constrainedFraction = Util.buildConstrainedStopsFraction(
+                        stopsFraction.doubleValue(), new int[] { coarseDenominator, fineDenominator });
+                if (constrainedFraction != null) {
+                    nextAdjustment.setStopsValue(constrainedFraction);
+                }
+            }
+        }
 
         if (nextAdjustment != null && nextAdjustment.getUnit() == mode) {
             switch (mode) {
@@ -161,14 +190,36 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
 
     public void setStopsValue(Fraction stopsValue) {
         state.set(STOPS_VALUE_KEY, stopsValue);
+        updateHasValueState();
     }
 
-    public void adjustStopsValue(Fraction adjustment) {
+    public void incrementStopsValueCoarse() {
+        Fraction adjustment = Util.safeGetStateFraction(state, COARSE_STOP_INC_KEY, COARSE_STOP_INC_DEFAULT);
+        adjustStopsValue(adjustment);
+    }
+
+    public void decrementStopsValueCoarse() {
+        Fraction adjustment = Util.safeGetStateFraction(state, COARSE_STOP_INC_KEY, COARSE_STOP_INC_DEFAULT);
+        adjustStopsValue(adjustment.negate());
+    }
+
+    public void incrementStopsValueFine() {
+        Fraction adjustment = Util.safeGetStateFraction(state, FINE_STOP_INC_KEY, FINE_STOP_INC_DEFAULT);
+        adjustStopsValue(adjustment);
+    }
+
+    public void decrementStopsValueFine() {
+        Fraction adjustment = Util.safeGetStateFraction(state, FINE_STOP_INC_KEY, FINE_STOP_INC_DEFAULT);
+        adjustStopsValue(adjustment.negate());
+    }
+
+    private void adjustStopsValue(Fraction adjustment) {
         Fraction stopsValue = state.get(STOPS_VALUE_KEY);
         if (stopsValue == null) {
             stopsValue = Fraction.ZERO;
         }
-        Fraction resultValue = stopsValue.add(adjustment);
+        Fraction resultValue = Util.constrainedFractionAdd(stopsValue, adjustment);
+
         state.set(STOPS_VALUE_KEY, resultValue);
         updateHasValueState();
     }

@@ -2,7 +2,6 @@ package org.logicprobe.printsizer.model;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

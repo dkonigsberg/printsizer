@@ -100,7 +100,8 @@
                     app:iconGravity="textStart"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:icon="@drawable/ic_dec_large" />
+                    app:icon="@drawable/ic_dec_large"
+                    android:onClick="@{() -> dialogViewModel.decrementStopsValueCoarse()}" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonDecFine"
                     android:layout_width="@dimen/burn_dodge_adj_button_edge"
@@ -114,7 +115,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toEndOf="@id/buttonDecCoarse"
                     android:layout_marginStart="@dimen/burn_dodge_adj_button_margin"
-                    app:icon="@drawable/ic_dec_small" />
+                    app:icon="@drawable/ic_dec_small"
+                    android:onClick="@{() -> dialogViewModel.decrementStopsValueFine()}" />
                 <TextView
                     android:id="@+id/textViewStopsAdj"
                     android:layout_width="wrap_content"
@@ -140,7 +142,8 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/buttonIncCoarse"
                     android:layout_marginEnd="@dimen/burn_dodge_adj_button_margin"
-                    app:icon="@drawable/ic_inc_small" />
+                    app:icon="@drawable/ic_inc_small"
+                    android:onClick="@{() -> dialogViewModel.incrementStopsValueFine()}" />
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/buttonIncCoarse"
                     android:layout_width="@dimen/burn_dodge_adj_button_edge"
@@ -153,7 +156,8 @@
                     app:iconGravity="textStart"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:icon="@drawable/ic_inc_large" />
+                    app:icon="@drawable/ic_inc_large"
+                    android:onClick="@{() -> dialogViewModel.incrementStopsValueCoarse()}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </FrameLayout>
 

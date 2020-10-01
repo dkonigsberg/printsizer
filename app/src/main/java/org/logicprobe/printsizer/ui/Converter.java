@@ -2,10 +2,10 @@ package org.logicprobe.printsizer.ui;
 
 import androidx.annotation.StringRes;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.apache.commons.math3.util.FastMath;
 import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.Util;
+import org.logicprobe.printsizer.model.Fraction;
 import org.logicprobe.printsizer.model.PaperProfile;
 
 import java.text.DecimalFormat;

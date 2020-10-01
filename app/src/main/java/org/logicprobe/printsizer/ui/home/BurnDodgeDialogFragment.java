@@ -6,9 +6,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,17 +25,17 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.apache.commons.math3.fraction.Fraction;
 import org.logicprobe.printsizer.LiveDataUtil;
 import org.logicprobe.printsizer.R;
 import org.logicprobe.printsizer.Util;
 import org.logicprobe.printsizer.databinding.DialogBurnDodgeBinding;
 import org.logicprobe.printsizer.model.ExposureAdjustment;
+import org.logicprobe.printsizer.model.Fraction;
 import org.logicprobe.printsizer.ui.Converter;
 
 import java.util.Locale;
 
-public class BurnDodgeDialogFragment extends DialogFragment {
+public class BurnDodgeDialogFragment extends DialogFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = BurnDodgeDialogFragment.class.getSimpleName();
 
     public static final int ACTION_ACCEPT = 1;
@@ -239,42 +239,6 @@ public class BurnDodgeDialogFragment extends DialogFragment {
             public void afterTextChanged(Editable s) { }
         });
 
-        Button buttonIncCoarse = view.findViewById(R.id.buttonIncCoarse);
-        buttonIncCoarse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fraction adjustment = getStopsAdjustmentAmount(false, true);
-                viewModel.adjustStopsValue(adjustment);
-            }
-        });
-
-        Button buttonIncFine = view.findViewById(R.id.buttonIncFine);
-        buttonIncFine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fraction adjustment = getStopsAdjustmentAmount(true, true);
-                viewModel.adjustStopsValue(adjustment);
-            }
-        });
-
-        Button buttonDecCoarse = view.findViewById(R.id.buttonDecCoarse);
-        buttonDecCoarse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fraction adjustment = getStopsAdjustmentAmount(false, false);
-                viewModel.adjustStopsValue(adjustment);
-            }
-        });
-
-        Button buttonDecFine = view.findViewById(R.id.buttonDecFine);
-        buttonDecFine.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Fraction adjustment = getStopsAdjustmentAmount(true, false);
-                viewModel.adjustStopsValue(adjustment);
-            }
-        });
-
         adjTypeToggleGroup = view.findViewById(R.id.adjTypeToggleGroup);
 
         MaterialButton buttonSeconds = adjTypeToggleGroup.findViewById(R.id.buttonSeconds);
@@ -322,8 +286,32 @@ public class BurnDodgeDialogFragment extends DialogFragment {
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setEnabled(hasValue);
             }
         });
-
         return dialog;
+    }
+
+    @Override
+    public void onResume() {
+        Log.d(TAG, "-->onResume()");
+        super.onResume();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+        updateStopIncrements(sharedPreferences);
+    }
+
+    @Override
+    public void onPause() {
+        Log.d(TAG, "-->onPause()");
+        super.onPause();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d(TAG, "-->onSharedPreferenceChanged("+key+")");
+        if ("burndodge_stops_fine".equals(key) || "burndodge_stops_coarse".equals(key)) {
+            updateStopIncrements(sharedPreferences);
+        }
     }
 
     private void updateAreaNameField(boolean focused) {
@@ -369,17 +357,13 @@ public class BurnDodgeDialogFragment extends DialogFragment {
         }
     };
 
-    private Fraction getStopsAdjustmentAmount(boolean fine, boolean increment) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-        String prefKey = fine ? "burndodge_stops_fine" : "burndodge_stops_coarse";
-        String defValue = fine ? "1_12_stop" : "1_stop";
-        String prefValue = sharedPreferences.getString(prefKey, defValue);
-        Fraction amount = Util.preferenceValueToFraction(prefValue);
+    private void updateStopIncrements(SharedPreferences sharedPreferences) {
+        String fineValue = sharedPreferences.getString("burndodge_stops_fine", "1_12_stop");
+        Fraction fineFraction = Util.preferenceValueToFraction(fineValue);
+        viewModel.setFineStopIncrement(fineFraction);
 
-        if (increment) {
-            return amount;
-        } else {
-            return amount.negate();
-        }
+        String coarseValue = sharedPreferences.getString("burndodge_stops_coarse", "1_stop");
+        Fraction coarseFraction = Util.preferenceValueToFraction(coarseValue);
+        viewModel.setCoarseStopIncrement(coarseFraction);
     }
 }
