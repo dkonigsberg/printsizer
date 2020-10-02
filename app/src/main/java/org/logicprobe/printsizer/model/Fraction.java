@@ -36,6 +36,7 @@ import org.apache.commons.math3.util.FastMath;
  *
  * @since 1.1
  */
+@SuppressWarnings("ALL")
 public class Fraction extends Number implements Comparable<Fraction>, Serializable {
 
     /** A fraction representing "2 / 1". */

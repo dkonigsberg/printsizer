@@ -102,6 +102,7 @@ public class UtilTest {
         assertEquals(Fraction.ZERO, fraction);
     }
 
+    @SuppressWarnings("ConstantConditions")
     @Test
     public void convertFractionToDenominator() {
         // Null case

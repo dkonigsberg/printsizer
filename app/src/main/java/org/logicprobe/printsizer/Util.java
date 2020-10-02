@@ -12,8 +12,6 @@ import androidx.lifecycle.SavedStateHandle;
 import org.apache.commons.math3.fraction.FractionConversionException;
 import org.logicprobe.printsizer.model.Fraction;
 
-import java.util.Arrays;
-
 public final class Util {
     public static final double EPSILON = 0.0001d;
     private static final Fraction ONE_SIXTH = new Fraction(1, 6);
@@ -114,6 +112,7 @@ public final class Util {
         return !Double.isNaN(value) && !Double.isInfinite(value) && value > EPSILON;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isEqual(double v1, double v2) {
         return (Double.isNaN(v1) && Double.isNaN(v2)) ||
                 (Double.isInfinite(v1) && Double.isInfinite(v2)) ||
@@ -154,16 +153,6 @@ public final class Util {
         } else {
             return Fraction.ZERO;
         }
-    }
-
-    public static int closestStopsDenominator(int denominator) {
-        int target = 0;
-        for (int i = 0; i < FRACTION_DENOMINATORS.length; i++) {
-            if (target == 0 || Math.abs(FRACTION_DENOMINATORS[i] - denominator) < Math.abs(FRACTION_DENOMINATORS[i] - target)) {
-                target = FRACTION_DENOMINATORS[i];
-            }
-        }
-        return target;
     }
 
     /**

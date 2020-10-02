@@ -89,7 +89,7 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
 
     private ExposureAdjustment buildExposureAdjustment(@ExposureAdjustment.AdjustmentUnit int adjMode) {
         ExposureAdjustment adjustment = new ExposureAdjustment();
-        switch(adjMode) {
+        switch (adjMode) {
             case ExposureAdjustment.UNIT_PERCENT:
                 adjustment.setPercentValue(Util.safeGetStateInt(state, PERCENT_VALUE_KEY, 0));
                 break;
@@ -97,8 +97,9 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
                 adjustment.setSecondsValue(Util.safeGetStateDouble(state, SECONDS_VALUE_KEY, 0d));
                 break;
             case ExposureAdjustment.UNIT_STOPS:
-                adjustment.setStopsValue((Fraction)state.get(STOPS_VALUE_KEY));
+                adjustment.setStopsValue((Fraction) state.get(STOPS_VALUE_KEY));
                 break;
+            case ExposureAdjustment.UNIT_NONE:
             default:
                 adjustment.setStopsValue(Fraction.ZERO);
                 break;
@@ -140,7 +141,7 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
 
         // If converting to stops, make sure to twiddle our fractional result so that it only uses
         // a denominator that we can currently set via the UI.
-        if (prevAdjustment != null && nextAdjustment != null &&
+        if (nextAdjustment != null &&
                 prevAdjustment.getUnit() != ExposureAdjustment.UNIT_STOPS && nextAdjustment.getUnit() == ExposureAdjustment.UNIT_STOPS) {
             int coarseDenominator = Util.safeGetStateFraction(state, COARSE_STOP_INC_KEY, COARSE_STOP_INC_DEFAULT).getDenominator();
             int fineDenominator = Util.safeGetStateFraction(state, FINE_STOP_INC_KEY, FINE_STOP_INC_DEFAULT).getDenominator();
