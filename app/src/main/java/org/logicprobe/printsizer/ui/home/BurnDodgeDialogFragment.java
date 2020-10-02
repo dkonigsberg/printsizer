@@ -291,7 +291,6 @@ public class BurnDodgeDialogFragment extends DialogFragment implements SharedPre
 
     @Override
     public void onResume() {
-        Log.d(TAG, "-->onResume()");
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
@@ -300,7 +299,6 @@ public class BurnDodgeDialogFragment extends DialogFragment implements SharedPre
 
     @Override
     public void onPause() {
-        Log.d(TAG, "-->onPause()");
         super.onPause();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
@@ -308,7 +306,6 @@ public class BurnDodgeDialogFragment extends DialogFragment implements SharedPre
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(TAG, "-->onSharedPreferenceChanged("+key+")");
         if ("burndodge_stops_fine".equals(key) || "burndodge_stops_coarse".equals(key)) {
             updateStopIncrements(sharedPreferences);
         }

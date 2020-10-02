@@ -231,13 +231,7 @@ public final class Util {
 
         // If the fraction represents zero or a whole number, then reduce it so that it
         // makes more sense.
-        if (lastCandidate != null) {
-            if (lastCandidate.getNumerator() == 0) {
-                lastCandidate = Fraction.ZERO;
-            } else if (Math.abs(lastCandidate.getNumerator()) == Math.abs(lastCandidate.getDenominator())) {
-                lastCandidate = new Fraction(lastCandidate.getNumerator(), lastCandidate.getDenominator());
-            }
-        }
+        lastCandidate = reduceWholeNumberFraction(lastCandidate);
 
         return lastCandidate;
     }
@@ -252,13 +246,13 @@ public final class Util {
         // If the first operand's denominator gives us an exact match, use that
         Fraction firstConverted = convertFractionToDenominator(result, first.getDenominator());
         if (Math.abs(firstConverted.doubleValue() - result.doubleValue()) < EPSILON) {
-            return firstConverted;
+            return reduceWholeNumberFraction(firstConverted);
         }
 
         // If the second operand's denominator gives us an exact match, use that
         Fraction secondConverted = convertFractionToDenominator(result, second.getDenominator());
         if (Math.abs(secondConverted.doubleValue() - result.doubleValue()) < EPSILON) {
-            return secondConverted;
+            return reduceWholeNumberFraction(secondConverted);
         }
 
         // If neither operand gave us an exact match, then pick the closest choice
@@ -266,10 +260,32 @@ public final class Util {
         Fraction firstCandidate = Fraction.getUnreducedFraction((int) Math.round(resultValue * first.getDenominator()), first.getDenominator());
         Fraction secondCandidate = Fraction.getUnreducedFraction((int) Math.round(resultValue * second.getDenominator()), second.getDenominator());
         if (Math.abs(resultValue - firstCandidate.doubleValue()) < Math.abs(resultValue - secondCandidate.doubleValue())) {
-            return firstCandidate;
+            return reduceWholeNumberFraction(firstCandidate);
         } else {
-            return secondCandidate;
+            return reduceWholeNumberFraction(secondCandidate);
         }
+    }
+
+    /**
+     * Reduce fractions that represent zero or a whole number.
+     * This is the one case where we typically want to circumvent user-friendly unreduced fraction
+     * behavior for more expected and consistent output.
+     *
+     * @param fraction The fraction to conditionally reduce
+     * @return Conditionally reduced fraction
+     */
+    public static Fraction reduceWholeNumberFraction(Fraction fraction) {
+        Fraction result = null;
+        if (fraction != null) {
+            if (fraction.getNumerator() == 0) {
+                result = Fraction.ZERO;
+            } else if (fraction.getNumerator() % fraction.getDenominator() == 0) {
+                result = new Fraction(fraction.getNumerator(), fraction.getDenominator());
+            } else {
+                result = fraction;
+            }
+        }
+        return result;
     }
 
     /**
