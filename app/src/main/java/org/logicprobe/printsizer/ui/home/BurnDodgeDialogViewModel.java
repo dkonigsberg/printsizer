@@ -26,6 +26,7 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
     private static final String STOPS_VALUE_KEY = "stops_value";
     private static final String BASE_EXPOSURE_TIME_KEY = "base_exposure_time";
     private static final String HAS_VALUE_KEY = "has_value";
+    private static final String LAST_USER_ADJ_VALUE = "user_adj_value";
 
     private static final Fraction FINE_STOP_INC_DEFAULT = new Fraction(1, 12);
     private static final Fraction COARSE_STOP_INC_DEFAULT = Fraction.ONE;
@@ -40,6 +41,7 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
         state.set(PERCENT_VALUE_KEY, 0);
         state.set(STOPS_VALUE_KEY, Fraction.ZERO);
         state.set(HAS_VALUE_KEY, Boolean.FALSE);
+        state.set(LAST_USER_ADJ_VALUE, ExposureAdjustment.UNIT_NONE);
     }
 
     public void setInitialized(boolean initialized) {
@@ -65,6 +67,7 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
                 state.set(STOPS_VALUE_KEY, adjustment.getStopsValue());
             }
             state.set(ADJ_MODE_KEY, adjustment.getUnit());
+            state.set(LAST_USER_ADJ_VALUE, adjustment.getUnit());
         }
         updateHasValueState();
     }
@@ -80,8 +83,12 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
     }
 
     private ExposureAdjustment buildExposureAdjustment() {
-        ExposureAdjustment adjustment = new ExposureAdjustment();
         int adjMode = Util.safeGetStateInt(state, ADJ_MODE_KEY, ExposureAdjustment.UNIT_STOPS);
+        return buildExposureAdjustment(adjMode);
+    }
+
+    private ExposureAdjustment buildExposureAdjustment(@ExposureAdjustment.AdjustmentUnit int adjMode) {
+        ExposureAdjustment adjustment = new ExposureAdjustment();
         switch(adjMode) {
             case ExposureAdjustment.UNIT_PERCENT:
                 adjustment.setPercentValue(Util.safeGetStateInt(state, PERCENT_VALUE_KEY, 0));
@@ -124,7 +131,8 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
     }
 
     public void setAdjustmentMode(@ExposureAdjustment.AdjustmentUnit int mode) {
-        ExposureAdjustment prevAdjustment = buildExposureAdjustment();
+        int adjMode = Util.safeGetStateInt(state, LAST_USER_ADJ_VALUE, ExposureAdjustment.UNIT_STOPS);
+        ExposureAdjustment prevAdjustment = buildExposureAdjustment(adjMode);
         double baseExposureTime = Util.safeGetStateDouble(state, BASE_EXPOSURE_TIME_KEY, 0.0d);
         ExposureAdjustment nextAdjustment = prevAdjustment.convertTo(mode, baseExposureTime);
 
@@ -171,7 +179,11 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
     }
 
     public void setSecondsValue(double secondsValue) {
+        Double previous = state.get(SECONDS_VALUE_KEY);
         state.set(SECONDS_VALUE_KEY, secondsValue);
+        if (previous == null || !Util.isEqual(previous, secondsValue)) {
+            state.set(LAST_USER_ADJ_VALUE, ExposureAdjustment.UNIT_SECONDS);
+        }
         updateHasValueState();
     }
 
@@ -180,7 +192,11 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
     }
 
     public void setPercentValue(int percentValue) {
+        Integer previous = state.get(PERCENT_VALUE_KEY);
         state.set(PERCENT_VALUE_KEY, percentValue);
+        if (previous == null || !Util.isEqual(previous, percentValue)) {
+            state.set(LAST_USER_ADJ_VALUE, ExposureAdjustment.UNIT_PERCENT);
+        }
         updateHasValueState();
     }
 
@@ -189,7 +205,11 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
     }
 
     public void setStopsValue(Fraction stopsValue) {
+        Fraction previous = state.get(STOPS_VALUE_KEY);
         state.set(STOPS_VALUE_KEY, stopsValue);
+        if (previous == null || !previous.equals(stopsValue)) {
+            state.set(LAST_USER_ADJ_VALUE, ExposureAdjustment.UNIT_STOPS);
+        }
         updateHasValueState();
     }
 
@@ -221,6 +241,7 @@ public class BurnDodgeDialogViewModel extends AndroidViewModel {
         Fraction resultValue = Util.constrainedFractionAdd(stopsValue, adjustment);
 
         state.set(STOPS_VALUE_KEY, resultValue);
+        state.set(LAST_USER_ADJ_VALUE, ExposureAdjustment.UNIT_STOPS);
         updateHasValueState();
     }
 

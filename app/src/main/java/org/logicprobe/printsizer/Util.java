@@ -114,6 +114,12 @@ public final class Util {
         return !Double.isNaN(value) && !Double.isInfinite(value) && value > EPSILON;
     }
 
+    public static boolean isEqual(double v1, double v2) {
+        return (Double.isNaN(v1) && Double.isNaN(v2)) ||
+                (Double.isInfinite(v1) && Double.isInfinite(v2)) ||
+                Math.abs(v1 - v2) < EPSILON;
+    }
+
     public static boolean isNightMode(Context context) {
         Configuration configuration = context.getResources().getConfiguration();
         int currentNightMode = configuration.uiMode & Configuration.UI_MODE_NIGHT_MASK;
