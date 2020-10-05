@@ -500,11 +500,11 @@ public class HomeFragment extends Fragment implements SharedPreferences.OnShared
         homeViewModel.setBasePaperGradeId(gradeId);
         homeViewModel.setTargetPaperProfileId(profileId);
         homeViewModel.setTargetPaperGradeId(gradeId);
-        homeViewModel.setHasPaperProfiles(true);
+        homeViewModel.setPaperProfilesAdded(true);
     }
 
     private void handleRemovePaperProfiles() {
-        homeViewModel.setHasPaperProfiles(false);
+        homeViewModel.setPaperProfilesAdded(false);
     }
 
     private void basePaperProfileClicked(PaperProfileEntity paperProfile) {

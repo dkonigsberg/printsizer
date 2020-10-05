@@ -127,7 +127,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/form_vertical_margin"
                                 android:layout_marginEnd="16dp"
-                                android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
+                                android:visibility="@{homeViewModel.paperProfilesAdded ? View.VISIBLE : View.GONE}"
                                 app:cardElevation="0dp"
                                 app:strokeColor="@color/outlined_stroke_color"
                                 app:strokeWidth="1dp">
@@ -204,9 +204,8 @@
                             android:layout_height="wrap_content"
                             app:layout_constraintTop_toTopOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
-                            android:visibility="@{homeViewModel.hasPaperProfiles() ? View.INVISIBLE : View.VISIBLE}"
                             style="@style/Widget.App.Button.TextButton.IconOnly"
-                            android:enabled="@{homeViewModel.hasPaperProfiles}"
+                            android:enabled="@{homeViewModel.paperProfilesAvailable &amp;&amp; !homeViewModel.paperProfilesAdded}"
                             app:icon="@drawable/ic_add_paper_profile" />
 
                         <com.google.android.material.button.MaterialButton
@@ -319,7 +318,7 @@
 
                         <com.google.android.material.card.MaterialCardView
                             android:id="@+id/targetPaperProfileView"
-                            android:visibility="@{homeViewModel.hasPaperProfiles() ? View.VISIBLE : View.GONE}"
+                            android:visibility="@{homeViewModel.paperProfilesAdded ? View.VISIBLE : View.GONE}"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/form_vertical_margin"

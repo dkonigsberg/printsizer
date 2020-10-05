@@ -49,7 +49,7 @@ public class HomeViewModel extends AndroidViewModel {
     private static final String BASE_PAPER_GRADE_ID_KEY = "base_paper_grade_id";
     private static final String TARGET_PAPER_PROFILE_ID_KEY = "target_paper_profile_id";
     private static final String TARGET_PAPER_GRADE_ID_KEY = "target_paper_grade_id";
-    private static final String HAS_PAPER_PROFILES_KEY = "has_paper_profiles";
+    private static final String PAPER_PROFILES_ADDED_KEY = "paper_profiles_added";
     private static final String ENLARGER_PROFILE_ID_KEY = "enlarger_profile_id";
     private static final String BURN_DODGE_ITEM_COUNTER_KEY = "burn_dodge_item_counter";
     private static final String BASE_BURN_DODGE_LIST_KEY = "base_burn_dodge_list";
@@ -58,7 +58,7 @@ public class HomeViewModel extends AndroidViewModel {
     private final SavedStateHandle state;
     private final DataRepository repository;
 
-    private LiveData<Boolean> hasPaperProfiles;
+    private LiveData<Boolean> paperProfilesAvailable;
     private MediatorLiveData<PaperProfile> basePaperProfile;
     private LiveData<PaperProfileEntity> loadedBasePaperProfile;
     private MediatorLiveData<Integer> basePaperGradeResourceId;
@@ -84,7 +84,7 @@ public class HomeViewModel extends AndroidViewModel {
         this.targetPrintHeightError = new MutableLiveData<>(EnlargerHeightErrorEvent.NONE);
         this.enlargerProfileValid = new MutableLiveData<>(true);
 
-        this.hasPaperProfiles = Transformations.map(repository.numPaperProfiles(), new Function<Integer, Boolean>() {
+        this.paperProfilesAvailable = Transformations.map(repository.numPaperProfiles(), new Function<Integer, Boolean>() {
             @Override
             public Boolean apply(Integer num) {
                 return num != null && num > 0;
@@ -131,7 +131,7 @@ public class HomeViewModel extends AndroidViewModel {
                             state.set(BASE_PAPER_GRADE_ID_KEY, findDefaultPaperGradeId(paperProfileEntity));
                         }
                         if (paperProfileEntity == null) {
-                            setHasPaperProfiles(false);
+                            setPaperProfilesAdded(false);
                         }
                         recalculateTargetPrintExposureTime();
                     }
@@ -175,7 +175,7 @@ public class HomeViewModel extends AndroidViewModel {
                             state.set(TARGET_PAPER_GRADE_ID_KEY, findDefaultPaperGradeId(paperProfileEntity));
                         }
                         if (paperProfileEntity == null) {
-                            setHasPaperProfiles(false);
+                            setPaperProfilesAdded(false);
                         }
                         recalculateTargetPrintExposureTime();
                     }
@@ -237,8 +237,8 @@ public class HomeViewModel extends AndroidViewModel {
         state.set(ENLARGER_PROFILE_ID_KEY, profileId);
     }
 
-    public LiveData<Boolean> getHasPaperProfiles() {
-        return hasPaperProfiles;
+    public LiveData<Boolean> getPaperProfilesAvailable() {
+        return paperProfilesAvailable;
     }
 
     public void setBasePrintHeight(double basePrintHeight) {
@@ -321,13 +321,13 @@ public class HomeViewModel extends AndroidViewModel {
         return targetPaperGradeResourceId;
     }
 
-    public void setHasPaperProfiles(boolean hasPaperProfiles) {
-        state.set(HAS_PAPER_PROFILES_KEY, hasPaperProfiles);
+    public void setPaperProfilesAdded(boolean paperProfilesAdded) {
+        state.set(PAPER_PROFILES_ADDED_KEY, paperProfilesAdded);
 
         // If we're setting paper profiles as being disabled, clear any existing
         // values. This ensures that we start from a clean slate if profiles are
         // added again.
-        if (!hasPaperProfiles) {
+        if (!paperProfilesAdded) {
             state.set(BASE_PAPER_PROFILE_ID_KEY, 0);
             state.set(BASE_PAPER_GRADE_ID_KEY, Integer.MIN_VALUE);
             state.set(TARGET_PAPER_PROFILE_ID_KEY, 0);
@@ -335,8 +335,8 @@ public class HomeViewModel extends AndroidViewModel {
         }
     }
 
-    public LiveData<Boolean> hasPaperProfiles() {
-        return state.getLiveData(HAS_PAPER_PROFILES_KEY, false);
+    public LiveData<Boolean> getPaperProfilesAdded() {
+        return state.getLiveData(PAPER_PROFILES_ADDED_KEY, false);
     }
 
     public LiveData<List<BurnDodgeItem>> getBaseBurnDodgeList() {
@@ -584,7 +584,7 @@ public class HomeViewModel extends AndroidViewModel {
         // (This should probably be replaced with something more elegant later.)
         int baseIsoP = 0;
         int targetIsoP = 0;
-        if (LiveDataUtil.getBooleanValue(hasPaperProfiles())) {
+        if (LiveDataUtil.getBooleanValue(getPaperProfilesAdded())) {
             PaperGrade baseGrade = getSelectedGrade(
                     basePaperProfile.getValue(), LiveDataUtil.getIntValue(getBasePaperGradeId()));
             PaperGrade targetGrade = getSelectedGrade(
