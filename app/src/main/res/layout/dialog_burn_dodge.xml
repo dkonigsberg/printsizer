@@ -176,18 +176,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_shutter_speed"
+                app:strokeColor="@color/outlined_stroke_color"
                 style="@style/Widget.App.Button.OutlinedButton.IconOnly" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonPercent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_percent"
+                app:strokeColor="@color/outlined_stroke_color"
                 style="@style/Widget.App.Button.OutlinedButton.IconOnly" />
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/buttonStops"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/ic_exposure"
+                app:strokeColor="@color/outlined_stroke_color"
                 style="@style/Widget.App.Button.OutlinedButton.IconOnly"/>
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
